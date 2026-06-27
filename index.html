@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>ComCody Lab v39</title>
+<title>ComCody Lab v43</title>
 <style>
 :root{
   --bg:#07111f;--panel:#101b2d;--panel2:#07101d;--ink:#f8fafc;--muted:#a9b9d6;--line:#2b4364;
@@ -45,6 +45,7 @@ h1{font-size:clamp(24px,3.4vw,40px)}
 .setupCard p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
 .setupActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .importStatus{margin-top:8px;padding:9px 10px;border-radius:12px;background:#050b14;border:1px solid var(--line);color:#dbeafe;font-weight:800}
+.packChecklist{display:grid;gap:8px;margin:10px 0}.packChecklist div{padding:9px 10px;border:1px solid #315176;border-radius:12px;background:#07101d}.packActions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.packStatus{margin-top:10px;padding:10px;border-radius:14px;background:#050b14;border:1px solid var(--line);color:#dbeafe;font-weight:850;white-space:pre-wrap}.packLog{margin-top:8px;max-height:170px;overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.35;color:#b8c7df;background:#020714;border:1px dashed #345374;border-radius:12px;padding:9px}.packLog b{color:#ffd166}.packCode{max-height:220px;overflow:auto}.dropZone{border:2px dashed #345374;border-radius:16px;padding:12px;background:#06101d;color:#cfe3ff}
 
 .inputHint{margin-top:8px;color:#c2d2ef;font-size:13px;font-weight:800;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .inputHint span{padding:5px 8px;border-radius:999px;background:#07101d;border:1px solid #315176;color:#dbeafe}
@@ -88,7 +89,7 @@ h1{font-size:clamp(24px,3.4vw,40px)}
 .pieceLine.containerLine{grid-template-columns:minmax(0,1fr) auto!important}
 .stackDelete,.childDelete{display:grid!important;place-items:center!important}
 .pieceMeta{display:none!important}
-.stack h2,.stackTitle{display:flex;align-items:center;gap:8px;justify-content:space-between}
+.stack h2,.stackTitle{display:flex;align-items:center;gap:8px;justify-content:space-between}.stackHeaderActions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .stackHint{font-size:12px;color:var(--muted);font-weight:800}
 .loopChildren{margin-left:16px}
 .loopChildItem .piece{padding-right:26px!important}
@@ -99,8 +100,8 @@ h1{font-size:clamp(24px,3.4vw,40px)}
 </head>
 <body>
 <header>
-  <div><h1>🧩 ComCody Maze Lab</h1><p class="sub">v41: every Program Stack piece opens by double-click; loops reuse one shared settings editor.</p></div>
-  <div class="topActions"><button id="tabMaker" class="gold active">🧱 Maze Maker</button><button id="tabPath">▶ Path Game</button><button id="gameSetupBtn" class="gold">🎛 Game Setup</button><button id="exportBtn">↧ Export</button></div>
+  <div><h1>🧩 ComCody Maze Lab</h1><p class="sub">v45: dependable Pack Studio — visible, tested export/import for real composable packs.</p></div>
+  <div class="topActions"><button id="tabMaker" class="gold active">🧱 Maze Maker</button><button id="tabPath">▶ Path Game</button><button id="gameSetupBtn" class="gold">🎛 Game Setup</button><button id="packStudioBtn" class="gold">📦 Packs</button><button id="exportBtn">↧ Export Game</button></div>
 </header>
 <div class="app">
   <section id="makerPage" class="page active makerLayout">
@@ -125,12 +126,12 @@ h1{font-size:clamp(24px,3.4vw,40px)}
     <div id="pieceDrawer" class="pieceDrawer">
       <div class="panel">
         <div class="pieceDrawerHead"><h2>Piece Store</h2><button id="closeStore" class="small danger">×</button></div>
-        <div class="storeTools"><button id="importBlocksBtn" class="small gold">⬆ Import Block YAML/ZIP</button><input id="blockImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div>
+        <div class="storeTools"><button id="importBlocksBtn" class="small gold">⬆ Import Pack</button><button id="exportGameStoreBtn" class="small">⬇ Export Game</button><input id="blockImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div>
         <div id="pathStore" class="store"></div>
       </div>
     </div>
     <div class="pathSide">
-      <div class="panel stackPanel"><h2 class="stackTitle"><span>Program Stack</span><span class="stackHint">double-click piece to edit</span></h2><div id="programStack" class="stack"></div></div>
+      <div class="panel stackPanel"><h2 class="stackTitle"><span>Program Stack</span><span class="stackHeaderActions"><span class="stackHint">double-click piece to edit</span><button id="toggleStoreStack" class="small gold" title="Open Piece Store">🧩 Pieces</button></span></h2><div id="programStack" class="stack"></div></div>
     </div>
   </section>
 
@@ -252,6 +253,277 @@ blocks:
  input:`function bindTabletInput() {\n  swipeLeft  -> moveActivePiece(-1, 0)\n  swipeRight -> moveActivePiece(1, 0)\n  swipeDown  -> moveActivePiece(0, 1)\n  tap        -> rotateActivePiece()\n  doubleTap  -> moveActivePiece(0, 1)\n}`
 };
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+
+const PACK_VERSION='1.1';
+function slugify(s){return String(s||'piece').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,48)||'piece'}
+function yamlScalar(v){if(v===undefined||v===null)return '';return String(v).replace(/\n/g,'\\n').replace(/:/g,'-')}
+function normalizeTypeRef(ref){
+  ref=String(ref||'').trim();
+  if(!ref)return 'checkpoint';
+  const map={loop:'repeat',timer_step:'timer',turn_left:'left',turn_right:'right',random_wall:'randwall',score_event:'score',tablet_input:'input',face_down:'face_down',face_left:'face_left',face_right:'face_right',face_up:'face_up'};
+  if(CUSTOM_BLOCKS.has(ref)||STORE.some(s=>s[0]===ref))return ref;
+  const tail=ref.split(/[./]/).filter(Boolean).pop()||ref;
+  return map[tail]||tail;
+}
+function behaviorFromExtends(x){x=String(x||'').toLowerCase();return ({loop:'repeat',repeat:'repeat',move:'move',timer:'timer',score:'score',input:'input',piece:'checkpoint'}[x]||x||'checkpoint')}
+function packSourceForPiece(p){
+  const b=p?.behavior||p?.type;
+  if(b==='repeat')return `export async function run(ctx, piece) {\n  for (let i = 0; i < (piece.count ?? 1); i++) {\n    await ctx.runChildren(piece)\n  }\n}\n`;
+  if(b==='move')return `export async function run(ctx, piece) {\n  await ctx.move(piece.steps ?? 1)\n}\n`;
+  if(b==='face_dir')return `export async function run(ctx, piece) {\n  await ctx.face(piece.dir)\n}\n`;
+  if(b==='timer')return `export async function run(ctx, piece) {\n  await ctx.wait(piece.delay ?? ctx.sliderDelay())\n}\n`;
+  if(b==='score')return `export async function run(ctx, piece) {\n  await ctx.score(piece.reason ?? 'score', piece.points ?? 0)\n}\n`;
+  if(b==='input')return `export async function run(ctx, piece) {\n  await ctx.configureInput(piece)\n}\n`;
+  if(b==='spawn_piece')return `export async function run(ctx, piece) {\n  await ctx.spawnRandomPiece()\n}\n`;
+  if(b==='rotate_shape')return `export async function run(ctx, piece) {\n  await ctx.rotateShape()\n}\n`;
+  if(b==='lock_piece')return `export async function run(ctx, piece) {\n  await ctx.lockPiece()\n}\n`;
+  if(b==='clear_rows')return `export async function run(ctx, piece) {\n  const rows = await ctx.clearRows()\n  piece.lastClearRows = rows\n}\n`;
+  const code=expertCodeLookup(p);
+  return code.startsWith('//')?`export async function run(ctx, piece) {\n  await ctx.checkpoint(piece.label ?? '${yamlScalar(p?.label||'piece')}')\n}\n`:code;
+}
+function pieceDefaults(p){const b=p?.behavior||p?.type;const d={};if(b==='move')d.steps=p.steps??1;if(b==='repeat')d.count=p.count??1;if(b==='timer'&&p.delay!==null)d.delay=p.delay;if(b==='face_dir')d.dir=p.dir??0;if(b==='random_wall'){d.count=p.count??1;d.replaceExisting=!!p.replaceExisting;d.persistent=!!p.persistent;d.ttlMoves=p.ttlMoves??3}if(b==='score'){d.reason=p.reason||'score';d.points=p.points??0}if(b==='input'){d.swipe=p.swipe!==false;d.tapRotate=p.tapRotate!==false;d.doubleTapDown=p.doubleTapDown!==false;d.keyboard=p.keyboard!==false}return d}
+function pieceToYaml(p,opts={}){
+  const type=opts.type||p.type||slugify(p.label);
+  const b=p.behavior||p.type;
+  const lines=['version: '+PACK_VERSION,'kind: piece','id: comcody.user.'+slugify(type),'type: '+type,'name: '+yamlScalar(p.label),'label: '+yamlScalar(p.label),'icon: '+yamlScalar(p.icon||'◆'),'role: flow','behavior: '+b,'class: '+(p.class||clsFor(p))];
+  const d=pieceDefaults(p); if(Object.keys(d).length){lines.push('defaults:');for(const [k,v] of Object.entries(d))lines.push('  '+k+': '+v)}
+  if(Array.isArray(p.children)&&p.children.length){lines.push('children:');for(const c of p.children){lines.push('  - type: '+(c.type||slugify(c.label)));lines.push('    label: '+yamlScalar(c.label));}}
+  lines.push('source:','  file: piece.js');
+  return lines.join('\n')+'\n';
+}
+function pieceReadme(p){return `# ${p.label}\n\nComposable ComCody piece pack.\n\nThis pack contains:\n\n- \`piece.yaml\` — no-code block manifest\n- \`piece.js\` — real JavaScript implementation under the block\n- \`tests.yaml\` — smoke tests for import/runtime visibility\n\nImport this ZIP in ComCody with **Import Pack**.\n`;}
+function pieceTestsYaml(p){return `version: ${PACK_VERSION}\ntests:\n  - name: import registers piece\n    expect:\n      type: ${p.type||slugify(p.label)}\n      label: ${yamlScalar(p.label)}\n  - name: expert code is visible\n    expect:\n      source: piece.js\n`;}
+function collectUniquePieces(list,acc=new Map()){for(const p of list||[]){if(!p)continue;const key=p.type||slugify(p.label);if(!acc.has(key))acc.set(key,p);if(Array.isArray(p.children))collectUniquePieces(p.children,acc);if(p.bindings)Object.values(p.bindings).forEach(arr=>collectUniquePieces(arr,acc));}return acc}
+function projectJson(){return {version:PACK_VERSION,kind:'game',preset:gamePreset,maze:{cols:maze.cols,rows:maze.rows,walls:[...maze.walls],locked:[...lockedCells().entries()],start:maze.start,goal:maze.goal,body:maze.body,bodyColor:maze.bodyColor,bodyName:maze.bodyName},gridTheme:{...gridTheme},timer:{...timer},score:{...scoreModule},input:{...inputConfig},program:program.map(p=>JSON.parse(JSON.stringify(p)))} }
+function applyProjectJson(data){
+  if(!data||data.kind!=='game')throw Error('game.json is not a ComCody game bundle');
+  gamePreset=data.preset||'imported_game';
+  Object.assign(maze,{cols:data.maze?.cols||10,rows:data.maze?.rows||10,start:data.maze?.start||{x:0,y:0,dir:1},goal:data.maze?.goal||{x:0,y:0},body:data.maze?.body||[[0,0]],bodyColor:data.maze?.bodyColor||COLORS.R1,bodyName:data.maze?.bodyName||'Imported'});
+  maze.walls=new Set(data.maze?.walls||[]);maze.locked=new Map(data.maze?.locked||[]);
+  Object.assign(gridTheme,data.gridTheme||{});Object.assign(timer,data.timer||{});scoreModule=data.score||{value:0,events:[]};Object.assign(inputConfig,data.input||{});
+  program=(data.program||[]).map(normalizePieceTree);resetState();renderAll();setPage('path');$('#pathStatus').textContent='Imported full ComCody game bundle.';
+}
+function crc32(bytes){let table=crc32.table;if(!table){table=crc32.table=new Uint32Array(256);for(let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=(c&1)?(0xedb88320^(c>>>1)):(c>>>1);table[i]=c>>>0}}let c=0xffffffff;for(const b of bytes)c=table[(c^b)&255]^(c>>>8);return (c^0xffffffff)>>>0}
+function makeZipBlob(files){
+  const enc=new TextEncoder(), parts=[], central=[];let offset=0;
+  const u16=n=>{const a=new Uint8Array(2);new DataView(a.buffer).setUint16(0,n,true);return a};
+  const u32=n=>{const a=new Uint8Array(4);new DataView(a.buffer).setUint32(0,n>>>0,true);return a};
+  const now=new Date(), time=((now.getHours()<<11)|(now.getMinutes()<<5)|(now.getSeconds()/2|0)), date=(((now.getFullYear()-1980)<<9)|((now.getMonth()+1)<<5)|now.getDate());
+  const push=(arr,...xs)=>xs.forEach(x=>arr.push(typeof x==='number'?u32(x):x));
+  for(const f of files){
+    const nameBytes=enc.encode(f.name.replace(/^\/+/,'')); const data=f.bytes?f.bytes:enc.encode(String(f.text??'')); const crc=crc32(data); const localOffset=offset;
+    const local=[u32(0x04034b50),u16(20),u16(0),u16(0),u16(time),u16(date),u32(crc),u32(data.length),u32(data.length),u16(nameBytes.length),u16(0),nameBytes,data];
+    local.forEach(x=>{parts.push(x);offset+=x.length});
+    const c=[u32(0x02014b50),u16(20),u16(20),u16(0),u16(0),u16(time),u16(date),u32(crc),u32(data.length),u32(data.length),u16(nameBytes.length),u16(0),u16(0),u16(0),u16(0),u32(0),u32(localOffset),nameBytes];
+    central.push(...c);
+  }
+  const centralOffset=offset;central.forEach(x=>{parts.push(x);offset+=x.length});
+  parts.push(u32(0x06054b50),u16(0),u16(0),u16(files.length),u16(files.length),u32(offset-centralOffset),u32(centralOffset),u16(0));
+  return new Blob(parts,{type:'application/zip'});
+}
+let activeDownloadUrl=null;
+const packLogEntries=[];
+function packLog(level,message,detail){
+  const stamp=new Date().toLocaleTimeString();
+  const row={stamp,level,message,detail:detail?String(detail):''};
+  packLogEntries.push(row); if(packLogEntries.length>80)packLogEntries.shift();
+  const fn=level==='error'?console.error:level==='warn'?console.warn:console.log;
+  try{fn('[ComCody Pack]',message,detail||'');}catch(_){ }
+  const el=$('#packStudioLog');
+  if(el){
+    el.innerHTML=packLogEntries.slice(-24).map(r=>`<div><b>${esc(r.stamp)} ${esc(r.level.toUpperCase())}</b> ${esc(r.message)}${r.detail?' — '+esc(r.detail):''}</div>`).join('');
+    el.scrollTop=el.scrollHeight;
+  }
+}
+function setStatusHtml(sel,html){const el=$(sel);if(el)el.innerHTML=html}
+function setStatusText(sel,text){const el=$(sel);if(el)el.textContent=text}
+function announcePackStatus(message){
+  packLog('info',message);
+  ['#pathStatus','#makerStatus','#packStudioStatus','#setupImportStatus'].forEach(sel=>setStatusText(sel,message));
+}
+function announceDownloadReady(filename,url,bytes=0,mode='object-url'){
+  const safeName=esc(filename);
+  const safeUrl=esc(url);
+  const size=bytes?` <span class="muted">(${Math.ceil(bytes/1024)} KB, ${esc(mode)})</span>`:'';
+  const html=`✅ Export ready: <a href="${safeUrl}" download="${safeName}" class="downloadReadyLink" style="color:#ffd166;font-weight:950;text-decoration:underline">Download ${safeName}</a>${size}`;
+  setStatusHtml('#packStudioStatus',html);
+  setStatusHtml('#pathStatus',html);
+  setStatusHtml('#makerStatus',html);
+  setStatusHtml('#setupImportStatus',html);
+  packLog('info','Export ready',`${filename}, ${bytes} bytes, ${mode}`);
+}
+function announceExportError(err){
+  const message='Export failed: '+(err?.message||err);
+  setStatusText('#packStudioStatus',message);
+  setStatusText('#pathStatus',message);
+  setStatusText('#makerStatus',message);
+  setStatusText('#setupImportStatus',message);
+  packLog('error',message,err?.stack||err);
+}
+function getObjectUrlFactory(){
+  const g=typeof globalThis!=='undefined'?globalThis:window;
+  if(g.URL&&typeof g.URL.createObjectURL==='function')return g.URL;
+  if(g.webkitURL&&typeof g.webkitURL.createObjectURL==='function')return g.webkitURL;
+  return null;
+}
+function bytesToBase64(bytes){
+  let out='';
+  for(let i=0;i<bytes.length;i+=0x8000)out+=String.fromCharCode(...bytes.subarray(i,i+0x8000));
+  return btoa(out);
+}
+async function createDownloadHref(blob){
+  const factory=getObjectUrlFactory();
+  if(factory){
+    packLog('info','Using browser object URL export path');
+    try{
+      if(activeDownloadUrl&&factory.revokeObjectURL)try{factory.revokeObjectURL(activeDownloadUrl)}catch(err){packLog('warn','Could not revoke previous download URL',err?.message||err)}
+      activeDownloadUrl=factory.createObjectURL(blob);
+      return {href:activeDownloadUrl,mode:'object-url'};
+    }catch(err){
+      packLog('warn','Object URL export failed; using data URL fallback',err?.message||err);
+    }
+  }else{
+    packLog('warn','URL.createObjectURL is unavailable; using data URL fallback');
+  }
+  if(typeof blob.arrayBuffer!=='function')throw Error('Browser cannot create object URLs and Blob.arrayBuffer is unavailable');
+  if(typeof btoa!=='function')throw Error('Browser cannot create object URLs and btoa is unavailable');
+  const bytes=new Uint8Array(await blob.arrayBuffer());
+  return {href:'data:application/zip;base64,'+bytesToBase64(bytes),mode:'data-url-fallback'};
+}
+async function downloadZip(files,filename){
+  packLog('info','Building ZIP',`${filename}, ${files.length} files`);
+  const blob=makeZipBlob(files);
+  if(!blob||!blob.size)throw Error('ZIP builder produced an empty blob');
+  packLog('info','ZIP blob ready',`${blob.size} bytes`);
+  if(typeof navigator!=='undefined'&&navigator&&typeof navigator.msSaveOrOpenBlob==='function'){
+    packLog('info','Using msSaveOrOpenBlob export path');
+    navigator.msSaveOrOpenBlob(blob,filename);
+    announcePackStatus(`Export ready: ${filename} (${Math.ceil(blob.size/1024)} KB)`);
+    return {filename,url:null,bytes:blob.size,mode:'ms-save'};
+  }
+  const {href,mode}=await createDownloadHref(blob);
+  const a=document.createElement('a');
+  a.href=href;
+  a.download=filename;
+  a.rel='noopener';
+  a.className='generatedDownloadAnchor';
+  a.textContent='Download '+filename;
+  a.style.position='fixed';
+  a.style.left='-9999px';
+  a.style.top='-9999px';
+  document.body.appendChild(a);
+  announceDownloadReady(filename,href,blob.size,mode);
+  try{a.click();packLog('info','Automatic download click fired',filename)}
+  catch(err){packLog('warn','Automatic download click blocked; visible fallback link is ready',err?.message||err)}
+  setTimeout(()=>a.remove(),2500);
+  return {filename,url:href,bytes:blob.size,mode};
+}
+async function exportPiecePack(p){
+  try{
+    if(!p)throw Error('No piece selected to export');
+    announcePackStatus('Preparing piece ZIP export …');
+    const type=p.type||slugify(p.label);
+    return await downloadZip([{name:'piece.yaml',text:pieceToYaml(p,{type})},{name:'piece.js',text:packSourceForPiece(p)},{name:'tests.yaml',text:pieceTestsYaml(p)},{name:'README.md',text:pieceReadme(p)}],`comcody-piece-${slugify(p.label)}.zip`);
+  }catch(err){announceExportError(err);return null;}
+}
+async function exportGameBundleZip(){
+  try{
+    announcePackStatus('Preparing full game ZIP export …');
+    normalizeProgram();
+    const files=[{name:'comcody-pack.yaml',text:`version: ${PACK_VERSION}\nkind: game_bundle\nname: ${yamlScalar(gamePreset)}\nentry: game.json\n`},{name:'game.yaml',text:yaml()+'\n'},{name:'game.json',text:JSON.stringify(projectJson(),null,2)},{name:'game.js',text:`export async function run(ctx, game) {\n  await ctx.runProgram(game.program)\n}\n`},{name:'tests.yaml',text:`version: ${PACK_VERSION}\ntests:\n  - name: game bundle imports\n    expect:\n      kind: game\n  - name: program has visible pieces\n    expect:\n      minPieces: ${program.length}\n`},{name:'README.md',text:`# ComCody Game Bundle\n\nOpen ComCody and use **Import Pack**. This bundle restores the no-code game plus real JS source for exported pieces.\n`}];
+    const unique=collectUniquePieces(program); for(const [type,p] of unique){const dir='pieces/'+slugify(type)+'/';files.push({name:dir+'piece.yaml',text:pieceToYaml(p,{type})},{name:dir+'piece.js',text:packSourceForPiece(p)},{name:dir+'tests.yaml',text:pieceTestsYaml(p)});}
+    return await downloadZip(files,`comcody-game-${slugify(gamePreset)}.zip`);
+  }catch(err){announceExportError(err);return null;}
+}
+function parseScalar(v){v=String(v??'').trim().replace(/^['"]|['"]$/g,'');if(v==='true')return true;if(v==='false')return false;if(v!==''&&!Number.isNaN(Number(v)))return Number(v);return v}
+function parsePieceManifestYAML(text,path,map){
+  const obj={defaults:{},settings:{},source:{},children:[]};let section=null,child=null;
+  for(const raw of text.split(/\r?\n/)){
+    const line=raw.replace(/#.*$/,'');if(!line.trim())continue;const indent=(line.match(/^\s*/)||[''])[0].length, t=line.trim();
+    const top=t.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
+    if(indent===0&&top){const [,k,v]=top; if(v===''){section=k;child=null;if(!obj[k])obj[k]=k==='children'?[]:{};}else{obj[k]=parseScalar(v);section=null;child=null}continue}
+    if(section==='children'&&t.startsWith('- ')){child={};obj.children.push(child);const rest=t.slice(2).trim();const m=rest.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);if(m)child[m[1]]=parseScalar(m[2]);continue}
+    const kv=t.match(/^([A-Za-z_][\w-]*):\s*(.*)$/); if(kv){const [,k,v]=kv;if(section==='defaults'||section==='settings'||section==='source')obj[section][k]=parseScalar(v);else if(section==='children'&&child)child[k]=parseScalar(v)}
+  }
+  if(!(obj.kind==='piece'||obj.type||obj.id&&obj.name||obj.label))return null;
+  const dir=path.includes('/')?path.slice(0,path.lastIndexOf('/')+1):'';
+  const sourceFile=obj.source?.file; let source='';
+  if(sourceFile){source=map.get(dir+sourceFile)||[...map.entries()].find(([k])=>k.endsWith('/'+sourceFile)||k===sourceFile)?.[1]||''}
+  const type=normalizeTypeRef(obj.type||obj.id||obj.name||obj.label);
+  const behavior=obj.behavior||behaviorFromExtends(obj.extends||obj.kind);
+  const children=(obj.children||[]).map(c=>normalizeTypeRef(c.type||c.id||c.behavior||c.label)).filter(Boolean);
+  return {type,label:obj.label||obj.name||type,icon:obj.icon||'◆',role:obj.role||'flow',behavior,class:obj.class||classForBehavior(behavior),defaults:{...(obj.defaults||{}),...(obj.settings||{})},children,source,packPath:path};
+}
+function parsePackDefs(map){const defs=[];for(const [path,text] of map.entries()){if(/(^|\/)piece\.ya?ml$/i.test(path)){const d=parsePieceManifestYAML(text,path,map);if(d)defs.push(d)}}return defs}
+function validateDefs(defs){const errors=[];for(const d of defs){if(!d.type)errors.push('Missing type in '+(d.packPath||d.label));if(!d.label)errors.push('Missing label for '+d.type);if(!d.behavior)errors.push('Missing behavior for '+d.type);if(!d.source)errors.push('Missing piece.js source for '+d.type)}return errors}
+function runImportedSmokeTests(defs){return defs.map(d=>({name:d.label,ok:!!(d.type&&d.label&&d.behavior),source:!!d.source}))}
+function makeRuntimeCtx(){return {sliderDelay:()=>+($('#speedSlider')?.value||timer.defaultMs),wait:ms=>delay(ms??+($('#speedSlider')?.value||timer.defaultMs)),move:steps=>execPiece({...make('move'),steps:steps??1},null,{inputEvent:true}),face:dir=>{state.dir=+dir||0;renderGrid('#playGrid')},runChildren:p=>execComposedChildren(p.children||[]),score:(reason,points)=>scoreAdd(reason,points),checkpoint:label=>{$('#pathStatus').textContent='Checkpoint: '+label},spawnRandomPiece:()=>spawnTetrisPiece(true),rotateShape:()=>userRotate('custom source'),lockPiece:()=>lockActivePiece(),clearRows:()=>clearFullRows(),configureInput:p=>applyInputPiece(p),runProgram:async list=>{for(const p of list)await execPiece(p)}}}
+async function runCustomSource(def,p){const src=String(def?.source||'').replace(/export\s+/g,'');if(!/function\s+run\s*\(/.test(src))return false;const fn=new Function('ctx','piece',src+'\nreturn run(ctx,piece);');await fn(makeRuntimeCtx(),p);return true}
+let packImportInputSingleton=null;
+function getPackImportInput(){
+  if(packImportInputSingleton&&document.body.contains(packImportInputSingleton))return packImportInputSingleton;
+  packImportInputSingleton=document.createElement('input');
+  packImportInputSingleton.type='file';
+  packImportInputSingleton.accept='.yaml,.yml,.zip,application/zip';
+  packImportInputSingleton.hidden=true;
+  packImportInputSingleton.id='globalPackImportInput';
+  document.body.appendChild(packImportInputSingleton);
+  return packImportInputSingleton;
+}
+async function handlePackImportFile(file,statusSelector='#pathStatus'){
+  setStatusText(statusSelector,'Importing '+file.name+' …');
+  try{
+    const msg=await importBlockFile(file);
+    setStatusText(statusSelector,msg||('Imported '+file.name));
+    if(statusSelector!=='#pathStatus')setStatusText('#pathStatus',msg||('Imported '+file.name));
+    renderStore();renderProgram();renderKernelStrip();
+    return msg;
+  }catch(err){
+    const message='Import failed: '+(err?.message||err);
+    setStatusText(statusSelector,message);setStatusText('#pathStatus',message);
+    throw err;
+  }
+}
+function openPackFileChooser(statusSelector='#pathStatus'){
+  const input=getPackImportInput();
+  input.value='';
+  input.onchange=e=>{const f=e.target.files?.[0];if(f)handlePackImportFile(f,statusSelector).finally(()=>{input.value=''})};
+  input.click();
+}
+async function exportFirstProgramPieceFromStudio(){
+  if(program[0]){await exportPiecePack(program[0]);announcePackStatus('Exported first Program Stack piece as a real piece ZIP.');}
+  else announcePackStatus('No Program Stack piece to export yet.');
+}
+async function runPackButtonAction(id){
+  if(id==='exportBtn'||id==='exportGameStoreBtn'||id==='packExportGameBtn'||id==='setupExportGameBtn')return await exportGameBundleZip();
+  if(id==='importBlocksBtn'||id==='packImportBtn'||id==='setupImportBtn'){
+    const target=id==='packImportBtn'?'#packStudioStatus':id==='setupImportBtn'?'#setupImportStatus':'#pathStatus';
+    openPackFileChooser(target);return true;
+  }
+  if(id==='packExportFirstBtn')return await exportFirstProgramPieceFromStudio();
+  return false;
+}
+function bindPackActionController(){
+  document.addEventListener('click',e=>{
+    const btn=e.target.closest('button');if(!btn)return;
+    if(!['exportBtn','exportGameStoreBtn','packExportGameBtn','setupExportGameBtn','importBlocksBtn','packImportBtn','setupImportBtn','packExportFirstBtn'].includes(btn.id))return;
+    e.preventDefault();e.stopImmediatePropagation();runPackButtonAction(btn.id).catch(announceExportError);
+  },true);
+}
+bindPackActionController();
+function bindPackStudioButtons(){
+  const bind=(id)=>{const b=$('#'+id);if(b)b.onclick=e=>{e.preventDefault();e.stopPropagation();runPackButtonAction(id).catch(announceExportError)}};
+  ['packImportBtn','packExportGameBtn','packExportFirstBtn'].forEach(bind);
+}
+function openPackStudio(){
+  const body=$('#settingsBody');$('#settingsTitle').textContent='📦 ComCody Pack Studio';
+  body.innerHTML=`<p class="muted">Create and import real composable packs. No-code users see blocks; coders get YAML + JavaScript + tests under every block.</p><div class="packChecklist"><div>✓ Piece ZIP: <b>piece.yaml</b> + <b>piece.js</b> + <b>tests.yaml</b></div><div>✓ Game ZIP: <b>game.json</b> + <b>game.yaml</b> + real piece source files</div><div>✓ Import validates manifest, registers pieces, and shows JS in Expert Code</div></div><div class="packActions"><button id="packImportBtn" type="button" class="gold">⬆ Import Pack ZIP/YAML</button><button id="packExportGameBtn" type="button" class="primary">⬇ Export Full Game ZIP</button><button id="packExportFirstBtn" type="button">⬇ Export First Program Piece</button><input id="packImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div><div id="packStudioStatus" class="packStatus" aria-live="polite">Ready. Import a pack or export the current game.</div><div class="muted" style="margin-top:8px;font-weight:900">Export log</div><div id="packStudioLog" class="packLog">No export actions yet.</div>`;
+  bindPackStudioButtons();
+  packLog('info','Pack Studio opened');
+  $('#packImportInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;handlePackImportFile(f,'#packStudioStatus').finally(()=>{e.target.value=''})};
+  $('#settingsModal').classList.add('open');
+}
+
 function bindPieceDoubleOpen(el,openFn){let lastTap=0;el.ondblclick=e=>{e.preventDefault();e.stopPropagation();openFn(e)};el.onclick=e=>{const now=Date.now();if(now-lastTap<340){lastTap=0;e.preventDefault();e.stopPropagation();openFn(e)}else lastTap=now}}
 function openPieceFromStackEvent(e){
   if(e.target.closest('button'))return;
@@ -264,7 +536,7 @@ function pieceHtml(type,icon,label,cls,id=''){return `<div class="piece ${cls} $
 function setPage(name){all('.page').forEach(p=>p.classList.remove('active'));$('#'+name+'Page').classList.add('active');all('.topActions button').forEach(b=>b.classList.remove('active'));$('#tab'+name[0].toUpperCase()+name.slice(1)).classList.add('active');fitMaze();renderAll()}
 $('#tabMaker').onclick=()=>setPage('maker');$('#tabPath').onclick=()=>setPage('path');$('#gameSetupBtn').onclick=openGameSetup;
 function togglePieceDrawer(force){const d=$('#pieceDrawer');if(!d)return;d.classList.toggle('open',force===undefined?!d.classList.contains('open'):!!force)}
-$('#toggleStore').onclick=()=>togglePieceDrawer();$('#closeStore').onclick=()=>togglePieceDrawer(false);
+$('#toggleStore').onclick=()=>togglePieceDrawer();$('#toggleStoreStack').onclick=()=>togglePieceDrawer();$('#closeStore').onclick=()=>togglePieceDrawer(false);
 function fitMaze(){let best=0;for(const box of ['makerGrid','playGrid']){const grid=$('#'+box);if(!grid)return;const shell=grid.parentElement;if(!shell)return;const w=shell.clientWidth-36,h=shell.clientHeight-36;if(w<120||h<120)continue;const gap=5;const cell=Math.floor(Math.min((w-(maze.cols-1)*gap)/maze.cols,(h-(maze.rows-1)*gap)/maze.rows));best=Math.max(best,cell)}if(!best)best=64;document.documentElement.style.setProperty('--cell',Math.max(28,Math.min(best,110))+'px');document.documentElement.style.setProperty('--cols',maze.cols);document.documentElement.style.setProperty('--rows',maze.rows)}
 window.addEventListener('resize',()=>{fitMaze();renderAll()});
 function bodyAbs(anchor=maze.start){return maze.body.map(([dx,dy])=>[anchor.x+dx,anchor.y+dy])}
@@ -358,7 +630,7 @@ function bindExpertCodePanel(kind){
 function openSettings(kind,index=null){const modal=$('#settingsModal'), body=$('#settingsBody');$('#settingsTitle').textContent='⚙ '+(index!==null?'Program Piece':'Maze Piece')+' Settings';let html='';if(kind==='grid'){html=`<div class="formGrid"><label>Columns<input id="setCols" type="number" min="4" max="20" value="${maze.cols}"></label><label>Rows<input id="setRows" type="number" min="4" max="24" value="${maze.rows}"></label><label>Grid background<input id="setBoardColor" type="color" value="${gridTheme.board}"></label><label>Empty cell color<input id="setCellColor" type="color" value="${gridTheme.cell}"></label><label>Wall / manual block color<input id="setWallColor" type="color" value="${gridTheme.wall}"></label><label>Goal color<input id="setGoalColor" type="color" value="${gridTheme.goal}"></label><label>Locked fallback color<input id="setLockedColor" type="color" value="${gridTheme.locked}"></label></div><p class="muted">These are shared grid item colors: Maze walls, Tetris manual blocks, goal markers, empty cells, and locked fallback cells.</p><button id="saveGrid" class="primary">Save Grid + Colors</button>${expertCodePanelHtml('grid')}`;body.innerHTML=html;bindExpertCodePanel('grid');$('#saveGrid').onclick=()=>{gridTheme.board=$('#setBoardColor').value;gridTheme.cell=$('#setCellColor').value;gridTheme.wall=$('#setWallColor').value;gridTheme.goal=$('#setGoalColor').value;gridTheme.goal2=gridTheme.goal;gridTheme.locked=$('#setLockedColor').value;applyGridTheme();resizeGrid(Number($('#setCols').value),Number($('#setRows').value));closeSettings()}}
 else if(kind==='avatar'){html=`<p class="muted">Choose a colored Tetris/rectangle body or keep editing custom cells on the maze with 🧍 Start Shape selected.</p><div id="shapeTray" class="shapeTray"></div><div style="margin-top:12px"><button id="saveCustom" class="gold">Save Current Custom Shape</button></div>${expertCodePanelHtml('avatar')}`;body.innerHTML=html;renderShapeTray();bindExpertCodePanel('avatar');$('#saveCustom').onclick=()=>{customShapes.push({id:'saved'+Date.now(),name:'Saved '+(customShapes.length+1),color:maze.bodyColor,cells:maze.body.map(c=>[...c])});renderShapeTray()}}
 else if(kind==='timerConfig'){html=`<div class="formGrid"><label>Default ms<input id="timerDefault" type="number" value="${timer.defaultMs}" min="0"></label><label>Min ms<input id="timerMin" type="number" value="${timer.min}" min="0"></label><label>Max ms<input id="timerMax" type="number" value="${timer.max}" min="0"></label><label>Step ms<input id="timerStep" type="number" value="${timer.step}" min="1"></label><label>Step limit<input id="timerLimit" type="number" value="${timer.limit}" min="1"></label></div><button id="saveTimer" class="primary">Save Timer</button>${expertCodePanelHtml('timer')}`;body.innerHTML=html;bindExpertCodePanel('timer');$('#saveTimer').onclick=()=>{timer.defaultMs=+$('#timerDefault').value;timer.min=+$('#timerMin').value;timer.max=+$('#timerMax').value;timer.step=+$('#timerStep').value;timer.limit=+$('#timerLimit').value;$('#speedSlider').min=timer.min;$('#speedSlider').max=timer.max;$('#speedSlider').step=timer.step;$('#speedSlider').value=timer.defaultMs;speedLabel();closeSettings()}}
-else if(index!==null){const p=program[index];function rerenderPieceSettings(){let extra='';const b=p.behavior||p.type;if(b==='move')extra='<label>Move steps<input id="pSteps" type="number" min="1" max="8" value="'+p.steps+'"></label>';if(b==='timer')extra='<label>Delay ms<input id="pDelay" type="number" min="0" value="'+(p.delay??'')+'"></label>';if(b==='face_dir')extra='<label>Direction<select id="pDir"><option value="0" '+(p.dir===0?'selected':'')+'>Up</option><option value="1" '+(p.dir===1?'selected':'')+'>Right</option><option value="2" '+(p.dir===2?'selected':'')+'>Down</option><option value="3" '+(p.dir===3?'selected':'')+'>Left</option></select></label>';if(b==='repeat')extra='<label>Repeat count<input id="pCount" type="number" min="1" max="50" value="'+(p.count||5)+'"></label>';if(b==='random_wall')extra='<label>Walls to place<input id="pCount" type="number" min="1" max="20" value="'+(p.count||1)+'"></label><label>Replace existing?<select id="pReplace"><option value="false">No, add only</option><option value="true" '+(p.replaceExisting?'selected':'')+'>Yes, may replace</option></select></label><label>Persistent?<select id="pPersist"><option value="false">No, temporary</option><option value="true" '+(p.persistent?'selected':'')+'>Yes, keep wall</option></select></label><label>Disappear after moves<input id="pTtl" type="number" min="1" max="50" value="'+(p.ttlMoves||3)+'"></label>';if(b==='input')extra='<label>Swipe move?<select id="pSwipe"><option value="true" '+(p.swipe!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.swipe===false?'selected':'')+'>Disabled</option></select></label><label>Tap rotates?<select id="pTap"><option value="true" '+(p.tapRotate!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.tapRotate===false?'selected':'')+'>Disabled</option></select></label><label>Double tap down?<select id="pDouble"><option value="true" '+(p.doubleTapDown!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.doubleTapDown===false?'selected':'')+'>Disabled</option></select></label><label>Keyboard fallback?<select id="pKeyboard"><option value="true" '+(p.keyboard!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.keyboard===false?'selected':'')+'>Disabled</option></select></label>';if(b==='score'||b==='score_lines')extra='<label>Reason<input id="pReason" value="'+esc(p.reason||'score')+'"></label><label>Points<input id="pPoints" type="number" value="'+(p.points||0)+'"></label>';body.innerHTML=`<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label)}"></label><label>Icon<input id="pIcon" value="${esc(p.icon)}"></label>${extra}</div>${(b==='repeat'||b==='composite')?loopEditorHtml(p):''}${b==='input'?inputBindingEditorHtml(p):''}<div class="settingsActions"><button id="savePiece" class="primary">Save Piece</button><button id="deletePieceFromSettings" class="danger" type="button">Remove Piece</button></div>${expertCodePanelHtml(p)}`;if(b==='repeat'||b==='composite')bindLoopEditor(p,rerenderPieceSettings);if(b==='input')bindInputBindingEditor(p,rerenderPieceSettings);bindExpertCodePanel(p);$('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pDir'))p.dir=+$('#pDir').value;if($('#pCount')){if(b==='repeat')p.count=+$('#pCount').value;else p.count=+$('#pCount').value}if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings()};const delFromSettings=$('#deletePieceFromSettings');if(delFromSettings)delFromSettings.onclick=()=>{program.splice(index,1);renderProgram();renderCode();closeSettings()}}
+else if(index!==null){const p=program[index];function rerenderPieceSettings(){let extra='';const b=p.behavior||p.type;if(b==='move')extra='<label>Move steps<input id="pSteps" type="number" min="1" max="8" value="'+p.steps+'"></label>';if(b==='timer')extra='<label>Delay ms<input id="pDelay" type="number" min="0" value="'+(p.delay??'')+'"></label>';if(b==='face_dir')extra='<label>Direction<select id="pDir"><option value="0" '+(p.dir===0?'selected':'')+'>Up</option><option value="1" '+(p.dir===1?'selected':'')+'>Right</option><option value="2" '+(p.dir===2?'selected':'')+'>Down</option><option value="3" '+(p.dir===3?'selected':'')+'>Left</option></select></label>';if(b==='repeat')extra='<label>Repeat count<input id="pCount" type="number" min="1" max="50" value="'+(p.count||5)+'"></label>';if(b==='random_wall')extra='<label>Walls to place<input id="pCount" type="number" min="1" max="20" value="'+(p.count||1)+'"></label><label>Replace existing?<select id="pReplace"><option value="false">No, add only</option><option value="true" '+(p.replaceExisting?'selected':'')+'>Yes, may replace</option></select></label><label>Persistent?<select id="pPersist"><option value="false">No, temporary</option><option value="true" '+(p.persistent?'selected':'')+'>Yes, keep wall</option></select></label><label>Disappear after moves<input id="pTtl" type="number" min="1" max="50" value="'+(p.ttlMoves||3)+'"></label>';if(b==='input')extra='<label>Swipe move?<select id="pSwipe"><option value="true" '+(p.swipe!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.swipe===false?'selected':'')+'>Disabled</option></select></label><label>Tap rotates?<select id="pTap"><option value="true" '+(p.tapRotate!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.tapRotate===false?'selected':'')+'>Disabled</option></select></label><label>Double tap down?<select id="pDouble"><option value="true" '+(p.doubleTapDown!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.doubleTapDown===false?'selected':'')+'>Disabled</option></select></label><label>Keyboard fallback?<select id="pKeyboard"><option value="true" '+(p.keyboard!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.keyboard===false?'selected':'')+'>Disabled</option></select></label>';if(b==='score'||b==='score_lines')extra='<label>Reason<input id="pReason" value="'+esc(p.reason||'score')+'"></label><label>Points<input id="pPoints" type="number" value="'+(p.points||0)+'"></label>';body.innerHTML=`<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label)}"></label><label>Icon<input id="pIcon" value="${esc(p.icon)}"></label>${extra}</div>${(b==='repeat'||b==='composite')?loopEditorHtml(p):''}${b==='input'?inputBindingEditorHtml(p):''}<div class="settingsActions"><button id="savePiece" class="primary">Save Piece</button><button id="exportPiecePackBtn" class="gold" type="button">Export Piece ZIP</button><button id="deletePieceFromSettings" class="danger" type="button">Remove Piece</button></div>${expertCodePanelHtml(p)}`;const exportBtn=$('#exportPiecePackBtn'); if(exportBtn)exportBtn.onclick=()=>exportPiecePack(p);if(b==='repeat'||b==='composite')bindLoopEditor(p,rerenderPieceSettings);if(b==='input')bindInputBindingEditor(p,rerenderPieceSettings);bindExpertCodePanel(p);$('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pDir'))p.dir=+$('#pDir').value;if($('#pCount')){if(b==='repeat')p.count=+$('#pCount').value;else p.count=+$('#pCount').value}if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings()};const delFromSettings=$('#deletePieceFromSettings');if(delFromSettings)delFromSettings.onclick=()=>{program.splice(index,1);renderProgram();renderCode();closeSettings()}}
 function loopEditorHtml(p){const kids=p.children||[];const b=p.behavior||p.type;const title=b==='repeat'?'Loop chain':'Template assembly';const help=b==='repeat'?'This chain runs inside the loop. Add reusable pieces here.':'This piece is a template made by assembling existing pieces. Do not duplicate movement code here.';return `<h3>${title}</h3><p class="muted">${help}</p><div class="innerChain">${kids.map((c,ci)=>`<div class="innerRow"><div class="piece ${clsFor(c)}"><span>${esc(c.icon)}</span><span>${esc(c.label)}</span></div><button class="small" data-up="${ci}">↑</button><button class="small" data-down="${ci}">↓</button><button class="small danger" data-del="${ci}">×</button></div>`).join('')||'<div class="hint">No inner pieces yet.</div>'}</div><div>${STORE.map(s=>s[0]).concat(['face_up','face_right','face_down','face_left','rotate_shape']).map(t=>{const mp=make(t);return `<button class="miniPieceBtn" data-add="${t}">${esc(mp.icon)} ${esc(mp.label)}</button>`}).join('')}</div>`}
 function bindLoopEditor(p,rerender){if(!p.children)p.children=[];all('[data-add]').forEach(b=>b.onclick=()=>{p.children.push(make(b.dataset.add));rerender()});all('[data-del]').forEach(b=>b.onclick=()=>{p.children.splice(+b.dataset.del,1);rerender()});all('[data-up]').forEach(b=>b.onclick=()=>{const i=+b.dataset.up;if(i>0){[p.children[i-1],p.children[i]]=[p.children[i],p.children[i-1]];rerender()}});all('[data-down]').forEach(b=>b.onclick=()=>{const i=+b.dataset.down;if(i<p.children.length-1){[p.children[i+1],p.children[i]]=[p.children[i],p.children[i+1]];rerender()}})}
 rerenderPieceSettings()}
@@ -435,8 +707,9 @@ function make(type){
   const def=CUSTOM_BLOCKS.get(type);
   if(def){
     const d=def.defaults||{};
-    const childSpecs=Array.isArray(d.children)?d.children:(typeof d.children==='string'?d.children.replace(/[\[\]]/g,'').split(',').map(x=>x.trim()).filter(Boolean):[]);
-    const children=childSpecs.map(c=>typeof c==='string'?make(c):{...make(c.type||c.behavior||'checkpoint'),...c,id:'p'+Math.random().toString(36).slice(2,8)});
+    const childSource=def.children!==undefined?def.children:d.children;
+    const childSpecs=Array.isArray(childSource)?childSource:(typeof childSource==='string'?childSource.replace(/[\[\]]/g,'').split(',').map(x=>x.trim()).filter(Boolean):[]);
+    const children=childSpecs.map(c=>typeof c==='string'?make(normalizeTypeRef(c)):{...make(normalizeTypeRef(c.type||c.id||c.behavior||'checkpoint')),...c,id:'p'+Math.random().toString(36).slice(2,8)});
     return {...base,behavior:def.behavior||type,icon:def.icon||'◆',label:def.label||type,class:def.class||classForBehavior(def.behavior||type),source:def.source||'',steps:d.steps??1,count:d.count??1,delay:d.delay??null,dir:d.dir??null,replaceExisting:!!d.replaceExisting,persistent:!!d.persistent,ttlMoves:d.ttlMoves??3,points:d.points??0,reason:d.reason||def.type,swipe:d.swipe??true,tapRotate:d.tapRotate??true,doubleTapDown:d.doubleTapDown??true,keyboard:d.keyboard??true,children}
   }
   if(type==='timer')return {...base,behavior:'timer',icon:'⏱',label:'Timer Step',delay:null};
@@ -609,8 +882,9 @@ function openChildSettings(loopIndex,childIndex){
     if(b==='random_wall')extra='<label>Walls to place<input id="pCount" type="number" min="1" max="20" value="'+(p.count||1)+'"></label><label>Replace existing?<select id="pReplace"><option value="false">No, add only</option><option value="true" '+(p.replaceExisting?'selected':'')+'>Yes, may replace</option></select></label><label>Persistent?<select id="pPersist"><option value="false">No, temporary</option><option value="true" '+(p.persistent?'selected':'')+'>Yes, keep wall</option></select></label><label>Disappear after moves<input id="pTtl" type="number" min="1" max="50" value="'+(p.ttlMoves||3)+'"></label>';
     if(b==='input')extra='<label>Swipe move?<select id="pSwipe"><option value="true" '+(p.swipe!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.swipe===false?'selected':'')+'>Disabled</option></select></label><label>Tap rotates?<select id="pTap"><option value="true" '+(p.tapRotate!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.tapRotate===false?'selected':'')+'>Disabled</option></select></label><label>Double tap down?<select id="pDouble"><option value="true" '+(p.doubleTapDown!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.doubleTapDown===false?'selected':'')+'>Disabled</option></select></label><label>Keyboard fallback?<select id="pKeyboard"><option value="true" '+(p.keyboard!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.keyboard===false?'selected':'')+'>Disabled</option></select></label>';
     if(b==='score'||b==='score_lines')extra='<label>Reason<input id="pReason" value="'+esc(p.reason||'score')+'"></label><label>Points<input id="pPoints" type="number" value="'+(p.points||0)+'"></label>';
-    body.innerHTML=`<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label)}"></label><label>Icon<input id="pIcon" value="${esc(p.icon)}"></label>${extra}</div>${(b==='repeat'||b==='composite')?loopEditorHtml(p):''}${b==='input'?inputBindingEditorHtml(p):''}<div class="settingsActions"><button id="savePiece" class="primary">Save Nested Piece</button><button id="deleteNestedPieceFromSettings" class="danger" type="button">Remove Nested Piece</button></div>${expertCodePanelHtml(p)}`;
+    body.innerHTML=`<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label)}"></label><label>Icon<input id="pIcon" value="${esc(p.icon)}"></label>${extra}</div>${(b==='repeat'||b==='composite')?loopEditorHtml(p):''}${b==='input'?inputBindingEditorHtml(p):''}<div class="settingsActions"><button id="savePiece" class="primary">Save Piece</button><button id="exportPiecePackBtn" class="gold" type="button">Export Piece ZIP</button><button id="deleteNestedPieceFromSettings" class="danger" type="button">Remove Piece</button></div>${expertCodePanelHtml(p)}`;
     bindExpertCodePanel(p);
+    const exportBtn=$('#exportPiecePackBtn'); if(exportBtn)exportBtn.onclick=()=>exportPiecePack(p);
     if(b==='repeat'||b==='composite')bindLoopEditor(p,draw);
     if(b==='input')bindInputBindingEditor(p,draw);
     $('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pDir'))p.dir=+$('#pDir').value;if($('#pCount'))p.count=+$('#pCount').value;if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings()};const delNested=$('#deleteNestedPieceFromSettings');if(delNested)delNested.onclick=()=>{removePieceByPath(path);renderProgram();renderCode();closeSettings()}
@@ -909,6 +1183,8 @@ async function execPiece(p,i=null,opts={}){
       }
       state.x=nx;state.y=ny;if(isTetris())state.lockPending=false;scoreAdd(inputEvent?'input_move':'move',1);tickTemporaryWalls();state.won=won();if(state.won)scoreAdd('goal_reached',100);activeMazeKey=key(state.x,state.y);renderGrid('#playGrid');await delay(inputEvent?60:Math.min(+$('#speedSlider').value,500));if(state.won)break;
     }
+  }else if(CUSTOM_BLOCKS.has(p.type)&&await runCustomSource(CUSTOM_BLOCKS.get(p.type),p)){
+    renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,250));
   }else if(b==='checkpoint'){}
   renderGrid('#playGrid');renderKernelStrip();
 }
@@ -961,7 +1237,7 @@ function codeLines(){
   program.forEach(p=>emit(p,1));lines.push({text:'}',id:null});return lines
 }
 function renderCode(){const lines=codeLines();const html=lines.map(l=>`<span class="codeLine ${activePiece&&l.id===activePiece?'activeLine':''}">${esc(l.text)}</span>`).join('\n');const out=$('#codeOut');if(out)out.innerHTML=html;}
-function exportProject(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([yaml()+'\n\nprogram:\n'+program.map(p=>'  - '+p.type).join('\n')],{type:'text/yaml'}));a.download='comcody-lab-v40.yaml';a.click()}$('#exportBtn').onclick=exportProject;
+function exportProject(){exportGameBundleZip().catch(announceExportError)}const psb=$('#packStudioBtn');if(psb)psb.onclick=openPackStudio;
 function renderExpert(){/* v31: expert list removed. Code opens inside piece settings only. */}
 
 async function readZipTextFiles(file){
@@ -975,7 +1251,7 @@ async function readZipTextFiles(file){
     let name=dec2.decode(u8.slice(ptr+46,ptr+46+nameLen)).replaceAll('\\','/');ptr+=46+nameLen+extra+comment;if(name.endsWith('/'))continue;
     let lfName=view.getUint16(local+26,true),lfExtra=view.getUint16(local+28,true),start=local+30+lfName+lfExtra,data=u8.slice(start,start+comp),content;
     if(method===0)content=data;else if(method===8){const stream=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));content=new Uint8Array(await new Response(stream).arrayBuffer())}else continue;
-    if(/\.(ya?ml|txt)$/i.test(name))out.set(name,dec2.decode(content));
+    if(/\.(ya?ml|txt|js|css|html?|md|json)$/i.test(name))out.set(name,dec2.decode(content));
   }
   return out;
 }
@@ -991,38 +1267,52 @@ function parseBlockDefsYAML(text){
     }
     const noComment=raw.replace(/#.*$/,'');if(!noComment.trim())continue;
     const trimmed=noComment.trim();
-    const item=trimmed.match(/^-\s+type:\s*(.+)$/);if(item){finishSource();cur={type:item[1].trim()};blocks.push(cur);section=null;continue}
+    const item=trimmed.match(/^-\s+type:\s*(.+)$/);if(item){finishSource();cur={type:normalizeTypeRef(item[1].trim())};blocks.push(cur);section=null;continue}
     if(!cur)continue;
-    const sec=trimmed.match(/^(defaults):\s*$/);if(sec){section=sec[1];cur[section]=cur[section]||{};continue}
+    const sec=trimmed.match(/^(defaults|settings|source|children):\s*$/);if(sec){section=sec[1];cur[section]=cur[section]||(section==='children'?[]:{});continue}
     const src=trimmed.match(/^source:\s*\|\s*$/);if(src){sourceMode=true;sourceIndent=(raw.match(/^\s*/)||[''])[0].length;sourceLines=[];section=null;continue}
-    const kv=trimmed.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);if(kv){let [,k,v]=kv;v=v.trim().replace(/^['"]|['"]$/g,'');if(v==='true')v=true;else if(v==='false')v=false;else if(v!==''&&!Number.isNaN(Number(v)))v=Number(v);if(section)cur[section][k]=v;else cur[k]=v}
+    if(section==='children'&&trimmed.startsWith('- ')){const rest=trimmed.slice(2).trim();const m=rest.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);const child={};if(m)child[m[1]]=parseScalar(m[2]);else child.type=normalizeTypeRef(rest);cur.children.push(child);continue}
+    const kv=trimmed.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);if(kv){let [,k,v]=kv;v=parseScalar(v);if(section==='defaults'||section==='settings')cur.defaults={...(cur.defaults||{}),[k]:v};else if(section==='children'&&cur.children.length)cur.children[cur.children.length-1][k]=v;else if(section==='source')cur.sourceFile=k==='file'?v:cur.sourceFile;else cur[k]=v}
   }
   finishSource();
-  return blocks.filter(b=>b.type&&b.label&&b.behavior);
+  return blocks.filter(b=>b.type&&b.label&&b.behavior).map(b=>({...b,children:(b.children||[]).map(c=>normalizeTypeRef(c.type||c.id||c.behavior||c.label)).filter(Boolean)}));
 }
 function classForBehavior(b){return b==='spawn_piece'?'shapePiece':b==='composite'?'movePiece':b==='gravity'?'repeatPiece':b==='rotate_shape'?'turnPiece':b==='lock_piece'?'wallPiece':b==='clear_rows'?'testPiece':b==='score_lines'?'scorePiece':b==='face_dir'?'turnPiece':b==='move'?'movePiece':b==='left'||b==='right'?'turnPiece':b==='timer'?'timerPiece':b==='repeat'?'repeatPiece':b==='random_wall'?'wallRandPiece':b==='input'?'inputPiece':b==='score'?'scorePiece':'customPiece'}
 function registerBlockDefs(defs){
-  let added=0;
+  let added=0,updated=0;
   for(const def of defs){
+    def.type=normalizeTypeRef(def.type);
+    CUSTOM_BLOCKS.has(def.type)?updated++:added++;
     CUSTOM_BLOCKS.set(def.type,def);
     if(def.type==='gravity_step')continue; // visible Gravity comes from the real Loop block, not as a separate store primitive.
-    if(STORE.some(s=>s[0]===def.type))continue;
-    STORE.push([def.type,`${def.icon||'◆'} ${def.label}`,def.class||classForBehavior(def.behavior)]);
-    added++;
+    if(!STORE.some(s=>s[0]===def.type))STORE.push([def.type,`${def.icon||'◆'} ${def.label}`,def.class||classForBehavior(def.behavior||def.type)]);
   }
   renderStore();renderExpert();
-  $('#pathStatus').textContent=added?`Imported ${added} block definition(s).`:'No new block definitions found.';
+  const msg=`Imported ${added} new / ${updated} updated piece definition(s).`;
+  $('#pathStatus').textContent=msg;
+  return msg;
 }
 async function importBlockFile(file){
-  let texts=[];
-  if(/\.zip$/i.test(file.name)){const map=await readZipTextFiles(file);texts=[...map.values()];}
-  else texts=[await file.text()];
-  const defs=texts.flatMap(parseBlockDefsYAML);
-  registerBlockDefs(defs);
+  let texts=[], defs=[], gameApplied=false, report=[];
+  if(/\.zip$/i.test(file.name)){
+    const map=await readZipTextFiles(file);
+    const gameEntry=[...map.entries()].find(([k])=>/(^|\/)game\.json$/i.test(k));
+    if(gameEntry){applyProjectJson(JSON.parse(gameEntry[1]));gameApplied=true;report.push('Restored full game bundle.');}
+    defs.push(...parsePackDefs(map));
+    texts=[...map.entries()].filter(([k])=>/\.ya?ml$/i.test(k)&&!/(^|\/)piece\.ya?ml$/i.test(k)).map(([,v])=>v);
+  } else texts=[await file.text()];
+  defs.push(...texts.flatMap(parseBlockDefsYAML));
+  defs=defs.filter(d=>d&&d.type&&d.label&&d.behavior);
+  const warnings=validateDefs(defs).filter(w=>!/Missing piece\.js/.test(w));
+  if(warnings.length)throw Error(warnings.join('; '));
+  const smoke=runImportedSmokeTests(defs);
+  if(defs.length)report.push(registerBlockDefs(defs));
+  if(!gameApplied&&!defs.length)throw Error('No ComCody piece.yaml, blocks YAML, or game.json found.');
+  if(smoke.length)report.push('Smoke tests: '+smoke.filter(t=>t.ok).length+'/'+smoke.length+' passed.');
+  const msg=report.join('\n');$('#pathStatus').textContent=msg;return msg;
 }
-$('#importBlocksBtn').onclick=()=>$('#blockImportInput').click();
-$('#blockImportInput').onchange=e=>{const f=e.target.files?.[0];if(f)importBlockFile(f).catch(err=>$('#pathStatus').textContent='Block import failed: '+err.message);e.target.value=''};
-
+// v44: Store import is handled by the shared Pack action controller. The hidden input remains as a fallback host.
+$('#blockImportInput').onchange=e=>{const f=e.target.files?.[0];if(f)handlePackImportFile(f,'#pathStatus').finally(()=>{e.target.value=''})};
 
 function applyBlankGame(){
   gamePreset='blank';
@@ -1048,14 +1338,15 @@ function openGameSetup(){
   <div class="gameSetupGrid">
     <div class="setupCard"><h3>Blank Game</h3><p>Clear the maze into a neutral 10×10 board. Use this for new game experiments.</p><button id="blankGameBtn" class="primary">Create Blank Game</button></div>
     <div class="setupCard"><h3>Tetris Lite Scaffold</h3><p>Switch to a 10×20 grid, register Tetris pieces, and build a visible tick loop: timer, Gravity as Loop(count=1) = Face Down + Move, lock, clear, score, respawn.</p><button id="tetrisScaffoldBtn" class="gold">Auto Setup Tetris Lite</button></div>
-    <div class="setupCard"><h3>Import Piece Pack</h3><p>Import YAML or ZIP packs with block definitions. The pack adds pieces to the existing Piece Store.</p><button id="setupImportBtn" class="gold">Import YAML/ZIP</button><input id="setupImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden><div id="setupImportStatus" class="importStatus">No pack imported in this session.</div></div>
-    <div class="setupCard"><h3>Next Composition Step</h3><p>After scaffold: tune piece definitions and templates. Runtime behavior remains in visible blocks, not hidden game code.</p><button id="goPathBtn">Open Program Stack</button></div>
+    <div class="setupCard"><h3>Import Piece Pack</h3><p>Import real ComCody packs: piece.yaml + piece.js + tests.yaml, or full game bundles with game.json.</p><button id="setupImportBtn" class="gold">Import Pack ZIP/YAML</button><input id="setupImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden><div id="setupImportStatus" class="importStatus">No pack imported in this session.</div></div>
+    <div class="setupCard"><h3>Pack Studio</h3><p>Export the current game or a selected Program Stack piece as a reusable ZIP with YAML, real JavaScript, and tests.</p><button id="setupPackStudioBtn" class="primary">Open Pack Studio</button><button id="goPathBtn">Open Program Stack</button></div>
   </div>`;
   $('#blankGameBtn').onclick=()=>{closeSettings();applyBlankGame()};
   $('#tetrisScaffoldBtn').onclick=()=>{closeSettings();applyTetrisLiteScaffold()};
+  $('#setupPackStudioBtn').onclick=()=>{openPackStudio()};
   $('#goPathBtn').onclick=()=>{closeSettings();setPage('path')};
-  $('#setupImportBtn').onclick=()=>$('#setupImportInput').click();
-  $('#setupImportInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;importBlockFile(f).then(()=>{$('#setupImportStatus').textContent='Imported '+f.name+' into Piece Store.'}).catch(err=>{$('#setupImportStatus').textContent='Import failed: '+err.message}).finally(()=>{e.target.value=''})};
+  $('#setupImportBtn').onclick=e=>{e.preventDefault();openPackFileChooser('#setupImportStatus')};
+  $('#setupImportInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;handlePackImportFile(f,'#setupImportStatus').finally(()=>{e.target.value=''})};
   modal.classList.add('open');
 }
 

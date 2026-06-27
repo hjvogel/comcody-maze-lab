@@ -1,58 +1,93 @@
-# ComCody Lab v40 — Gravity Is a Real Loop Block
+# ComCody Lab v46 — Export Fallback + Logging
 
-This version fixes the remaining Gravity mistake strictly by the build helper workflow.
+This version fixes the release-blocking export runtime failure where some browsers/environments did not provide a usable `URL.createObjectURL` path.
 
-The issue was not only runtime behavior. The visible piece still carried the old machine type `gravity_step`, so it could look like a loop but fail the normal loop/settings path in some imported/autosetup trees.
-
-## What changed in v40
-
-### 1. Gravity now has the real Loop type
-
-Correct model:
+ComCody is moving from a single prototype game into a reusable no-code/code ecosystem.
 
 ```text
-Gravity = Face Down + Move · 1×
-  Face Down
-  Move
+no-code piece
+  ↕
+piece.yaml manifest
+  ↕
+piece.js implementation
+  ↕
+tests.yaml smoke tests
+  ↕
+import/export ZIP
 ```
 
-Internally this is now the normal `repeat` piece:
+## What is fixed in v46
+
+- Export no longer depends only on `URL.createObjectURL`.
+- Export first tries the normal object URL path.
+- If object URL creation is unavailable or throws, export falls back to a base64 data URL.
+- Pack Studio now has a visible **Export log**.
+- Export logs every important phase: build ZIP, blob size, URL path, fallback path, automatic click, visible link.
+- Export functions are async so fallback generation completes before success is reported.
+- v45 import/export button routing remains intact.
+
+## What Pack Studio supports
+
+- **Import Pack** from the Piece Store, Game Setup, or Pack Studio.
+- Import supports:
+  - legacy block YAML
+  - `piece.yaml + piece.js + tests.yaml` ZIP packs
+  - full game bundles with `game.json`
+- Every imported piece is registered into the existing Piece Store.
+- Imported pieces use the same Program Stack, settings, Expert Code, generated code, and runtime paths as native pieces.
+- Any Program Stack piece can be exported as a ZIP from Pack Studio.
+- The full game can be exported as a ZIP with:
+  - `game.yaml`
+  - `game.json`
+  - `game.js`
+  - per-piece `piece.yaml`
+  - per-piece `piece.js`
+  - `tests.yaml`
+  - `README.md`
+
+## ComCody Pack v1 contract
+
+A reusable piece ZIP should contain:
 
 ```text
-type: repeat
-behavior: repeat
-count: 1
-children:
-  - Face Down
-  - Move
+piece.yaml
+piece.js
+tests.yaml
+README.md
 ```
 
-It is not `type: gravity_step` with repeat-like behavior.
+Minimal `piece.yaml`:
 
-### 2. One settings path for every Program Stack piece
-
-Top-level pieces and nested pieces now both open through the same object-path editor:
-
-```text
-open piece by tree path -> edit actual piece object
+```yaml
+version: 1.0
+kind: piece
+id: comcody.example.dash_two
+type: dash_two
+name: Dash 2
+label: Dash 2
+icon: ⚡
+role: flow
+behavior: move
+class: movePiece
+defaults:
+  steps: 2
+source:
+  file: piece.js
 ```
 
-That removes the split between `openSettings(type, index)` and nested piece settings.
+Minimal `piece.js`:
 
-### 3. Legacy self-heal remains
-
-Old imported packs or older saved program trees may still contain:
-
-```text
-type: gravity_step
-behavior: gravity
+```js
+export async function run(ctx, piece) {
+  await ctx.move(piece.steps ?? 1)
+}
 ```
 
-Those are normalized into the real Loop piece before rendering, code generation, and runtime use.
+## Important rule
 
-### 4. Gravity is not added as a separate Store primitive
+No-code UX does not mean fake code.
 
-The Tetris scaffold may create a named gravity loop, but the Piece Store does not expose Gravity as a separate primitive. Users can always create the same thing from the existing Loop block.
+Every reusable block must have a visible no-code representation and real source under it. The source can be imported, inspected inside the piece settings panel, and exported again.
 
 Read before changing code:
 
@@ -64,14 +99,12 @@ Read before changing code:
 
 - JavaScript syntax check passed.
 - ZIP integrity check passed.
-- Static semantic checks confirm:
-  - scaffold uses `makeGravityLoop()`
-  - `make('gravity_step')` aliases to a real Loop
-  - old gravity pieces are normalized
-  - Program Stack double-click edits by tree path
-  - Gravity is skipped as separate Store primitive
+- Deterministic export harness passed for normal object URL export.
+- Deterministic export harness passed for object URL throwing `URL.createObjecturl is not a function`.
+- Deterministic export harness passed for missing object URL API.
+- ZIP integrity check passed.
 
 
-## v41 Double-Click Settings Fix
+## v46 QA note
 
-All Program Stack pieces, including top-level Loop, Tetris Tick Loop, and nested Gravity = Face Down + Move, must open through the same shared double-click settings editor. Loop editor code is a shared function, not a local helper buried inside one branch.
+See `QA_REPORT_v46.md` for the exact export fallback tests and logging checks.

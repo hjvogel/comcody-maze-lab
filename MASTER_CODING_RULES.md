@@ -29,7 +29,20 @@ A reusable behavior must exist as one of:
 
 No reusable behavior may exist only as buried JavaScript.
 
-## 3. Piece editing is direct
+## 3. No-code and code must stay connected
+
+Every shareable piece must be exportable as a real pack:
+
+```text
+piece.yaml
+piece.js
+tests.yaml
+README.md
+```
+
+The no-code block, settings panel, Expert Code, generated code, runtime behavior, import manifest, and export ZIP must describe the same piece.
+
+## 4. Piece editing is direct
 
 Do not add per-piece settings wheels in the Program Stack.
 
@@ -40,11 +53,9 @@ Required UI:
 - show Expert Code only inside the settings panel
 - no bottom expert section
 
-## 4. Higher-level pieces are containers
+## 5. Higher-level pieces are containers
 
 Loops, templates, and event routers are not special code islands.
-
-They are containers whose children define the behavior.
 
 Container rules:
 
@@ -54,20 +65,33 @@ Container rules:
 - Children may themselves be containers.
 - Deeper nesting must keep working.
 
-## 5. One tree, many views
+## 6. One tree, many views
 
 The piece child tree is the source of truth for:
 
 - visual representation
 - settings panel
-- expert code view
+- Expert Code
 - generated flow code
 - runtime execution
 - import/export
 
 Never create a second hidden representation that can drift out of sync.
 
-## 6. Game semantics are shared
+## 7. Import/export is product behavior
+
+A ComCody pack is not a meme/demo ZIP. It must be usable by another user.
+
+Required:
+
+- validate `piece.yaml`
+- register into Piece Store
+- show imported `piece.js` in Expert Code
+- export pieces with source and tests
+- export full games with `game.json` restoration data
+- keep imported pieces on the same UI/settings/runtime path as native pieces
+
+## 8. Game semantics are shared
 
 If two cell sources mean the same thing for a rule, use one semantic query.
 
@@ -79,9 +103,7 @@ occupied_for_line_clear = locked_cells OR manual_walls
 
 Manual walls and locked Tetris cells must clear and collapse together.
 
-## 7. Layout is product behavior
-
-A feature is not complete if it steals essential working space.
+## 9. Layout is product behavior
 
 Required UI:
 
@@ -90,73 +112,29 @@ Required UI:
 - Controls must never float over nested bodies.
 - Tablet landscape and portrait must both remain usable.
 
-## 8. Theme values are state, not magic CSS
-
-Grid colors must be configurable through shared grid settings.
-
-Required shared colors:
-
-- board background
-- empty cell
-- wall/manual block
-- goal marker
-- locked fallback
-
-## 9. Quality gate before delivery
+## 10. Quality gate before delivery
 
 Before delivering a ZIP:
 
 - JavaScript syntax check must pass.
 - ZIP integrity check must pass.
-- README must match the version.
-- This file and `COMPOSABILITY_GUIDE.md` must be updated if rules changed.
-- Imported block packs must follow the same UI/settings/expert path as native pieces.
+- A targeted semantic check must cover the requested behavior.
+- README, this file, schemas, and `COMPOSABILITY_GUIDE.md` must be synchronized.
 
 
-## 10. Loop-count-one template rule
+## 11. Button actions are product behavior
 
-If a higher-level behavior is only an ordered child chain that runs once, do not invent a new container type.
+Any user-visible import/export button must be click-tested from a fresh app start.
 
-Use the existing Loop container with `count = 1`.
+Required:
 
-Example:
-
-```text
-Gravity = Face Down + Move
-  count = 1
-  Face Down
-  Move
-```
-
-Reason: this reuses existing visual nesting, settings editing, generated code, runtime execution, drag/drop, and expert code paths.
-
-Forbidden: custom `composite` or hidden `gravity` execution when `Loop(count=1)` can express the behavior.
+- one shared action controller for duplicate buttons that do the same job
+- no dead modal-only handlers
+- visible success/failure status after click
+- fallback download link after export
+- singleton file input for imports so dynamic UI cannot lose handlers
 
 
-## 11. Real type reuse, not behavior imitation
+## v45 QA note
 
-When reusing an existing container, the piece must use the real existing type, not a renamed special type that only imitates behavior.
-
-Correct:
-
-```text
-Gravity = Face Down + Move
-  type: repeat
-  behavior: repeat
-  count: 1
-```
-
-Wrong:
-
-```text
-Gravity = Face Down + Move
-  type: gravity_step
-  behavior: repeat
-```
-
-Reason: settings, visual nesting, generated code, drag/drop, import/export, runtime, and tests must all use one shared object path and one shared implementation.
-
-
-## v41 Double-Click Settings Fix
-
-All Program Stack pieces, including top-level Loop, Tetris Tick Loop, and nested Gravity = Face Down + Move, must open through the same shared double-click settings editor. Loop editor code is a shared function, not a local helper buried inside one branch.
+See `THINKINGRESULTS.md` for the export regression analysis and the deterministic tool path used for this fix.

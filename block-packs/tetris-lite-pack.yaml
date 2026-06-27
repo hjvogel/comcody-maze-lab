@@ -1,4 +1,4 @@
-version: 0.8
+version: 1.0
 name: Tetris Lite Assembly Pack
 rule: assembly_first_loop_count_one_for_templates
 blocks:

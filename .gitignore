@@ -1,6 +1,10 @@
 credentials.json
 **/*.cache/
 
+THINKINGRESULTS.md
+
+QA_REPORT**
+
 ngrok.yml
 # Coverage.py
 htmlcov/

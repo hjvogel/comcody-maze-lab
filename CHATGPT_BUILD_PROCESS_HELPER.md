@@ -176,3 +176,78 @@ We are building ComCody, a composable Blockly-like game/code system. Use GPT-5.5
 ## v41 Double-Click Settings Fix
 
 All Program Stack pieces, including top-level Loop, Tetris Tick Loop, and nested Gravity = Face Down + Move, must open through the same shared double-click settings editor. Loop editor code is a shared function, not a local helper buried inside one branch.
+
+## v43 Pack Build Rule
+
+For ComCody platform work, the build is not complete if a reusable element only works inside the current HTML file.
+
+When adding or changing shareable behavior, verify the round trip:
+
+```text
+visible piece -> settings -> Expert Code -> piece.yaml -> piece.js -> tests.yaml -> ZIP export -> ZIP import -> Piece Store -> settings again
+```
+
+Preferred implementation path:
+
+1. Start from latest accepted ZIP.
+2. Patch the smallest surface.
+3. Keep native and imported pieces on the same code path.
+4. Add pack contract files/examples only after runtime syntax passes.
+5. Run ZIP integrity, JavaScript syntax, and targeted semantic checks.
+
+Avoid:
+
+- separate demo packs that do not import into the live Piece Store
+- source code that exists only in README examples
+- import behavior that registers pieces but cannot show Expert Code
+- export behavior that loses child trees or source files
+
+
+## 11. Import/export button test protocol
+
+For Pack Studio or file workflows, static syntax checks are not enough.
+
+Use this order:
+
+1. Fresh start the app.
+2. Click the visible top-level export button.
+3. Confirm a ZIP download is started or a visible fallback download link appears.
+4. Click every visible import entry point:
+   - Piece Store Import Pack
+   - Game Setup Import Pack
+   - Pack Studio Import Pack
+5. Confirm the shared file input is opened or can receive a file.
+6. Inject/import the included example pack and confirm the imported piece appears in the Piece Store.
+7. Export again after importing and confirm the app still responds.
+
+Best tool path that worked here:
+
+```text
+node --check extracted_script.js
+zip -T artifact.zip
+Chromium CDP over remote-debugging-port
+  document.write(index.html) into about:blank
+  dispatch real click MouseEvents
+  inspect status DOM
+  inject File via DataTransfer for import smoke test
+```
+
+Avoid relying only on Playwright navigation to `file://` or `localhost` in this environment, because Chromium policy can block those navigations. CDP with `document.write()` is the reliable fallback.
+
+
+## v45 QA note
+
+See `THINKINGRESULTS.md` for the export regression analysis and the deterministic tool path used for this fix.
+
+
+## v46 export-specific rule
+
+For download/export bugs, do not rely on screenshots or Chromium timeouts as proof. Use a deterministic JavaScript harness that forces the browser API branches:
+
+```text
+1. URL.createObjectURL works.
+2. URL.createObjectURL exists but throws.
+3. URL.createObjectURL is missing.
+```
+
+The product must show a visible fallback download link and a visible log line for every branch.

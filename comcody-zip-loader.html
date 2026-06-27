@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"/>
+<title>Tetris Quest ZIP Loader v27</title>
+<style>
+:root{--bg:#050713;--panel:#10162a;--ink:#f8f3df;--muted:#9fadcf;--blue:#5f9cff;--green:#36ec74;--gold:#ffc94d;--red:#ff4e58;--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);--safe-left:env(safe-area-inset-left);--safe-right:env(safe-area-inset-right)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}body{overflow:hidden}
+button,label{border:0;border-radius:22px;background:#1f3262;color:white;font-weight:1000;font-size:clamp(16px,2.8vw,22px);padding:13px 16px;min-height:54px;box-shadow:inset 0 0 0 3px var(--blue)}button.primary{background:#123d25;box-shadow:inset 0 0 0 3px var(--green)}button.gold{background:#56330c;box-shadow:inset 0 0 0 3px var(--gold)}button:disabled{opacity:.38;filter:grayscale(1)}input{display:none}
+#page{position:fixed;inset:0;padding:calc(10px + var(--safe-top)) calc(10px + var(--safe-right)) calc(10px + var(--safe-bottom)) calc(10px + var(--safe-left));display:grid;grid-template-rows:auto 1fr;gap:12px;background:radial-gradient(circle at 50% 0,#1a2450 0,#080b18 48%,#03040a 100%)}
+.top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}.title{background:rgba(16,22,42,.9);border:2px solid #2a3d6e;border-radius:28px;padding:16px 18px}.title h1{margin:0;font-size:clamp(28px,5vw,62px);line-height:1}.title p{margin:.25em 0 0;color:var(--muted);font-size:clamp(13px,2vw,18px)}.actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;flex-wrap:wrap}
+.main{min-height:0;display:grid;grid-template-columns:minmax(310px,390px) 1fr;gap:12px}.panel{min-height:0;background:rgba(16,22,42,.92);border:2px solid #2a3d6e;border-radius:30px;padding:14px}.leftPanel{display:grid;grid-template-rows:auto auto auto 1fr;gap:12px}.drop{min-height:220px;display:grid;place-items:center;text-align:center;border:4px dashed #4268bd;border-radius:30px;color:#9db7ff;font-size:clamp(30px,6vw,64px);background:rgba(6,10,24,.56)}.drop.ready{border-color:var(--gold);color:var(--gold);background:rgba(56,38,8,.42)}.drop.loaded{border-color:var(--green);color:var(--green);background:rgba(10,38,23,.45)}.drop small{display:block;font-size:clamp(13px,2.3vw,20px);color:var(--muted);margin-top:8px}
+.fileCard{display:none;border:2px solid var(--gold);border-radius:24px;background:#1b160a;padding:12px;gap:8px;align-items:center;grid-template-columns:1fr auto}.fileCard.show{display:grid}.fileName{font-weight:1000;color:var(--gold);word-break:break-word}.fileMeta{font-size:13px;color:var(--muted)}
+.gate{font-size:clamp(42px,8vw,80px);font-weight:1000;color:var(--green);line-height:1}.gate.fail{color:var(--red)}.gate.wait{color:var(--gold)}.logMini{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;overflow:auto;min-height:0}.line{border-bottom:1px solid #1e2c52;padding:7px}.ok{color:var(--green)}.error{color:var(--red)}.warn{color:var(--gold)}.info{color:#a8c1ff}
+#right{display:grid;grid-template-rows:auto 1fr;gap:12px;min-width:0}.launchDeck{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.launchCard{min-height:118px;border-radius:26px;background:#0d1428;border:2px solid #344c82;padding:14px;display:grid;align-content:center;gap:4px}.launchCard b{font-size:clamp(24px,4vw,44px);color:var(--gold)}.launchCard span{color:var(--muted);font-size:13px}.launchCard.ok{border-color:var(--green)}
+.map{overflow:auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;align-content:start}.card{border:2px solid #344c82;border-radius:20px;background:#0d1428;padding:12px;min-height:82px}.card b{color:var(--gold);font-size:14px}.card small{display:block;color:var(--muted);margin-top:4px}
+#platformLog{position:fixed;inset:calc(10px + var(--safe-top)) calc(10px + var(--safe-right)) calc(10px + var(--safe-bottom)) calc(10px + var(--safe-left));z-index:30;background:#030611;border:3px solid var(--blue);border-radius:28px;display:none;grid-template-rows:auto 1fr auto;overflow:hidden;box-shadow:0 24px 100px #000}#platformLog.open{display:grid}.logHead{display:flex;gap:8px;align-items:center;padding:10px;background:#10182e;border-bottom:2px solid #263963}.logHead b{font-size:clamp(20px,3vw,32px);flex:1}.logFull{overflow:auto;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;padding:8px}.logFoot{display:flex;gap:8px;padding:10px;background:#10182e;border-top:2px solid #263963}
+@media(max-width:860px){body{overflow:auto}#page{position:static;min-height:100dvh;grid-template-rows:auto auto;overflow:visible}.top{grid-template-columns:1fr}.actions{justify-content:stretch}.actions>*{flex:1 1 45%}.main{grid-template-columns:1fr}.panel{min-height:auto}.drop{min-height:30dvh}.launchDeck{grid-template-columns:1fr}.map{max-height:none}.logMini{max-height:260px}.fileCard{grid-template-columns:1fr}}
+
+#gamePicker{position:fixed;inset:calc(10px + var(--safe-top)) calc(10px + var(--safe-right)) calc(10px + var(--safe-bottom)) calc(10px + var(--safe-left));z-index:35;background:#030611;border:3px solid var(--gold);border-radius:30px;display:none;grid-template-rows:auto 1fr auto;overflow:hidden;box-shadow:0 28px 120px #000}
+#gamePicker.open{display:grid}
+.pickerHead{display:flex;gap:8px;align-items:center;padding:12px;background:#10182e;border-bottom:2px solid #3d315f}
+.pickerHead b{font-size:clamp(24px,4vw,42px);flex:1}
+.gameGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:14px;overflow:auto}
+.gameTile{border:3px solid #344c82;border-radius:30px;background:radial-gradient(circle at 50% 0,#263963,#0d1428 62%);padding:18px;min-height:220px;display:grid;align-content:center;justify-items:center;gap:10px;text-align:center;color:var(--ink)}
+.gameTile:active{transform:scale(.98)}
+.gameTile .glyph{font-size:clamp(64px,11vw,112px);filter:drop-shadow(0 12px 26px #000)}
+.gameTile b{font-size:clamp(22px,4vw,38px);color:var(--gold)}
+.gameTile small{color:var(--muted);font-size:15px}
+.gameTile.primaryGame{border-color:var(--green);box-shadow:0 0 0 3px rgba(54,236,116,.18) inset}
+.pickerFoot{display:flex;gap:8px;padding:12px;background:#10182e;border-top:2px solid #3d315f}
+
+</style>
+</head>
+<body>
+<div id="page">
+  <section class="top">
+    <div class="title"><h1>📦 ZIP Quest Loader</h1><p>Select ZIP → explicit load → validate → launch packaged web app or built-in games.</p></div>
+    <div class="actions">
+      <label>📦 Select<input id="zipInput" type="file" accept=".zip,application/zip"/></label>
+      <button id="loadBtn" class="gold" disabled>⬆ Load ZIP</button>
+      <button id="launchBtn" class="primary" disabled>🎮 Launch</button>
+      <button id="logBtn">📋 Log</button>
+    </div>
+  </section>
+  <section class="main">
+    <aside class="panel leftPanel">
+      <div id="drop" class="drop">📦<br><small>Select or drop ZIP</small></div>
+      <div id="fileCard" class="fileCard"><div><div id="fileName" class="fileName">No file selected</div><div id="fileMeta" class="fileMeta">Choose a ZIP first</div></div><button id="loadBtn2" class="gold">⬆ Load</button></div>
+      <div><div id="gate" class="gate wait">—</div><div id="gateText" style="color:var(--muted)">No ZIP selected</div></div>
+      <div id="logMini" class="logMini"></div>
+    </aside>
+    <section id="right">
+      <div class="launchDeck"><div class="launchCard" id="deckCards"><b>0</b><span>cards</span></div><div class="launchCard" id="deckChecks"><b>0</b><span>checks passed</span></div><div class="launchCard" id="deckMode"><b>—</b><span>session</span></div></div>
+      <div class="panel"><h2 style="margin-top:0">Composition Map</h2><div id="map" class="map"><div style="color:var(--muted)">Map appears after ZIP load.</div></div></div>
+    </section>
+  </section>
+</div>
+<section id="platformLog"><div class="logHead"><b>📋 Platform Log</b><button id="copyLog">⧉ Copy</button><button id="downloadLog">⬇</button><button id="closeLog">×</button></div><div id="logFull" class="logFull"></div><div class="logFoot"><button id="clearLog">Clear</button><button id="revalidateBtn" class="gold">Revalidate</button></div></section>
+
+<section id="gamePicker">
+  <div class="pickerHead"><b>🎮 Choose Game</b><button id="closePicker">×</button></div>
+  <div id="gameGrid" class="gameGrid">
+    <button class="gameTile primaryGame" data-game="tetris"><span class="glyph">🧩</span><b>Tetris Quest</b><small>falling blocks · swipe/tap · tray drag</small></button>
+    <button class="gameTile" data-game="wood"><span class="glyph">🪵</span><b>Wood Block Quest</b><small>place blocks · clear rows/columns</small></button>
+  </div>
+  <div class="pickerFoot"><button id="openHub" class="gold">🏰 Arcade Hub</button><button id="closePicker2">Close</button></div>
+</section>
+
+<script>
+let files=new Map(), selectedFile=null, report=null, events=[], launchHtml="";
+const dec=new TextDecoder(), enc=new TextEncoder(), $=s=>document.querySelector(s);
+function now(){return new Date().toISOString()}
+function log(level,msg,data=""){const row={time:now(),level,msg,data:String(data||"")};events.push(row);const line=document.createElement("div");line.className="line "+(level==="error"?"error":level);line.textContent=`${row.time} [${level}] ${msg}${data?" · "+data:""}`;$("#logMini").appendChild(line.cloneNode(true));$("#logFull").appendChild(line);$("#logMini").scrollTop=999999;$("#logFull").scrollTop=999999}
+function reportText(){return JSON.stringify({app:"Tetris Quest ZIP Loader v27",userAgent:navigator.userAgent,selectedFile:selectedFile?{name:selectedFile.name,size:selectedFile.size}:null,report,events},null,2)}
+function setGate(txt,msg,fail=false,wait=false){$("#gate").textContent=txt;$("#gate").classList.toggle("fail",fail);$("#gate").classList.toggle("wait",wait);$("#gateText").textContent=msg}
+function setSelected(file){selectedFile=file;files=new Map();launchHtml="";$("#fileCard").classList.add("show");$("#fileName").textContent=file.name;$("#fileMeta").textContent=`${file.size.toLocaleString()} bytes · ready to load`;$("#loadBtn").disabled=false;$("#launchBtn").disabled=true;$("#drop").className="drop ready";$("#drop").innerHTML="📦<br><small>ZIP selected — tap Load ZIP</small>";setGate("READY","ZIP selected, not loaded yet.",false,true);log("info","ZIP selected",`${file.name}, ${file.size} bytes`)}
+async function unzip(file){const buf=await file.arrayBuffer(),view=new DataView(buf),u8=new Uint8Array(buf),out=new Map();let eocd=-1;for(let i=u8.length-22;i>=Math.max(0,u8.length-65558);i--)if(view.getUint32(i,true)===0x06054b50){eocd=i;break}if(eocd<0)throw Error("ZIP end directory missing");let total=view.getUint16(eocd+10,true),ptr=view.getUint32(eocd+16,true);log("ok","central directory found",`${total} entries`);for(let n=0;n<total;n++){if(view.getUint32(ptr,true)!==0x02014b50)throw Error("central directory broken at "+ptr);let method=view.getUint16(ptr+10,true),comp=view.getUint32(ptr+20,true),nameLen=view.getUint16(ptr+28,true),extra=view.getUint16(ptr+30,true),comment=view.getUint16(ptr+32,true),local=view.getUint32(ptr+42,true);let name=dec.decode(u8.slice(ptr+46,ptr+46+nameLen)).replaceAll("\\","/");ptr+=46+nameLen+extra+comment;if(name.endsWith("/"))continue;let lfName=view.getUint16(local+26,true),lfExtra=view.getUint16(local+28,true),start=local+30+lfName+lfExtra,data=u8.slice(start,start+comp),content;if(method===0)content=data;else if(method===8){const stream=new Blob([data]).stream().pipeThrough(new DecompressionStream("deflate-raw"));content=new Uint8Array(await new Response(stream).arrayBuffer())}else throw Error("unsupported compression "+method);out.set(name,content)}return out}
+function text(suffix){const p=[...files.keys()].find(p=>p.endsWith(suffix));return p?dec.decode(files.get(p)):""}
+function getIndexPath(){
+ const paths=[...files.keys()].filter(p=>!p.endsWith('/'));
+ return paths.find(p=>p==='index.html') || paths.find(p=>/^[^/]+\/index\.html$/.test(p)) || paths.find(p=>p.endsWith('/index.html')) || '';
+}
+function mimeFor(path){
+ const ext=(path.split('.').pop()||'').toLowerCase();
+ return ({html:'text/html',htm:'text/html',css:'text/css',js:'text/javascript',mjs:'text/javascript',json:'application/json',yaml:'text/yaml',yml:'text/yaml',svg:'image/svg+xml',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',txt:'text/plain',md:'text/markdown'})[ext] || 'application/octet-stream';
+}
+function buildZipWebAppHtml(){
+ const indexPath=getIndexPath();
+ if(!indexPath)throw Error('No index.html found in ZIP.');
+ const base=indexPath.includes('/') ? indexPath.slice(0,indexPath.lastIndexOf('/')+1) : '';
+ let html=dec.decode(files.get(indexPath));
+ const urlFor=new Map();
+ for(const [path,bytes] of files.entries()){
+   if(path.endsWith('/'))continue;
+   urlFor.set(path,URL.createObjectURL(new Blob([bytes],{type:mimeFor(path)})));
+ }
+ function resolve(rel){
+   if(!rel || /^(https?:|data:|blob:|mailto:|tel:|#)/i.test(rel))return rel;
+   const clean=rel.split('#')[0].split('?')[0];
+   const suffix=rel.slice(clean.length);
+   const parts=(base+clean).split('/');
+   const stack=[];
+   for(const part of parts){if(!part||part==='.'){continue}else if(part==='..'){stack.pop()}else stack.push(part)}
+   const normalized=stack.join('/');
+   return urlFor.get(normalized) ? urlFor.get(normalized)+suffix : rel;
+ }
+ // Rewrite common relative asset references so a ZIP with a folder root can launch from a blob URL.
+ html=html.replace(/\b(src|href)=(['"])([^'"]+)\2/gi,(m,a,q,u)=>`${a}=${q}${resolve(u)}${q}`);
+ html=html.replace(/url\((['"]?)([^)'" ]+)\1\)/gi,(m,q,u)=>`url(${q||''}${resolve(u)}${q||''})`);
+ return html;
+}
+function validate(){
+ let total=0,pass=0,fail=[];
+ function check(ok,name){total++;if(ok){pass++;log("ok",name)}else{fail.push(name);log("error",name)}}
+
+ const paths=[...files.keys()];
+ const cardPaths=paths.filter(p=>/cards\/[^/]+\/card\.js$/.test(p));
+ const manifestPaths=paths.filter(p=>/cards\/[^/]+\/card\.manifest\.json$/.test(p));
+ const sharedPaths=paths.filter(p=>/shared\/[^/]+\.js$/.test(p));
+ const gameHtmlPaths=paths.filter(p=>/games\/[^/]+\.html$/.test(p));
+ const testPaths=paths.filter(p=>/tests\/.+/.test(p));
+ const indexPath=getIndexPath();
+ const base=indexPath && indexPath.includes('/') ? indexPath.slice(0,indexPath.lastIndexOf('/')+1) : '';
+ const relFiles=base ? paths.filter(p=>p.startsWith(base)).map(p=>p.slice(base.length)) : paths;
+
+ const isCardPlatform = cardPaths.length>0 || manifestPaths.length>0;
+ const isArcadePlatform = sharedPaths.length>=4 && gameHtmlPaths.length>=2;
+ const isWebAppZip = !!indexPath;
+
+ if(isCardPlatform){
+   check(cardPaths.length>=8,"card modules present");
+   check(manifestPaths.length>=8,"card manifests present");
+   check(!!text("platform/ui-slots.json"),"UI slot spec present");
+   check(!!text("index.html"),"index present");
+   let manifests=[];
+   for(const p of manifestPaths){try{manifests.push(JSON.parse(dec.decode(files.get(p))))}catch(e){check(false,"manifest parse "+p)}}
+   const providers=new Map();
+   for(const m of manifests)for(const svc of m.provides||[]){if(!providers.has(svc))providers.set(svc,[]);providers.get(svc).push(m.id)}
+   for(const m of manifests)for(const req of m.requires||[])check(providers.has(req),`${m.id} requires ${req}`);
+   for(const p of cardPaths){
+     const s=dec.decode(files.get(p)),id=(p.match(/cards\/([^/]+)/)||[])[1];
+     check(/export\s+default/.test(s),`${id} export default`);
+     check(/install\s*\(\s*ctx\s*\)|async\s+install\s*\(\s*ctx\s*\)/.test(s),`${id} install(ctx)`);
+   }
+   $("#map").innerHTML=manifests.map(m=>`<div class="card"><b>${m.id}</b><small>${m.slice||""}</small><small>↦ ${(m.provides||[]).join(", ")}</small></div>`).join("");
+   $("#deckCards b").textContent=cardPaths.length;
+ } else if(isArcadePlatform){
+   check(!!text("index.html"),"arcade hub present");
+   check(!!text("games/tetris.html"),"Tetris game page present");
+   check(!!text("games/wood-block.html"),"Wood Block game page present");
+   check(sharedPaths.some(p=>p.endsWith("board.js")),"shared board backend present");
+   check(sharedPaths.some(p=>p.endsWith("renderer.js")),"shared renderer present");
+   check(sharedPaths.some(p=>p.endsWith("pieces.js")),"shared pieces present");
+   check(
+     sharedPaths.some(p=>p.endsWith("score.js")) ||
+     sharedPaths.some(p=>p.endsWith("board.js")) ||
+     [...files.keys()].some(p=>/games\/[^/]+\.html$/.test(p) && /score|clearLines|line/i.test(dec.decode(files.get(p)))),
+     "shared or game scoring present"
+   );
+   check(sharedPaths.some(p=>p.endsWith("input.js")),"shared input present");
+   check(testPaths.length>0,"tests present");
+   for(const p of sharedPaths){
+     const s=dec.decode(files.get(p));
+     check(/export\s+/.test(s),`${p.split("/").pop()} exports module API`);
+   }
+   $("#map").innerHTML=[
+     `<div class="card"><b>Arcade Hub</b><small>index.html</small><small>launches games</small></div>`,
+     `<div class="card"><b>Tetris Quest</b><small>games/tetris.html</small><small>falling game</small></div>`,
+     `<div class="card"><b>Wood Block Quest</b><small>games/wood-block.html</small><small>placement puzzle</small></div>`,
+     ...sharedPaths.map(p=>`<div class="card"><b>${p.split("/").pop()}</b><small>shared backend</small><small>reused by games</small></div>`)
+   ].join("");
+   $("#deckCards b").textContent=sharedPaths.length + gameHtmlPaths.length;
+ } else if(isWebAppZip){
+   const html=dec.decode(files.get(indexPath));
+   const scriptRefs=[...html.matchAll(/<script[^>]+src=['"]([^'"]+)['"]/gi)].map(m=>m[1]).filter(u=>!/^https?:|^data:|^blob:/i.test(u));
+   const cssRefs=[...html.matchAll(/<link[^>]+href=['"]([^'"]+)['"]/gi)].map(m=>m[1]).filter(u=>!/^https?:|^data:|^blob:/i.test(u));
+   function hasRel(rel){
+     const clean=rel.split('#')[0].split('?')[0];
+     const parts=(base+clean).split('/');
+     const stack=[];
+     for(const part of parts){if(!part||part==='.'){continue}else if(part==='..'){stack.pop()}else stack.push(part)}
+     return files.has(stack.join('/'));
+   }
+   check(!!indexPath,"web app index.html present");
+   check(scriptRefs.every(hasRel),"local script references resolvable");
+   check(cssRefs.every(hasRel),"local stylesheet references resolvable");
+   check(relFiles.some(p=>p.endsWith('.js')) || scriptRefs.length===0,"JavaScript file present or not required");
+   check(relFiles.some(p=>p.endsWith('.css')) || cssRefs.length===0,"stylesheet present or not required");
+   $("#map").innerHTML=[
+     `<div class="card"><b>Web App</b><small>${indexPath}</small><small>launches packaged content</small></div>`,
+     ...relFiles.filter(p=>p && !p.endsWith('/')).slice(0,24).map(p=>`<div class="card"><b>${p.split('/').pop()}</b><small>${p.includes('/')?p.slice(0,p.lastIndexOf('/')):'root'}</small><small>${mimeFor(p)}</small></div>`)
+   ].join("");
+   $("#deckCards b").textContent=relFiles.filter(p=>p && !p.endsWith('/')).length;
+ } else {
+   check(false,"recognized project architecture");
+   check(!!text("index.html"),"index present");
+ }
+
+ $("#deckChecks b").textContent=`${pass}/${total}`;
+ const arch=isArcadePlatform?"arcade-platform":(isCardPlatform?"card-platform":(isWebAppZip?"webapp-zip":"unknown"));
+ $("#deckMode b").textContent=isArcadePlatform?"arcade":(isCardPlatform?"cards":(isWebAppZip?"webapp":"unknown"));
+ $("#deckCards").classList.add("ok");
+ $("#deckChecks").classList.toggle("ok",pass===total);
+ $("#deckMode").classList.add("ok");
+ report={pass,total,fail,architecture:arch,indexPath,cardCount:cardPaths.length,sharedCount:sharedPaths.length,gameCount:gameHtmlPaths.length};
+ setGate(`${pass}/${total}`,pass===total?"Loaded and ready to launch.":"Fix: "+fail.join(", "),pass!==total,false);
+ $("#drop").className=pass===total?"drop loaded":"drop ready";
+ $("#drop").innerHTML=pass===total?"✅<br><small>Loaded</small>":"⚠️<br><small>Loaded with issues</small>";
+ return pass===total
+}
+function tetrisGameHtml(){
+return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Tetris Quest Game</title><style>
+:root{--bg:#070914;--ink:#f7f4df;--blue:#5f9cff;--green:#36ec74;--gold:#ffc94d;--red:#ff4e58;--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);--safe-left:env(safe-area-inset-left);--safe-right:env(safe-area-inset-right)}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:none}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}body{position:fixed;inset:0}#app{position:absolute;inset:0;padding:calc(8px + var(--safe-top)) calc(8px + var(--safe-right)) calc(8px + var(--safe-bottom)) calc(8px + var(--safe-left));display:grid;grid-template-rows:auto 1fr;gap:8px;background:radial-gradient(circle at 50% 10%,#172044 0,#070914 52%,#03040a 100%)}.top{display:flex;justify-content:flex-end;gap:8px;z-index:5;min-height:52px}.pill{padding:8px 14px;border:2px solid #394a7e;border-radius:16px;background:#11182d;font-weight:1000;font-size:clamp(16px,4vw,24px)}button{border:0;color:var(--ink);font-weight:1000;font-size:clamp(20px,5vw,30px);border-radius:18px;background:#1b2c55;box-shadow:inset 0 0 0 3px #629cff;min-width:58px;min-height:52px}.game{position:relative;min-height:0;display:grid;place-items:center}.stage{position:relative;height:100%;width:100%;display:grid;place-items:center}.nextPreview{position:absolute;right:12px;top:12px;width:min(24vw,128px);min-width:72px;max-height:44vh;border:3px solid var(--gold);border-radius:22px;background:rgba(12,17,34,.86);display:grid;grid-template-rows:repeat(3,1fr);gap:4px;padding:8px;place-items:center;box-shadow:0 10px 30px #000}.nextPreview canvas{width:100%;height:100%;max-height:72px;background:transparent;cursor:grab}.dragGhost{position:absolute;z-index:40;pointer-events:none;opacity:.92;filter:drop-shadow(0 10px 22px #000);transform:translate(-50%,-50%);image-rendering:pixelated}.gestureHint{position:absolute;left:50%;bottom:12px;transform:translateX(-50%);display:flex;gap:10px;opacity:.55;pointer-events:none}.gestureHint i{font-style:normal;font-size:clamp(22px,5vw,38px)}canvas#board{touch-action:none;max-width:100%;max-height:100%;image-rendering:pixelated;border-radius:18px;box-shadow:0 0 0 4px #263966,0 18px 60px #000;background:#10162a}.overlayMsg{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:none;place-items:center;padding:20px 28px;border-radius:24px;background:rgba(8,10,22,.9);box-shadow:0 0 0 4px var(--gold);font-size:clamp(24px,6vw,56px);font-weight:1000}.paused .overlayMsg{display:grid}.drawer{position:absolute;inset:auto 8px calc(8px + var(--safe-bottom)) 8px;max-height:78vh;transform:translateY(calc(100% + 24px));transition:transform .22s ease;background:#12182e;border:3px solid #7657d6;border-radius:28px;z-index:20;padding:12px;box-shadow:0 -20px 80px #000;display:grid;gap:10px}.drawer.open{transform:translateY(0)}.drawerHead{display:flex;gap:8px}.loadout{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;overflow:auto}.card{min-height:120px;border-radius:24px;background:#243358;border:3px solid #5f9cff;padding:12px;display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center}.card .icon{font-size:44px}.card .name{font-weight:1000}.card.selected{border-color:var(--gold);background:#4a310f}@media(orientation:landscape) and (min-width:800px){.drawer{left:auto;top:78px;right:12px;bottom:12px;width:min(430px,42vw);max-height:none;transform:translateX(calc(100% + 24px))}.drawer.open{transform:translateX(0)}.loadout{grid-template-columns:1fr}}@media(max-width:520px){.loadout{grid-template-columns:1fr}.top{gap:5px}.pill{padding:7px}}
+
+#gamePicker{position:fixed;inset:calc(10px + var(--safe-top)) calc(10px + var(--safe-right)) calc(10px + var(--safe-bottom)) calc(10px + var(--safe-left));z-index:35;background:#030611;border:3px solid var(--gold);border-radius:30px;display:none;grid-template-rows:auto 1fr auto;overflow:hidden;box-shadow:0 28px 120px #000}
+#gamePicker.open{display:grid}
+.pickerHead{display:flex;gap:8px;align-items:center;padding:12px;background:#10182e;border-bottom:2px solid #3d315f}
+.pickerHead b{font-size:clamp(24px,4vw,42px);flex:1}
+.gameGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;padding:14px;overflow:auto}
+.gameTile{border:3px solid #344c82;border-radius:30px;background:radial-gradient(circle at 50% 0,#263963,#0d1428 62%);padding:18px;min-height:220px;display:grid;align-content:center;justify-items:center;gap:10px;text-align:center;color:var(--ink)}
+.gameTile:active{transform:scale(.98)}
+.gameTile .glyph{font-size:clamp(64px,11vw,112px);filter:drop-shadow(0 12px 26px #000)}
+.gameTile b{font-size:clamp(22px,4vw,38px);color:var(--gold)}
+.gameTile small{color:var(--muted);font-size:15px}
+.gameTile.primaryGame{border-color:var(--green);box-shadow:0 0 0 3px rgba(54,236,116,.18) inset}
+.pickerFoot{display:flex;gap:8px;padding:12px;background:#10182e;border-top:2px solid #3d315f}
+
+</style></head><body><div id="app"><div class="top"><div class="pill">🏆 <b id="score">0</b></div><div class="pill">⚡ <b id="level">1</b></div><button id="pauseBtn">⏸</button><button id="restartTop">⟲</button><button id="configBtn">📦</button><button id="upgradeBtn">⚙</button></div><div class="game"><div id="stage" class="stage"><canvas id="board"></canvas><div class="nextPreview" id="nextPreview"><canvas class="nextMini"></canvas><canvas class="nextMini"></canvas><canvas class="nextMini"></canvas></div><canvas id="dragGhost" class="dragGhost"></canvas><div class="gestureHint"><i>↔</i><i>↻</i><i>↧</i></div><div class="overlayMsg" id="overlay">▶</div></div></div><div class="drawer" id="drawer"><div class="drawerHead"><b style="font-size:24px;flex:1">🎒 Upgrade</b><button id="closeDrawer">×</button></div><div class="loadout"><div class="card" data-slot="rotation" data-plugin="wallkick"><div class="icon">🧱↺</div><div><div class="name">Wall Rune</div><small>rotate near walls</small></div></div><div class="card" data-slot="gravity" data-plugin="fast"><div class="icon">🔥🥾</div><div><div class="name">Fast Boots</div><small>faster fall</small></div></div><div class="card" data-slot="tray" data-plugin="drag"><div class="icon">✋🧩</div><div><div class="name">Drag Tray</div><small>drag preview piece</small></div></div></div></div></div><script>
+(()=>{const COLS=10,ROWS=20,COLORS=['#10162a','#55d6ff','#ffc94d','#8557ff','#36ec74','#ff4e58','#ff8b32','#5f9cff'];const SHAPES={I:[[[0,0],[1,0],[2,0],[3,0]],[[1,-1],[1,0],[1,1],[1,2]]],O:[[[0,0],[1,0],[0,1],[1,1]]],T:[[[1,0],[0,1],[1,1],[2,1]],[[1,0],[1,1],[2,1],[1,2]],[[0,1],[1,1],[2,1],[1,2]],[[1,0],[0,1],[1,1],[1,2]]],S:[[[1,0],[2,0],[0,1],[1,1]],[[1,0],[1,1],[2,1],[2,2]]],Z:[[[0,0],[1,0],[1,1],[2,1]],[[2,0],[1,1],[2,1],[1,2]]],J:[[[0,0],[0,1],[1,1],[2,1]],[[1,0],[2,0],[1,1],[1,2]],[[0,1],[1,1],[2,1],[2,2]],[[1,0],[1,1],[0,2],[1,2]]],L:[[[2,0],[0,1],[1,1],[2,1]],[[1,0],[1,1],[1,2],[2,2]],[[0,1],[1,1],[2,1],[0,2]],[[0,0],[1,0],[1,1],[1,2]]]};const TYPES=Object.keys(SHAPES),colorIndex={I:1,O:2,T:3,S:4,Z:5,J:6,L:7};let canvas=document.getElementById('board'),ctx=canvas.getContext('2d'),nextC=[...document.querySelectorAll('.nextMini')],nextX=nextC.map(c=>c.getContext('2d')),scoreEl=document.getElementById('score'),levelEl=document.getElementById('level'),stage=document.getElementById('stage'),overlay=document.getElementById('overlay'),drawer=document.getElementById('drawer'),pauseBtn=document.getElementById('pauseBtn'),dragGhost=document.getElementById('dragGhost'),dragCtx=dragGhost.getContext('2d');let board,piece,queue=[],score=0,level=1,lines=0,dropCounter=0,last=0,paused=false,gameOver=false,dragging=null,plugins={gravity:'classic',rotation:'wallkick',tray:'drag'};function newBoard(){return Array.from({length:ROWS},()=>Array(COLS).fill(0))}function randPiece(){let t=TYPES[(Math.random()*TYPES.length)|0];return{t,x:3,y:0,r:0,c:colorIndex[t]}}function cells(p=piece,dx=0,dy=0,dr=0){let rots=SHAPES[p.t],r=(p.r+dr+rots.length)%rots.length;return rots[r].map(([x,y])=>[p.x+x+dx,p.y+y+dy])}function collide(p=piece,dx=0,dy=0,dr=0){return cells(p,dx,dy,dr).some(([x,y])=>x<0||x>=COLS||y>=ROWS||(y>=0&&board[y][x]))}function refill(){while(queue.length<3)queue.push(randPiece())}function spawn(){refill();piece=queue.shift();refill();piece.x=3;piece.y=0;piece.r=0;if(collide()){gameOver=true;paused=true;stage.classList.add('paused');overlay.textContent='☠'}}function reset(){board=newBoard();score=0;level=1;lines=0;queue=[];refill();gameOver=false;paused=false;stage.classList.remove('paused');spawn();resize();draw()}function merge(p=piece){cells(p).forEach(([x,y])=>{if(y>=0&&y<ROWS&&x>=0&&x<COLS)board[y][x]=p.c})}function clearLines(){let n=0;outer:for(let y=ROWS-1;y>=0;y--){for(let x=0;x<COLS;x++)if(!board[y][x])continue outer;board.splice(y,1);board.unshift(Array(COLS).fill(0));n++;y++}if(n){lines+=n;score += [0,100,300,500,800][n]*level;level=1+Math.floor(lines/8);scoreEl.textContent=score;levelEl.textContent=level}}function lock(){merge();clearLines();spawn()}function move(dx){if(paused)return;if(!collide(piece,dx,0,0))piece.x+=dx;draw()}function soft(){if(paused)return;if(!collide(piece,0,1,0))piece.y++;else lock();draw()}function hardDrop(){if(paused)return;while(!collide(piece,0,1,0))piece.y++;lock();draw()}function rotate(){if(paused)return;if(!collide(piece,0,0,1))piece.r=(piece.r+1)%SHAPES[piece.t].length;else for(const dx of[-1,1,-2,2])if(!collide(piece,dx,0,1)){piece.x+=dx;piece.r=(piece.r+1)%SHAPES[piece.t].length;break}draw()}function update(t=0){let delta=t-last;last=t;if(!paused){dropCounter+=delta;if(dropCounter>700){soft();dropCounter=0}}requestAnimationFrame(update)}function resize(){let top=document.querySelector('.top').getBoundingClientRect();let availW=innerWidth-24,availH=innerHeight-top.height-24;let cell=Math.floor(Math.min(availW/COLS,availH/ROWS));cell=Math.max(14,Math.min(cell,48));canvas.width=COLS*cell;canvas.height=ROWS*cell;canvas.dataset.cell=cell;nextC.forEach(c=>{c.width=96;c.height=72});draw()}function drawCell(x,y,v,cell){ctx.strokeStyle='#20294c';ctx.fillStyle=v?COLORS[v]:'#151c35';ctx.fillRect(x*cell,y*cell,cell-1,cell-1);ctx.strokeRect(x*cell+.5,y*cell+.5,cell-1,cell-1)}function block(x,y,v,cell){ctx.fillStyle=COLORS[v];ctx.fillRect(x*cell+2,y*cell+2,cell-4,cell-4);ctx.strokeStyle='#ffffff55';ctx.strokeRect(x*cell+3,y*cell+3,cell-6,cell-6)}function draw(){let cell=+canvas.dataset.cell||28;ctx.clearRect(0,0,canvas.width,canvas.height);for(let y=0;y<ROWS;y++)for(let x=0;x<COLS;x++)drawCell(x,y,board[y][x],cell);if(piece&&!dragging){let gy=0;while(!collide(piece,0,gy+1,0))gy++;ctx.globalAlpha=.25;cells(piece,0,gy,0).forEach(([x,y])=>y>=0&&block(x,y,piece.c,cell));ctx.globalAlpha=1;cells().forEach(([x,y])=>y>=0&&block(x,y,piece.c,cell))}if(dragging){drawDragPreview(cell)}drawNext()}function drawMini(ctx2,p,w=96,h=72){ctx2.clearRect(0,0,w,h);if(!p)return;let shape=SHAPES[p.t][0],minX=Math.min(...shape.map(c=>c[0])),minY=Math.min(...shape.map(c=>c[1])),maxX=Math.max(...shape.map(c=>c[0])),maxY=Math.max(...shape.map(c=>c[1]));let cell=Math.floor(Math.min((w-12)/(maxX-minX+1),(h-12)/(maxY-minY+1)));let ox=(w-cell*(maxX-minX+1))/2,oy=(h-cell*(maxY-minY+1))/2;shape.forEach(([x,y])=>{ctx2.fillStyle=COLORS[p.c];ctx2.fillRect(ox+(x-minX)*cell,oy+(y-minY)*cell,cell-3,cell-3);ctx2.strokeStyle='#ffffff55';ctx2.strokeRect(ox+(x-minX)*cell+1,oy+(y-minY)*cell+1,cell-5,cell-5)})}function drawNext(){queue.slice(0,3).forEach((p,i)=>drawMini(nextX[i],p))}let sx=0,sy=0;canvas.onpointerdown=e=>{sx=e.clientX;sy=e.clientY};canvas.onpointerup=e=>{let dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)<24&&Math.abs(dy)<24)rotate();else if(Math.abs(dx)>Math.abs(dy))move(dx>0?1:-1);else if(dy>0)hardDrop()};nextC.forEach((c,i)=>{c.onpointerdown=e=>{if(!queue[i])return;paused=true;stage.classList.add('paused');overlay.textContent='✋';dragging={i,p:{...queue[i],r:0,shape:SHAPES[queue[i].t][0]},snapX:0,snapY:0,ok:false};dragGhost.style.display='none';updateDragSnap(e.clientX,e.clientY);window.addEventListener('pointermove',moveGhost,{passive:false});window.addEventListener('pointerup',dropTray,{once:true})}});
+function shapeBounds(p){let shape=SHAPES[p.t][0];return{shape,minX:Math.min(...shape.map(c=>c[0])),minY:Math.min(...shape.map(c=>c[1])),maxX:Math.max(...shape.map(c=>c[0])),maxY:Math.max(...shape.map(c=>c[1]))}}
+function updateDragSnap(clientX,clientY){
+  if(!dragging)return;
+  let p=dragging.p,b=shapeBounds(p),r=canvas.getBoundingClientRect(),cellW=r.width/COLS,cellH=r.height/ROWS;
+  let width=b.maxX-b.minX+1,height=b.maxY-b.minY+1;
+  // Single source of truth: finger controls the visual center of the piece footprint on the board.
+  // At the board bottom, this clamps to the last legal row for the full footprint.
+  let centerCol=(clientX-r.left)/cellW;
+  let centerRow=(clientY-r.top)/cellH;
+  let x=Math.round(centerCol-width/2)-b.minX;
+  let y=Math.round(centerRow-height/2)-b.minY;
+  x=Math.max(-b.minX,Math.min(COLS-1-b.maxX,x));
+  y=Math.max(-b.minY,Math.min(ROWS-1-b.maxY,y));
+  dragging.snapX=x;dragging.snapY=y;
+  let oldX=p.x,oldY=p.y;p.x=x;p.y=y;dragging.ok=fitsGiven(p);p.x=oldX;p.y=oldY;
+  draw();
+}
+function drawDragPreview(cell){
+  let p=dragging.p,b=shapeBounds(p),ok=dragging.ok;
+  ctx.save();
+  ctx.globalAlpha=ok?.72:.38;
+  for(const [sx,sy] of b.shape){
+    let x=dragging.snapX+sx,y=dragging.snapY+sy;
+    if(y>=0&&y<ROWS&&x>=0&&x<COLS){
+      ctx.fillStyle=ok?COLORS[p.c]:'#ff4e58';
+      ctx.fillRect(x*cell+2,y*cell+2,cell-4,cell-4);
+      ctx.lineWidth=Math.max(2,cell*.08);
+      ctx.strokeStyle=ok?'#ffffffcc':'#ffdddd';
+      ctx.strokeRect(x*cell+3,y*cell+3,cell-6,cell-6);
+    }
+  }
+  ctx.restore();
+}
+function moveGhost(e){if(!dragging)return;e.preventDefault();updateDragSnap(e.clientX,e.clientY)}
+function fitsGiven(p){return cells(p).every(([x,y])=>x>=0&&x<COLS&&y>=0&&y<ROWS&&!board[y][x])}function dropTray(e){
+  window.removeEventListener('pointermove',moveGhost);
+  dragGhost.style.display='none';
+  if(!dragging)return;
+  updateDragSnap(e.clientX,e.clientY);
+  let p=dragging.p;p.x=dragging.snapX;p.y=dragging.snapY;
+  if(dragging.ok){merge(p);queue.splice(dragging.i,1);refill();clearLines()}
+  paused=false;stage.classList.remove('paused');dragging=null;draw()
+}pauseBtn.onclick=()=>{paused=!paused;pauseBtn.textContent=paused?'▶':'⏸';stage.classList.toggle('paused',paused);overlay.textContent='▶';draw()};document.getElementById('restartTop').onclick=reset;document.getElementById('upgradeBtn').onclick=()=>drawer.classList.add('open');document.getElementById('configBtn').onclick=()=>{try{if(window.opener&&!window.opener.closed){window.opener.focus();window.opener.document.getElementById('gamePicker')?.classList.add('open');}else{alert('Return to the arcade loader tab.')}}catch(e){alert('Return to the arcade loader tab.')}};document.getElementById('closeDrawer').onclick=()=>drawer.classList.remove('open');window.onresize=resize;reset();requestAnimationFrame(update)})();<\/script></body></html>`;
+}
+
+function woodBlockGameHtml(){
+return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><title>Wood Block Quest</title><style>
+:root{--bg:#070914;--ink:#f7f4df;--blue:#5f9cff;--green:#36ec74;--gold:#ffc94d;--red:#ff4e58;--safe-top:env(safe-area-inset-top);--safe-bottom:env(safe-area-inset-bottom);--safe-left:env(safe-area-inset-left);--safe-right:env(safe-area-inset-right)}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:none}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}body{position:fixed;inset:0}#app{position:absolute;inset:0;padding:calc(8px + var(--safe-top)) calc(8px + var(--safe-right)) calc(8px + var(--safe-bottom)) calc(8px + var(--safe-left));display:grid;grid-template-rows:auto 1fr auto;gap:10px;background:radial-gradient(circle at 50% 10%,#1f2a4f 0,#070914 52%,#03040a 100%)}.top{display:flex;justify-content:flex-end;gap:8px;min-height:52px}.pill{padding:8px 14px;border:2px solid #394a7e;border-radius:16px;background:#11182d;font-weight:1000;font-size:clamp(16px,4vw,24px)}button{border:0;color:var(--ink);font-weight:1000;font-size:clamp(20px,5vw,30px);border-radius:18px;background:#1b2c55;box-shadow:inset 0 0 0 3px #629cff;min-width:58px;min-height:52px}.stage{position:relative;min-height:0;display:grid;place-items:center}.board{display:grid;grid-template-columns:repeat(10,1fr);grid-template-rows:repeat(10,1fr);gap:3px;aspect-ratio:1/1;height:min(72dvh,88vw);max-height:100%;border:4px solid var(--blue);border-radius:22px;background:#10162a;padding:6px;box-shadow:0 18px 60px #000}.cell{border-radius:8px;background:#151c35;border:1px solid #263963}.cell.filled{background:linear-gradient(135deg,#a96b2e,#ffc94d);box-shadow:inset 0 0 0 2px #ffe0a0}.cell.preview{background:#36ec7488}.cell.bad{background:#ff4e5888}.tray{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;min-height:120px}.piece{border:3px solid #344c82;border-radius:24px;background:#0d1428;display:grid;place-items:center;min-height:112px}.mini{display:grid;grid-template-columns:repeat(5,16px);grid-template-rows:repeat(5,16px);gap:3px}.dot{border-radius:5px}.on{background:#ffc94d}.off{background:transparent}.hint{text-align:center;color:#9fadcf;font-size:14px}@media(orientation:landscape) and (min-width:820px){#app{grid-template-columns:1fr minmax(180px,24vw);grid-template-rows:auto 1fr}.top{grid-column:1/3}.tray{grid-column:2;grid-row:2;grid-template-columns:1fr;align-content:center}.stage{grid-column:1;grid-row:2}.board{height:min(82dvh,70vw)}}<\/style></head><body><div id="app"><div class="top"><div class="pill">🏆 <b id="score">0</b></div><button id="configBtn">📦</button><button id="restart">⟲</button></div><div class="stage"><div id="board" class="board"></div></div><div id="tray" class="tray"></div><div class="hint">drag a wood block · clear rows + columns</div></div><script>
+(()=>{const W=10,H=10,boardEl=document.getElementById('board'),trayEl=document.getElementById('tray'),scoreEl=document.getElementById('score');let board,score=0,tray=[],drag=null,preview=[];const shapes=[[[0,0]],[[0,0],[1,0]],[[0,0],[0,1]],[[0,0],[1,0],[2,0]],[[0,0],[0,1],[0,2]],[[0,0],[1,0],[0,1],[1,1]],[[0,0],[1,0],[2,0],[1,1]],[[0,0],[0,1],[1,1],[2,1]],[[2,0],[0,1],[1,1],[2,1]]];function reset(){board=Array.from({length:H},()=>Array(W).fill(0));score=0;tray=[rand(),rand(),rand()];draw()}function rand(){let s=shapes[Math.floor(Math.random()*shapes.length)];return s.map(c=>[...c])}function can(shape,x,y){return shape.every(([dx,dy])=>x+dx>=0&&x+dx<W&&y+dy>=0&&y+dy<H&&!board[y+dy][x+dx])}function place(shape,x,y){if(!can(shape,x,y))return false;shape.forEach(([dx,dy])=>board[y+dy][x+dx]=1);score+=shape.length*5;clear();return true}function clear(){let rows=[],cols=[];for(let y=0;y<H;y++)if(board[y].every(Boolean))rows.push(y);for(let x=0;x<W;x++)if(board.every(r=>r[x]))cols.push(x);rows.forEach(y=>board[y].fill(0));cols.forEach(x=>board.forEach(r=>r[x]=0));if(rows.length||cols.length)score+=(rows.length+cols.length)*100}function draw(){scoreEl.textContent=score;boardEl.innerHTML='';for(let y=0;y<H;y++)for(let x=0;x<W;x++){let c=document.createElement('div');c.className='cell'+(board[y][x]?' filled':'');if(preview.some(p=>p[0]===x&&p[1]===y))c.className+=' preview';boardEl.appendChild(c)}trayEl.innerHTML='';tray.forEach((shape,i)=>{let p=document.createElement('div');p.className='piece';p.dataset.i=i;p.innerHTML=mini(shape);p.onpointerdown=e=>{drag={i,shape};window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',up,{once:true})};trayEl.appendChild(p)})}function mini(shape){let a=Array.from({length:25},()=>'<span class="dot off"></span>');shape.forEach(([x,y])=>a[y*5+x]='<span class="dot on"></span>');return '<div class="mini">'+a.join('')+'</div>'}function xy(e){let r=boardEl.getBoundingClientRect(),cw=r.width/W,ch=r.height/H;return [Math.floor((e.clientX-r.left)/cw),Math.floor((e.clientY-r.top)/ch)]}function move(e){if(!drag)return;e.preventDefault();let [x,y]=xy(e);preview=drag.shape.map(([dx,dy])=>[x+dx,y+dy]).filter(([px,py])=>px>=0&&px<W&&py>=0&&py<H);draw()}function up(e){window.removeEventListener('pointermove',move);if(!drag)return;let [x,y]=xy(e);if(place(drag.shape,x,y)){tray.splice(drag.i,1);if(!tray.length)tray=[rand(),rand(),rand()]}preview=[];drag=null;draw()}document.getElementById('restart').onclick=reset;document.getElementById('configBtn').onclick=()=>{try{if(window.opener&&!window.opener.closed)window.opener.focus();else alert('Return to loader tab.')}catch(e){alert('Return to loader tab.')}};reset()})();<\/script></body></html>`;
+}
+function arcadeHubHtml(){
+return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Arcade Hub</title><style>html,body{margin:0;height:100%;background:#070914;color:#f7f4df;font-family:system-ui}body{display:grid;place-items:center}.hub{display:grid;gap:18px;width:min(900px,92vw)}h1{font-size:clamp(42px,9vw,90px);margin:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}button{border:3px solid #5f9cff;border-radius:32px;background:#10162a;color:#fff;min-height:230px;font-size:32px;font-weight:1000}.glyph{font-size:84px;display:block}.wood{border-color:#ffc94d}.tetris{border-color:#36ec74}</style></head><body><main class="hub"><h1>🏰 Arcade</h1><div class="grid"><button class="tetris" onclick="opener.__launchGameFromPicker?.('tetris')"><span class="glyph">🧩</span>Tetris Quest</button><button class="wood" onclick="opener.__launchGameFromPicker?.('wood')"><span class="glyph">🪵</span>Wood Block Quest</button></div></main></body></html>`;
+}
+
+async function loadSelected(){if(!selectedFile){setGate("NO ZIP","Select a ZIP first.",true,false);log("error","load requested without selected ZIP");return}try{setGate("LOAD","Reading ZIP…",false,true);log("info","loading selected ZIP",selectedFile.name);files=await unzip(selectedFile);log("ok","extracted files",files.size);const ok=validate();if(report?.architecture==="webapp-zip"){launchHtml=buildZipWebAppHtml()}else{launchHtml=tetrisGameHtml()}$("#launchBtn").disabled=!ok}catch(e){setGate("FAIL",e.message,true,false);log("error",e.message);$("#launchBtn").disabled=true}}
+$("#zipInput").onchange=e=>{if(e.target.files[0])setSelected(e.target.files[0])};$("#drop").ondragover=e=>{e.preventDefault();$("#drop").style.background="#13204a"};$("#drop").ondrop=e=>{e.preventDefault();$("#drop").style.background="";if(e.dataTransfer.files[0])setSelected(e.dataTransfer.files[0])};$("#loadBtn").onclick=loadSelected;$("#loadBtn2").onclick=loadSelected;function launchGame(kind){
+  let src = kind==="webapp" ? launchHtml : (kind==="wood" ? woodBlockGameHtml() : (kind==="hub" ? arcadeHubHtml() : tetrisGameHtml()));
+  const url=URL.createObjectURL(new Blob([src],{type:"text/html"}));
+  log("info",kind==="webapp"?"launch ZIP web app":"launch game",kind);
+  open(url, kind==="webapp"?"zipWebApp":kind==="wood"?"woodBlockQuest":kind==="hub"?"arcadeHub":"tetrisQuestGame");
+}
+window.__launchGameFromPicker = launchGame;
+$("#launchBtn").onclick=()=>{if(!launchHtml)return;if(report?.architecture==="webapp-zip")launchGame("webapp");else $("#gamePicker").classList.add("open")};
+$("#closePicker").onclick=()=>$("#gamePicker").classList.remove("open");
+$("#closePicker2").onclick=()=>$("#gamePicker").classList.remove("open");
+$("#openHub").onclick=()=>launchGame("hub");
+document.querySelectorAll("[data-game]").forEach(b=>b.onclick=()=>{launchGame(b.dataset.game);$("#gamePicker").classList.remove("open")});$("#logBtn").onclick=()=>$("#platformLog").classList.add("open");$("#closeLog").onclick=()=>$("#platformLog").classList.remove("open");$("#copyLog").onclick=async()=>{const t=reportText();try{await navigator.clipboard.writeText(t);log("ok","platform log copied")}catch(e){const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.left="0";ta.style.top="0";ta.style.width="1px";ta.style.height="1px";document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand("copy");log("ok","platform log copied via fallback")}catch(err){log("warn","copy unavailable; downloading log instead");const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"application/json"}));a.download="tetris-quest-platform-log.json";a.click()}ta.remove()}};$("#downloadLog").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([reportText()],{type:"application/json"}));a.download="tetris-quest-platform-log.json";a.click()};$("#clearLog").onclick=()=>{$("#logMini").innerHTML="";$("#logFull").innerHTML="";events=[];log("info","log cleared")};$("#revalidateBtn").onclick=()=>files.size?validate():log("warn","nothing to revalidate");log("info","loader ready");
+</script></body></html>

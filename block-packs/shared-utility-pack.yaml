@@ -1,4 +1,4 @@
-version: 0.7
+version: 1.0
 name: Shared Utility Pack
 rule: visible_utility_event_router_double_click_edit
 blocks:

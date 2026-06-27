@@ -28,7 +28,20 @@ A reusable behavior must be represented as one of these:
 
 No reusable utility may exist only as buried code.
 
-## 3. Loop and template equivalence
+## 3. Pack-first sharing model
+
+Every shareable piece must round-trip through ComCody Pack v1:
+
+```text
+piece.yaml
+piece.js
+tests.yaml
+README.md
+```
+
+The manifest is for no-code users. The JavaScript file is for coders. Both must describe the same behavior.
+
+## 4. Loop and template equivalence
 
 A template must behave like a loop in structure:
 
@@ -46,7 +59,7 @@ The same nested child tree must drive:
 - settings editing
 - import/export definitions
 
-## 4. Nested depth rule
+## 5. Nested depth rule
 
 Children may themselves be containers.
 
@@ -63,7 +76,7 @@ Template A
 
 All editing and rendering must use path-based tree access, not one-level loop-only helpers.
 
-## 5. Piece editing rule
+## 6. Piece editing rule
 
 Every visible piece opens from the piece itself.
 
@@ -74,20 +87,6 @@ Rules:
 - keep a compact remove `×` on the right side of each block row
 - Expert Code opens inside the settings panel only
 - no bottom expert section and no separate expert piece rail
-
-This applies to top-level pieces, loop children, template children, and imported pieces.
-
-## 6. Container control rule
-
-Higher-level pieces such as loops, templates, and input/event routers are clean containers.
-
-Rules:
-
-- no floating controls beside the nested body
-- double-click the container piece to open settings
-- simple delete stays row-aligned as `×`
-- children may themselves be containers
-- controls must never visually overlap a child body
 
 ## 7. Event-router exception
 
@@ -107,136 +106,50 @@ Swipe Down
   Move
 ```
 
-Runtime input events must be safe:
+## 8. Import/export rule
 
-- they reuse the same child pieces
-- they do not consume the main Run/Test step budget
-- they do not crash the game when a Tetris side move is blocked
-- they are queued so repeated taps/swipes do not corrupt the active tick loop
+Imported pieces are not second-class objects.
 
-## 8. Piece Store layout rule
+After import, a piece must:
 
-The Piece Store is an overlay drawer, not a permanent column that steals space from the Program Stack.
+- appear in the normal Piece Store
+- open the normal settings panel
+- show `piece.js` under Expert Code
+- execute through an existing behavior or explicit `run(ctx, piece)` source hook
+- export again as a normal ComCody piece pack
 
-Rules:
+## 9. Full game bundle rule
 
-- keep Program Stack visible and wide
-- open the Piece Store with the `Pieces` button
-- place the drawer over the grid area
-- close or collapse the drawer after choosing a piece
-
-## 9. Shared cell semantics
-
-If a game rule says two cell sources mean the same thing, the runtime must use one shared semantic query.
-
-For Tetris Lite row clearing:
+A full game export must contain enough data to restore the editable no-code state:
 
 ```text
-occupied_for_line_clear = locked_cells OR manual_walls
+game.json
+game.yaml
+game.js
+pieces/*/piece.yaml
+pieces/*/piece.js
+tests.yaml
+README.md
 ```
 
-Therefore manual walls placed on the Tetris grid count as occupied Tetris cells for line clear. When a row clears, manual walls and locked cells above the row collapse together.
 
-Scoring is not hidden inside the clear primitive. `Clear Rows` sets `lastClearRows`; the visible `Score Event` piece decides how many points to award.
+## Pack action controller
 
-## 10. Grid theme rule
+Import/export is part of composability. It must not be wired separately for each button.
 
-Grid visuals are not hard-coded into individual game modes.
-
-Shared configurable grid items:
-
-- board background
-- empty cell
-- wall / manual block
-- goal marker
-- locked fallback cell
-
-Maze and Tetris Lite must read the same grid theme state.
-
-## 11. Current primitive inventory
-
-Already tested and reusable:
-
-- `Move`
-- `Turn Left`
-- `Turn Right`
-- `Loop`
-- `Timer Step`
-- `Random Wall`
-- `Score Event`
-- `Face Direction` (`Face Up`, `Face Right`, `Face Down`, `Face Left`)
-- `Rotate Shape`
-
-Tetris may assemble from these before requesting new primitives.
-
-## 12. Loop-count-one templates
-
-A higher-level assembly that runs once must use the existing Loop model with `count = 1`.
-
-Preferred shape:
+Required pattern:
 
 ```text
-Gravity = Face Down + Move · 1×
-  Face Down
-  Move
+one visible action
+  -> one shared controller
+  -> one import/export implementation
+  -> visible status
+  -> same piece registry/runtime/settings path
 ```
 
-This is not a separate composite runtime. It is a named loop/template using the same nested block tree as Loop.
-
-## 13. Current valid Tetris assemblies
-
-```text
-Gravity Step · 1×
-  Face Down
-  Move
-```
-
-```text
-Swipe Left
-  Face Left
-  Move
-```
-
-```text
-Swipe Right
-  Face Right
-  Move
-```
-
-```text
-Swipe Down
-  Face Down
-  Move
-```
-
-Only truly missing Tetris primitives remain new:
-
-- `Spawn Random Piece`
-- `Lock Piece`
-- `Clear Rows`
+This prevents Pack Studio, Game Setup, and Piece Store from drifting into different behaviors.
 
 
-## 13. Reuse must include the machine type
+## v45 QA note
 
-A reusable assembly is not fully composable if it only copies another piece's behavior while keeping a special machine type.
-
-For named assemblies that are just a loop with children, the machine object must still be a Loop:
-
-```yaml
-label: Gravity = Face Down + Move
-type: repeat
-behavior: repeat
-count: 1
-children:
-  - face_down
-  - move
-```
-
-This guarantees the same editor opens, the same visual nesting is rendered, and the same runtime execution is used at every nesting depth.
-
-Legacy imported aliases like `gravity_step` may be accepted, but they must be normalized to `type: repeat` before rendering or execution.
-
-
-## v41 Double-Click Settings Fix
-
-All Program Stack pieces, including top-level Loop, Tetris Tick Loop, and nested Gravity = Face Down + Move, must open through the same shared double-click settings editor. Loop editor code is a shared function, not a local helper buried inside one branch.
+See `THINKINGRESULTS.md` for the export regression analysis and the deterministic tool path used for this fix.
