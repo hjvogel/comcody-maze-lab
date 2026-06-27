@@ -14,7 +14,6 @@ reports/
 *.dat*
 *.pickle*
 *.xls*
-*.zip*
 data/
 
 # direnv
