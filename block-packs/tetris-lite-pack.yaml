@@ -1,0 +1,103 @@
+version: 0.8
+name: Tetris Lite Assembly Pack
+rule: assembly_first_loop_count_one_for_templates
+blocks:
+  - type: face_up
+    label: Face Up
+    icon: ↑
+    role: flow
+    behavior: face_dir
+    class: turnPiece
+    defaults:
+      dir: 0
+    source: |
+      function faceUp() {
+        state.dir = UP
+      }
+  - type: face_right
+    label: Face Right
+    icon: →
+    role: flow
+    behavior: face_dir
+    class: turnPiece
+    defaults:
+      dir: 1
+    source: |
+      function faceRight() {
+        state.dir = RIGHT
+      }
+  - type: face_down
+    label: Face Down
+    icon: ↓
+    role: flow
+    behavior: face_dir
+    class: turnPiece
+    defaults:
+      dir: 2
+    source: |
+      function faceDown() {
+        state.dir = DOWN
+      }
+  - type: face_left
+    label: Face Left
+    icon: ←
+    role: flow
+    behavior: face_dir
+    class: turnPiece
+    defaults:
+      dir: 3
+    source: |
+      function faceLeft() {
+        state.dir = LEFT
+      }
+  - type: spawn_piece
+    label: Spawn Random Piece
+    icon: 🎲
+    role: flow
+    behavior: spawn_piece
+    class: shapePiece
+    source: |
+      function spawnRandomPiece() {
+        active_piece = random(tetrominoTray)
+        active_piece.x = spawnColumn(grid)
+        active_piece.y = 0
+      }
+  # Gravity is intentionally not defined as a new block type.
+  # The scaffold creates it from the existing Loop block:
+  #   type: repeat
+  #   label: Gravity = Face Down + Move
+  #   count: 1
+  #   children: [face_down, move]
+  - type: rotate_shape
+    label: Rotate Shape
+    icon: ↻
+    role: flow
+    behavior: rotate_shape
+    class: turnPiece
+    source: |
+      function rotateShape() {
+        active_piece.shape = rotateCells(active_piece.shape)
+      }
+  - type: lock_piece
+    label: Lock Piece
+    icon: 🔒
+    role: flow
+    behavior: lock_piece
+    class: wallPiece
+    source: |
+      function lockPiece() {
+        if (state.lockPending) grid.locked.add(active_piece.cells)
+      }
+  - type: clear_rows
+    label: Clear Rows
+    icon: ▤
+    role: flow
+    behavior: clear_rows
+    class: testPiece
+    source: |
+      function clearRows() {
+        const fullRows = rowsWhereEveryCellIsOccupied(locked_cells OR manual_walls)
+        removeFullRows(fullRows)
+        collapseLockedCellsAndManualWallsAbove(fullRows)
+        state.lastClearRows = fullRows.length
+      }

@@ -1,101 +1,77 @@
-# ComCody Lab v32 — Composable Tetris Fix
+# ComCody Lab v40 — Gravity Is a Real Loop Block
 
-ComCody is a reusable game-kernel lab, not a set of separate mini-games.
-Maze and Tetris Lite must share the same primitives: grid runtime, active piece, program stack, input, score, timer, settings, and expert-code inspection.
+This version fixes the remaining Gravity mistake strictly by the build helper workflow.
 
-## What v32 fixes
+The issue was not only runtime behavior. The visible piece still carried the old machine type `gravity_step`, so it could look like a loop but fail the normal loop/settings path in some imported/autosetup trees.
 
-- Imported and auto-scaffolded Tetris pieces now use the same clean settings system as native Maze pieces.
-- One settings wheel per program piece.
-- No bottom **Expert Pieces** or **Generated Flow Code** surface.
-- Expert code opens only inside the selected piece settings panel.
-- Tetris scaffold state is preserved when opening/closing piece settings.
-- Built-in Tetris Lite pieces now include expert-code snippets.
-- Imported YAML pieces can provide their own expert code using `source: |`.
+## What changed in v40
 
-## No Hidden Utility Rule
+### 1. Gravity now has the real Loop type
 
-Every reusable behavior must be exposed as one of these:
+Correct model:
 
 ```text
-flow_piece      -> appears in the Program Stack
-template_piece  -> configures a game preset
-child_piece     -> can live inside another piece, such as Loop
+Gravity = Face Down + Move · 1×
+  Face Down
+  Move
 ```
 
-A behavior is not ComCody-ready if it only exists as buried JavaScript.
-
-## Current shared kernel modules
+Internally this is now the normal `repeat` piece:
 
 ```text
-grid_runtime
-active_piece
-timer_loop
-program_stack
-step_debugger
-score_module
-piece_store
-input_module
-piece_settings
-inline_expert_code
+type: repeat
+behavior: repeat
+count: 1
+children:
+  - Face Down
+  - Move
 ```
 
-## Example: Tetris Lite scaffold
+It is not `type: gravity_step` with repeat-like behavior.
 
-Use **Game Setup → Auto Setup Tetris Lite**.
+### 2. One settings path for every Program Stack piece
 
-The lab reuses the current kernel and switches the configuration to:
-
-```yaml
-game_preset: tetris_lite_scaffold
-grid_runtime:
-  cols: 10
-  rows: 20
-active_piece:
-  shape: T
-score_module:
-  reusable_by: [maze, tetris_lite]
-```
-
-The Program Stack is assembled from visible pieces:
+Top-level pieces and nested pieces now both open through the same object-path editor:
 
 ```text
-Tablet Input
-Spawn Random Piece
-Timer Step
-Gravity Loop
-Score Event
-Checkpoint
+open piece by tree path -> edit actual piece object
 ```
 
-## Example: imported piece with expert code
+That removes the split between `openSettings(type, index)` and nested piece settings.
 
-```yaml
-version: 0.1
-blocks:
-  - type: hard_drop
-    label: Hard Drop
-    icon: ↧
-    role: flow
-    behavior: move
-    class: movePiece
-    defaults:
-      steps: 20
-    source: |
-      function hardDrop(piece) {
-        while (canMove(piece, 0, 1)) {
-          piece.y += 1
-        }
-        lockPiece(piece)
-      }
+### 3. Legacy self-heal remains
+
+Old imported packs or older saved program trees may still contain:
+
+```text
+type: gravity_step
+behavior: gravity
 ```
 
-After import, this piece is available in the Piece Store. Its code is visible only from its own settings panel under **Expert Code**.
+Those are normalized into the real Loop piece before rendering, code generation, and runtime use.
 
-## Next correct refactor steps
+### 4. Gravity is not added as a separate Store primitive
 
-1. Split `locked_cells` from maze walls so Tetris can lock pieces cleanly.
-2. Add full row-clear behavior using the existing `score_module`.
-3. Let imported block packs declare input bindings and templates in YAML.
+The Tetris scaffold may create a named gravity loop, but the Piece Store does not expose Gravity as a separate primitive. Users can always create the same thing from the existing Loop block.
 
-The rule remains: **reuse first, compose second, duplicate never.**
+Read before changing code:
+
+- `CHATGPT_BUILD_PROCESS_HELPER.md`
+- `MASTER_CODING_RULES.md`
+- `COMPOSABILITY_GUIDE.md`
+
+## Quality gate used
+
+- JavaScript syntax check passed.
+- ZIP integrity check passed.
+- Static semantic checks confirm:
+  - scaffold uses `makeGravityLoop()`
+  - `make('gravity_step')` aliases to a real Loop
+  - old gravity pieces are normalized
+  - Program Stack double-click edits by tree path
+  - Gravity is skipped as separate Store primitive
+
+
+## v41 Double-Click Settings Fix
+
+All Program Stack pieces, including top-level Loop, Tetris Tick Loop, and nested Gravity = Face Down + Move, must open through the same shared double-click settings editor. Loop editor code is a shared function, not a local helper buried inside one branch.

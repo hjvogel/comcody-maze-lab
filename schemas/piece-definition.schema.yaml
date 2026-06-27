@@ -1,0 +1,85 @@
+version: 0.9
+required:
+  - type
+  - label
+  - behavior
+fields:
+  type: stable machine id
+  label: visible piece name
+  role: flow | template | child | primitive | event_router
+  behavior: existing runtime behavior; templates should prefer repeat count=1 over new composite behavior when possible
+  defaults:
+    children: optional ordered list of reusable piece ids for templates
+    bindings: optional gesture/event bindings whose values are ordered child-piece lists
+    dir: optional direction for face_dir primitives
+    points: optional score points
+  source: optional expert code or template view shown only inside piece settings
+ui_rules:
+  higher_level_piece:
+    applies_to: repeat | composite | input | event_router
+    visible_side_buttons: false
+    open_settings: double_click_piece
+    delete_location: row_aligned_x
+  simple_child_piece:
+    controls: row_aligned
+    floating_controls: false
+runtime_rules:
+
+  loop_count_one_template:
+    preferred_for: higher-level assemblies that run a child chain once
+    example: Gravity = Face Down + Move
+    behavior: repeat
+    count: 1
+    reason: reuse existing Loop visual, settings, generated-code, and runtime paths
+  nested_tree:
+    source_of_truth: true
+    supports_multi_level_depth: true
+    legacy_one_level_handlers: forbidden
+  input_event:
+    reuses_child_pieces: true
+    consumes_run_step_budget: false
+    queued: true
+    blocked_tetris_side_move: no_crash
+  tetris_line_clear:
+    occupied_for_line_clear: locked_cells OR manual_walls
+    clear_piece_sets_last_clear_rows: true
+    score_event_reads_last_clear_rows: true
+rules:
+  - assemble from existing tested pieces before creating a new primitive
+  - reusable utilities must be visible as flow pieces, template pieces, or child pieces
+  - templates must use the same nested representation model as loops
+  - visual representation, generated code, runtime execution, and settings must read from the same child tree
+  - higher-level pieces must not display floating controls beside nested bodies
+  - pieces open settings by double-click, not settings wheels
+  - piece store is hidden by default and opens as an overlay drawer
+  - grid item colors are shared state, not hard-coded per mode
+  - event routers may keep nested child chains inside settings when the children are event bindings rather than sequential flow
+  - shared game semantics must be implemented once and reused by manual, imported, and runtime pieces
+  - Tetris gravity is not a new composite runtime. It is the existing repeat/loop container with count=1 and children: Face Down, Move
+  - Tetris row clear uses occupied cells, not only locked cells
+
+ui_theme:
+  grid_theme:
+    board: configurable color
+    empty_cell: configurable color
+    wall_manual_block: configurable color
+    goal: configurable color
+    locked_fallback: configurable color
+
+
+reuse_machine_type:
+  rule: reuse existing type, not only existing behavior
+  example_correct:
+    label: Gravity = Face Down + Move
+    type: repeat
+    behavior: repeat
+    count: 1
+    children: [face_down, move]
+  example_wrong:
+    type: gravity_step
+    behavior: repeat
+  legacy_aliases:
+    gravity_step: normalize_to_repeat_before_rendering
+
+# v0.9: every visible stack piece opens settings by double-click/double-tap through one shared editor.
+double_click_settings: true

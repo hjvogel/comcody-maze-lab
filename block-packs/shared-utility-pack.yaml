@@ -1,0 +1,31 @@
+version: 0.7
+name: Shared Utility Pack
+rule: visible_utility_event_router_double_click_edit
+blocks:
+  - type: input
+    label: Tablet Input
+    icon: 👆
+    role: event_router
+    behavior: input
+    class: inputPiece
+    source: |
+      template TabletInput {
+        // Event router only. Gestures run nested child-piece chains.
+        swipe left  -> Face Left + Move
+        swipe right -> Face Right + Move
+        swipe down  -> Face Down + Move
+        tap         -> Rotate Shape
+      }
+  - type: score
+    label: Score Event
+    icon: ★
+    role: flow
+    behavior: score
+    class: scorePiece
+    defaults:
+      points: 10
+      reason: custom_score
+    source: |
+      function scoreEvent(reason, points) {
+        score.add(reason, points)
+      }
