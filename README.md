@@ -1,4 +1,4 @@
-# ComCody Lab v46 — Export Fallback + Logging
+# ComCody Lab v47 — Clean Pack Studio Export
 
 This version fixes the release-blocking export runtime failure where some browsers/environments did not provide a usable `URL.createObjectURL` path.
 
@@ -15,6 +15,14 @@ tests.yaml smoke tests
   ↕
 import/export ZIP
 ```
+
+
+## What is fixed in v47
+
+- Removed the redundant top-right **Export Game** button from the global header.
+- Full game export now lives in **📦 Packs / Pack Studio**, where status, fallback download link, and export log are visible together.
+- Kept v46 fallback behavior for browsers/environments where `URL.createObjectURL` is missing or throws.
+- Updated `THINKINGRESULTS.md` with the `URL.createObjectURL is not a function` issue and the tested fallback rule.
 
 ## What is fixed in v46
 

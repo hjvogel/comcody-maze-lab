@@ -100,8 +100,8 @@ h1{font-size:clamp(24px,3.4vw,40px)}
 </head>
 <body>
 <header>
-  <div><h1>🧩 ComCody Maze Lab</h1><p class="sub">v45: dependable Pack Studio — visible, tested export/import for real composable packs.</p></div>
-  <div class="topActions"><button id="tabMaker" class="gold active">🧱 Maze Maker</button><button id="tabPath">▶ Path Game</button><button id="gameSetupBtn" class="gold">🎛 Game Setup</button><button id="packStudioBtn" class="gold">📦 Packs</button><button id="exportBtn">↧ Export Game</button></div>
+  <div><h1>🧩 ComCody Maze Lab</h1><p class="sub">v47: clean Pack Studio export — one export home, tested fallback logging.</p></div>
+  <div class="topActions"><button id="tabMaker" class="gold active">🧱 Maze Maker</button><button id="tabPath">▶ Path Game</button><button id="gameSetupBtn" class="gold">🎛 Game Setup</button><button id="packStudioBtn" class="gold">📦 Packs</button></div>
 </header>
 <div class="app">
   <section id="makerPage" class="page active makerLayout">
@@ -495,7 +495,7 @@ async function exportFirstProgramPieceFromStudio(){
   else announcePackStatus('No Program Stack piece to export yet.');
 }
 async function runPackButtonAction(id){
-  if(id==='exportBtn'||id==='exportGameStoreBtn'||id==='packExportGameBtn'||id==='setupExportGameBtn')return await exportGameBundleZip();
+  if(id==='exportGameStoreBtn'||id==='packExportGameBtn'||id==='setupExportGameBtn')return await exportGameBundleZip();
   if(id==='importBlocksBtn'||id==='packImportBtn'||id==='setupImportBtn'){
     const target=id==='packImportBtn'?'#packStudioStatus':id==='setupImportBtn'?'#setupImportStatus':'#pathStatus';
     openPackFileChooser(target);return true;
@@ -506,7 +506,7 @@ async function runPackButtonAction(id){
 function bindPackActionController(){
   document.addEventListener('click',e=>{
     const btn=e.target.closest('button');if(!btn)return;
-    if(!['exportBtn','exportGameStoreBtn','packExportGameBtn','setupExportGameBtn','importBlocksBtn','packImportBtn','setupImportBtn','packExportFirstBtn'].includes(btn.id))return;
+    if(!['exportGameStoreBtn','packExportGameBtn','setupExportGameBtn','importBlocksBtn','packImportBtn','setupImportBtn','packExportFirstBtn'].includes(btn.id))return;
     e.preventDefault();e.stopImmediatePropagation();runPackButtonAction(btn.id).catch(announceExportError);
   },true);
 }

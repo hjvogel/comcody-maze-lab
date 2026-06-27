@@ -138,3 +138,8 @@ Required:
 ## v45 QA note
 
 See `THINKINGRESULTS.md` for the export regression analysis and the deterministic tool path used for this fix.
+
+
+## v47 Pack Studio export UX
+
+Full game export belongs in Pack Studio, not as a duplicate global header action. Export UI must show status, fallback download link, and log in the same place.

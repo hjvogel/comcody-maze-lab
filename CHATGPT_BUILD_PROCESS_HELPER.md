@@ -210,7 +210,7 @@ For Pack Studio or file workflows, static syntax checks are not enough.
 Use this order:
 
 1. Fresh start the app.
-2. Click the visible top-level export button.
+2. Open 📦 Packs / Pack Studio and click Export Full Game ZIP.
 3. Confirm a ZIP download is started or a visible fallback download link appears.
 4. Click every visible import entry point:
    - Piece Store Import Pack
@@ -251,3 +251,8 @@ For download/export bugs, do not rely on screenshots or Chromium timeouts as pro
 ```
 
 The product must show a visible fallback download link and a visible log line for every branch.
+
+
+## v47 export UX rule
+
+Do not add duplicate global export buttons. Full game export belongs in Pack Studio because that is where the persistent download link and export log live. A release check must confirm the header does not contain a redundant `exportBtn`.
