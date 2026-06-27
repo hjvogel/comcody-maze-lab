@@ -1,0 +1,61 @@
+version: 0.1
+pack: comcody-tetris-lite
+summary: Minimal Tetris module pack for ComCody Lab.
+blocks:
+  - type: tetris_board
+    label: Board Grid
+    icon: 🧱
+    role: tetris_module
+    behavior: tetris_board
+    class: tetrisPiece
+    defaults:
+      cols: 10
+      rows: 20
+  - type: tetromino_tray
+    label: Tetromino Tray
+    icon: 🎒
+    role: tetris_module
+    behavior: tetromino_tray
+    class: tetrisPiece
+  - type: falling_piece
+    label: Falling Piece
+    icon: 🧩
+    role: tetris_module
+    behavior: falling_piece
+    class: tetrisPiece
+  - type: move_left
+    label: Move Left
+    icon: ←
+    role: tetris_module
+    behavior: move_left
+    class: turnPiece
+  - type: move_right
+    label: Move Right
+    icon: →
+    role: tetris_module
+    behavior: move_right
+    class: movePiece
+  - type: rotate_piece
+    label: Rotate Piece
+    icon: ↻
+    role: tetris_module
+    behavior: rotate_piece
+    class: repeatPiece
+  - type: soft_drop
+    label: Soft Drop
+    icon: ↓
+    role: tetris_module
+    behavior: soft_drop
+    class: timerPiece
+  - type: lock_piece
+    label: Lock Piece
+    icon: 🔒
+    role: tetris_module
+    behavior: lock_piece
+    class: wallPiece
+  - type: clear_lines
+    label: Clear Lines
+    icon: ✨
+    role: tetris_module
+    behavior: clear_lines
+    class: wallRandPiece

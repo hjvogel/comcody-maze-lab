@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>ComCody Lab v32</title>
+<style>
+:root{
+  --bg:#07111f;--panel:#101b2d;--panel2:#07101d;--ink:#f8fafc;--muted:#a9b9d6;--line:#2b4364;
+  --gold:#ffd166;--green:#38e078;--red:#ff5a65;--blue:#57a6ff;--purple:#9d7bff;--orange:#ff9f1c;
+  --cell:72px;--cols:8;--rows:8;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}body{overflow:hidden;background:radial-gradient(circle at 55% 0,#1a335c 0,#07111f 50%,#02050b 100%)}button,input,select,textarea{font:inherit}button{border:0;border-radius:14px;padding:11px 14px;background:#19365d;color:white;font-weight:950;cursor:pointer;box-shadow:inset 0 0 0 2px #3d6fa8;white-space:nowrap}button:hover{filter:brightness(1.1)}button.primary{background:#134b2a;box-shadow:inset 0 0 0 2px var(--green)}button.gold{background:#54380c;box-shadow:inset 0 0 0 2px var(--gold)}button.danger{background:#481622;box-shadow:inset 0 0 0 2px var(--red)}button.purple{background:#2d1b57;box-shadow:inset 0 0 0 2px var(--purple)}button.small{padding:7px 9px;border-radius:10px;font-size:13px}button.active{outline:3px solid var(--gold);filter:brightness(1.15)}
+header{height:108px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start;padding:14px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#152746aa,#0b1324aa);overflow:hidden}h1{margin:0;font-size:clamp(30px,4vw,52px);line-height:1;letter-spacing:-.035em}.sub{margin:6px 0 0;color:#c2d2ef;font-size:clamp(14px,1.25vw,18px);max-width:1180px}.topActions{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}.app{height:calc(100dvh - 108px);display:grid;overflow:hidden}.page{display:none;height:100%;min-height:0}.page.active{display:grid}.panel{background:rgba(16,27,45,.95);border:1px solid var(--line);border-radius:22px;padding:14px;box-shadow:0 24px 70px #0006;min-width:0;min-height:0}.panel h2{margin:0 0 12px;font-size:20px}.hint{color:var(--muted);font-size:13px;line-height:1.35}.makerLayout{grid-template-columns:minmax(0,1fr) clamp(300px,30vw,430px);gap:12px;padding:12px;min-height:0;overflow:hidden}.rightRail{display:grid;grid-template-rows:minmax(190px,auto) minmax(0,1fr);gap:12px;min-height:0;overflow:hidden}.mazePanel{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:10px;min-height:0;overflow:hidden}.mazeTop{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}.mazeShell{position:relative;touch-action:none;min-height:0;border:1px solid #243a59;background:radial-gradient(circle at 50% 45%,#0e1728,#060b14 68%);border-radius:20px;padding:10px;display:grid;place-items:center;overflow:hidden}.mazeGrid{display:grid;touch-action:none;grid-template-columns:repeat(var(--cols),var(--cell));grid-template-rows:repeat(var(--rows),var(--cell));gap:max(3px,calc(var(--cell)*.07));place-content:center;max-width:100%;max-height:100%}.cell{touch-action:none;width:var(--cell);height:var(--cell);border-radius:calc(var(--cell)*.22);display:grid;place-items:center;font-size:calc(var(--cell)*.45);font-weight:950;background:#e6edf5;color:#07111f;border:2px solid #ffffff50;user-select:none;position:relative;box-shadow:inset 0 -4px 10px #0002}.cell:hover{outline:3px solid var(--gold)}.cell.path{background:#e6edf5}.cell.wall{background:#334155;color:#e5e7eb}.cell.goal{background:linear-gradient(135deg,#23b961,#8df5aa)}.cell.body{background:var(--body,#55b9ff)!important;color:#07111f;box-shadow:inset 0 0 0 3px #ffffff70,0 0 16px color-mix(in srgb,var(--body,#55b9ff) 70%,transparent)}.cell.head{outline:4px solid var(--gold);z-index:2}.cell.step{animation:pulse .55s ease-in-out infinite alternate;outline:4px solid var(--gold)}@keyframes pulse{to{transform:scale(1.08);filter:brightness(1.3)}}.status{font-weight:850;color:#cdd8ef;min-height:26px}.scoreBox{padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:#06101d;font-weight:950}.kernelStrip{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}.kernelChip{padding:8px 10px;border-radius:12px;background:#07101d;border:1px solid #345374;color:#dbeafe;font-weight:950;font-size:13px}.kernelChip b{color:var(--gold)}.builderPanel{display:grid;grid-template-rows:auto 1fr;min-height:0}.pieceLists{display:grid;grid-template-columns:1fr 1fr;gap:12px;min-height:0}.pieceCol{background:#07101d;border:1px solid var(--line);border-radius:18px;padding:12px;overflow:auto;min-height:0}.pieceCol h3{margin:0 0 8px;font-size:15px;color:#dbe8ff}.piece{position:relative;margin:7px 0;padding:10px 38px 10px 22px;min-height:44px;border-radius:16px;color:white;font-weight:950;display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none;box-shadow:0 8px 20px #0006,inset 0 0 0 2px #ffffff30;max-width:100%;overflow:visible}.piece:after{content:"";position:absolute;right:2px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:8px;background:inherit;clip-path:polygon(0 0,100% 50%,0 100%)}.piece:before{content:"";position:absolute;left:3px;top:50%;transform:translateY(-50%);width:16px;height:24px;border-radius:8px;background:#07101d;box-shadow:inset 0 0 0 2px #ffffff25}.piece .gear{position:absolute;right:26px;top:50%;transform:translateY(-50%);width:26px;height:26px;display:grid;place-items:center;border-radius:10px;background:#1e2b42;box-shadow:inset 0 0 0 2px #ffffff25}.piece.selected,.piece.activeStep{outline:4px solid var(--gold);filter:brightness(1.18);animation:wiggle .55s ease-in-out infinite alternate}@keyframes wiggle{to{transform:translateX(5px)}}.pathPiece{background:linear-gradient(135deg,#dce8f6,#ffffff);color:#0b1325}.wallPiece{background:linear-gradient(135deg,#263348,#667085)}.startPiece{background:linear-gradient(135deg,#ff7b00,#ffbd55)}.shapePiece{background:linear-gradient(135deg,#ffc247,#fff176);color:#111827}.goalPiece{background:linear-gradient(135deg,#0f9f58,#38e078)}.testPiece{background:linear-gradient(135deg,#c2185b,#ff5aac)}.timerPiece{background:linear-gradient(135deg,#0f766e,#2dd4bf)}.movePiece{background:linear-gradient(135deg,#1463d8,#48b5ff)}.turnPiece{background:linear-gradient(135deg,#117fb8,#34d1ff)}.checkPiece{background:linear-gradient(135deg,#c2185b,#ff5aac)}.repeatPiece{background:linear-gradient(135deg,#7132d8,#b080ff)}.wallRandPiece{background:linear-gradient(135deg,#facc15,#f59e0b);color:#111827;box-shadow:0 8px 20px #0006,inset 0 0 0 2px #fff7adcc}.inputPiece{background:linear-gradient(135deg,#0891b2,#67e8f9);color:#06202a}.scorePiece{background:linear-gradient(135deg,#ca8a04,#fde047);color:#1f1300}.customPiece{background:linear-gradient(135deg,#0f172a,#64748b)}.loopChildren{margin:2px 0 0 22px;padding:4px 8px 6px 12px;border-left:4px solid var(--purple);border-radius:12px;background:#050b1488}.loopChildren .piece{font-size:13px;min-height:34px;margin:5px 0}.loopChildren .loopCaption{font-size:12px;color:#c4b5fd;margin-bottom:4px;font-weight:900}.loopChildItem{position:relative;margin:6px 0;padding-right:70px}.loopChildItem .piece{width:100%;cursor:grab}.loopChildItem>button{position:absolute;top:50%;transform:translateY(-50%);width:26px;min-width:26px;height:26px;min-height:26px;padding:0;border-radius:9px;font-size:12px;z-index:3}.loopChildItem>button.childGear{right:36px}.loopChildItem>button.childDelete{right:4px}.loopChildItem.insertBefore{border-top:4px solid var(--gold);padding-top:6px}.loopChildren.dropInside{border-color:var(--gold);background:#1a1205}.loopChildren.emptyTarget{min-height:52px;display:grid;align-items:center}.miniPieceBtn{display:inline-block;margin:4px;padding:7px 9px;border-radius:10px;background:#13243b;color:white;border:1px solid #315176;font-weight:850;cursor:pointer}.innerChain{border:1px dashed #536f9d;border-radius:14px;padding:8px;background:#050b14;margin:8px 0}.innerRow{display:flex;gap:7px;align-items:center;margin:6px 0}.innerRow .piece{flex:1;margin:0;min-height:36px;font-size:13px}.actionStack{border:2px dashed #315176;border-radius:16px;padding:10px;min-height:280px}.actionStack button{width:100%;margin:6px 0}.questsPanel{overflow:auto}.quests{line-height:1.75;margin:0;padding-left:20px}.pass{color:#86efac}.fail{color:#fda4af}pre{margin:0;white-space:pre-wrap;overflow:auto;background:#050b14;border:1px solid var(--line);border-radius:14px;padding:12px;color:#d8e4f5;font-size:12px;line-height:1.45;min-height:0}.yamlBox{margin-top:14px}.pathLayout{grid-template-columns:minmax(0,1fr) clamp(310px,34vw,430px);gap:12px;padding:12px;min-height:0;overflow:hidden}.pathSide{display:grid;grid-template-rows:minmax(150px,auto) minmax(0,1fr);gap:12px;min-height:0;overflow:hidden}.pathSide>.panel{overflow:hidden}.pathSide>.panel:nth-child(2){display:grid;grid-template-rows:auto minmax(0,1fr)}.pathSide>.codePanel{display:none}.pathSide>.panel:nth-child(3){display:none}.runBar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.runBar input{accent-color:var(--gold)}.speedRead{min-width:58px;color:var(--gold);font-weight:950}.storeTools{display:flex;gap:8px;margin-bottom:10px;align-items:center;flex-wrap:wrap}.store{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:210px;overflow:auto;padding-right:4px}.store .piece{width:100%;min-width:0;margin:0;cursor:grab;font-size:clamp(13px,1.3vw,16px);padding-left:22px}.stack{border:2px dashed #315176;border-radius:18px;padding:10px;min-height:0;height:100%;overflow:auto;background:#07101d;contain:layout paint}.stack.dragOver{border-color:var(--gold);background:#191305}.stackItem{position:relative;display:block;margin:8px 0;padding-right:64px;min-width:0}.stackItem>button{position:absolute;top:50%;transform:translateY(-50%);width:28px;min-width:28px;height:28px;min-height:28px;padding:0;border-radius:10px;font-size:13px;z-index:2}.stackItem>button:nth-of-type(1){display:none}.stackItem>button:nth-of-type(2){right:32px}.stackItem>button:nth-of-type(3){right:0}.stackItem .piece{margin:0;cursor:grab;width:100%;font-size:clamp(14px,1.4vw,18px);min-height:42px}.stackItem.insertBefore{border-top:4px solid var(--gold);padding-top:5px}.stackItem.dragging{opacity:.45}.stackBtns{display:flex;gap:5px}.codePanel{display:grid;grid-template-rows:auto 1fr;min-height:0}.codeLine{display:block;padding:2px 6px;border-radius:8px}.codeLine.activeLine{background:#4a350c;color:#fff2ba;outline:2px solid var(--gold);box-shadow:0 0 18px #ffd16644}.settingsExpert{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}.settingsExpert .pieceCode{margin-top:10px;max-height:34vh;overflow:auto}.settingsExpert button{min-width:150px}.expertLayout{grid-template-columns:320px 1fr;gap:14px;padding:14px;min-height:0}.expertList{overflow:auto}.expertBody{display:grid;grid-template-rows:auto minmax(0,1fr) auto minmax(180px,32vh);gap:10px;overflow:hidden}.expertItem{display:block;width:100%;margin:7px 0;text-align:left;background:#13243b}.expertItem.active{background:#4a350c;box-shadow:inset 0 0 0 2px var(--gold)}.modal{position:fixed;inset:0;z-index:100;display:none;place-items:center;background:#02050bcc;backdrop-filter:blur(6px);padding:18px}.modal.open{display:grid}.modalCard{width:min(760px,96vw);max-height:88dvh;overflow:auto;background:#07101d;border:2px solid var(--gold);border-radius:24px;box-shadow:0 40px 140px #000;padding:16px}.modalHead{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}.modalHead b{font-size:24px;flex:1}.formGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.formGrid label,.formFull label{display:grid;gap:5px;color:var(--muted);font-size:13px;font-weight:900}.formGrid input,.formGrid select,.formFull textarea{width:100%;padding:10px;border-radius:12px;border:1px solid #345374;background:#050b14;color:white;font-weight:900}.shapeTray{display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:10px;margin-top:10px}.shapeCard{border:2px solid #335477;border-radius:16px;background:#0c1728;padding:10px;display:grid;gap:8px;place-items:center;color:white;font-weight:950}.shapeCard.active{border-color:var(--gold);box-shadow:0 0 0 3px #ffd16633}.miniShape{display:grid;gap:3px}.miniCell{width:18px;height:18px;border-radius:5px;background:var(--shapeColor,#57a6ff);box-shadow:inset 0 0 0 2px #ffffff55}.miniCell.empty{background:transparent;box-shadow:none}.muted{color:var(--muted)}@media(max-width:1050px){header{height:auto;display:block;overflow:visible}.topActions{justify-content:flex-start;margin-top:10px}.app{height:calc(100dvh - 150px)}.makerLayout,.pathLayout{grid-template-columns:1fr;overflow:auto}.rightRail,.pathSide{grid-template-rows:auto auto auto;overflow:visible}.pieceLists{grid-template-columns:1fr}.panel{min-height:unset}.store{grid-template-columns:repeat(3,minmax(0,1fr));max-height:none}.store .piece{width:100%}.mazeShell{min-height:52dvh}}@media(max-width:780px){body{overflow:auto}.app{height:auto}.page.active{min-height:calc(100dvh - 150px)}.makerLayout,.pathLayout,.expertLayout{display:grid;grid-template-columns:1fr;padding:10px}.mazeShell{min-height:58dvh}.formGrid{grid-template-columns:1fr}.topActions button{font-size:14px;padding:9px 10px}.store{grid-template-columns:1fr}.stackItem{padding-right:58px}}
+
+/* v32: no bottom expert/code surfaces; code inspection lives only inside piece settings. */
+#expertPage,.expertLayout,#expertFlowCode,#codeOut,.codePanel{display:none!important}
+.pathSide>.codePanel{display:none!important}
+@media(max-width:1050px){.pathSide{grid-template-rows:auto auto!important}}
+
+
+/* v26 tablet-first UX pass: keep the maze central, keep controls reachable, avoid stacking on landscape tablets. */
+header{height:82px;padding:10px 14px;gap:10px;align-items:center}
+h1{font-size:clamp(24px,3.4vw,40px)}
+.sub{margin-top:4px;font-size:clamp(12px,1.2vw,15px);line-height:1.25;max-width:980px}
+.topActions{gap:7px;align-items:center}.topActions button{padding:9px 11px;border-radius:12px;font-size:clamp(13px,1.5vw,16px);min-height:40px}
+.app{height:calc(100dvh - 82px)}
+.panel{border-radius:18px;padding:10px}.panel h2{font-size:18px;margin-bottom:8px}
+.makerLayout,.pathLayout{grid-template-columns:minmax(0,1fr) minmax(286px,31vw);gap:10px;padding:10px;overflow:hidden}
+.rightRail{grid-template-rows:minmax(0,1.1fr) minmax(118px,.7fr);gap:10px;overflow:hidden}
+.pathSide{grid-template-rows:minmax(130px,auto) minmax(0,1fr);gap:10px;overflow:hidden}
+.mazePanel{gap:8px}.mazeTop{gap:8px}.mazeTop h2{font-size:20px}.mazeTop button{padding:8px 10px;min-height:36px}.runBar{gap:6px;margin-bottom:6px}.runBar button{padding:7px 9px;min-height:36px;font-size:13px}.runBar input{max-width:120px}
+.mazeShell{padding:8px;border-radius:18px;min-height:0}.mazeGrid{gap:max(2px,calc(var(--cell)*.055))}.cell{border-width:1px;box-shadow:inset 0 -3px 8px #0002}.cell:hover{outline-width:2px}.cell.head{outline-width:3px}.cell.step{outline-width:3px}
+.status{min-height:20px;font-size:13px;line-height:1.2}.kernelStrip{gap:5px;margin:5px 0}.kernelChip{padding:5px 7px;border-radius:10px;font-size:11px}.scoreBox{padding:6px 8px;border-radius:12px;font-size:13px}
+.builderPanel{overflow:hidden}.pieceLists{grid-template-columns:1fr;gap:8px;overflow:hidden}.pieceCol{padding:8px;border-radius:14px}.pieceCol h3{font-size:13px;margin-bottom:5px}.piece{min-height:38px;padding:8px 34px 8px 20px;border-radius:13px;margin:5px 0;font-size:13px}.piece:after{width:18px;height:18px}.piece:before{width:13px;height:20px}.piece .gear{right:22px;width:24px;height:24px}.actionStack{min-height:0;padding:8px;display:grid;grid-template-columns:1fr 1fr;gap:7px}.actionStack button{width:100%;margin:0;padding:8px 7px;font-size:12px;min-height:36px;border-radius:11px}.questsPanel{display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden}.questsPanel .yamlBox{display:none}.quests{font-size:13px;line-height:1.45;overflow:auto;padding-right:6px}.hint{font-size:12px}.store{grid-template-columns:repeat(2,minmax(0,1fr));max-height:150px;gap:6px}.store .piece{font-size:12px;min-height:36px}.stack{padding:8px;border-radius:15px}.stackItem{margin:6px 0;padding-right:58px}.stackItem .piece{min-height:38px;font-size:13px}.loopChildren{margin-left:14px;padding:4px 6px 5px 10px}.loopChildItem{padding-right:62px}.modalCard{width:min(720px,96vw);max-height:86dvh;border-radius:20px}.shapeTray{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}.shapeCard{padding:8px;border-radius:14px}
+.expertLayout{grid-template-columns:minmax(250px,28vw) minmax(0,1fr);padding:10px;gap:10px}.expertBody{gap:8px}.expertList,.expertBody pre{min-height:0}
+@media (max-height:720px) and (min-width:821px){header{height:68px}.app{height:calc(100dvh - 68px)}.sub{display:none}.panel{padding:8px}.panel h2{font-size:16px}.mazeTop h2{font-size:18px}.mazeShell{padding:6px}.kernelChip{font-size:10px}.scoreBox,.status{font-size:12px}.rightRail{grid-template-rows:minmax(0,1fr) minmax(96px,.45fr)}.store{max-height:118px}.topActions button{min-height:34px;padding:7px 9px}}
+@media (max-width:920px) and (orientation:portrait){body{overflow:auto}header{height:auto;display:block;overflow:visible}.topActions{justify-content:flex-start;margin-top:8px}.app{height:auto}.page.active{min-height:calc(100dvh - 132px)}.makerLayout,.pathLayout,.expertLayout{grid-template-columns:1fr;padding:8px;overflow:visible}.rightRail,.pathSide{grid-template-rows:auto auto;overflow:visible}.mazeShell{min-height:min(60dvh,680px)}.store{max-height:none}.questsPanel .yamlBox{display:none}.pieceLists{grid-template-columns:1fr}.expertLayout{grid-template-columns:1fr}}
+@media (max-width:620px){h1{font-size:23px}.topActions button{font-size:12px;padding:7px 8px}.makerLayout,.pathLayout{padding:6px}.panel{padding:8px}.mazeShell{min-height:54dvh}.store{grid-template-columns:1fr}.formGrid{grid-template-columns:1fr}.actionStack{grid-template-columns:1fr}.stackItem{padding-right:52px}}
+
+
+.gameSetupGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:10px 0}
+.setupCard{border:1px solid #345374;border-radius:18px;background:#0b1628;padding:14px;display:grid;gap:8px;align-content:start}
+.setupCard h3{margin:0;color:var(--gold)}
+.setupCard p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+.setupActions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.importStatus{margin-top:8px;padding:9px 10px;border-radius:12px;background:#050b14;border:1px solid var(--line);color:#dbeafe;font-weight:800}
+
+.inputHint{margin-top:8px;color:#c2d2ef;font-size:13px;font-weight:800;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.inputHint span{padding:5px 8px;border-radius:999px;background:#07101d;border:1px solid #315176;color:#dbeafe}
+@media(max-width:780px){.gameSetupGrid{grid-template-columns:1fr}}
+.stackItem{padding-right:40px}.stackItem>.stackDelete{right:0!important;display:block!important}.stackItem>button:not(.stackDelete){display:none!important}.stackItem .piece .gear{right:8px}.stackItem .piece{padding-right:48px}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>🧩 ComCody Maze Lab</h1><p class="sub">v32: imported pieces use the same clean settings and expert-code path; no bottom expert/code panels.</p></div>
+  <div class="topActions"><button id="tabMaker" class="gold active">🧱 Maze Maker</button><button id="tabPath">▶ Path Game</button><button id="gameSetupBtn" class="gold">🎛 Game Setup</button><button id="exportBtn">↧ Export</button></div>
+</header>
+<div class="app">
+  <section id="makerPage" class="page active makerLayout">
+    <div class="panel mazePanel">
+      <div class="mazeTop"><h2>Maze Canvas</h2><div><button id="mazeSettings" class="gold small">⚙ Maze Settings</button><button id="startSettingsTop" class="gold small">🧍 Start Shape</button></div></div>
+      <div class="mazeShell"><div id="makerGrid" class="mazeGrid"></div></div>
+      <div><div id="makerStatus" class="status">Ready. Choose a piece and paint the maze.</div><div class="kernelStrip"><div class="kernelChip">Preset: <b id="kernelPresetA">maze</b></div><div class="kernelChip">Grid: <b id="kernelGridA">—</b></div><div class="kernelChip">Active Piece: <b id="kernelPieceA">—</b></div><div class="kernelChip">Score: <b id="kernelScoreA">0</b></div></div><div class="scoreBox" id="makerScore">Maker quests: —</div></div>
+    </div>
+    <div class="rightRail">
+      <div class="panel builderPanel"><h2>Maze Piece Builder</h2><div class="pieceLists"><div class="pieceCol"><h3>Paint pieces</h3><div id="makerPieces"></div></div><div class="pieceCol"><h3>Actions</h3><div class="actionStack"><button id="clearWalls" class="danger">Clear Walls</button><button id="demoMaze" class="gold">Load Demo Maze</button><button id="testMazeMaker" class="primary">Test Maze</button><button id="publishPlay" class="primary">Publish & Play</button></div></div></div></div>
+      <div class="panel questsPanel"><h2>Maker Quests</h2><ol id="makerQuests" class="quests"></ol><div class="yamlBox"><h2>Maze YAML</h2><pre id="mazeYaml"></pre></div></div>
+    </div>
+  </section>
+
+  <section id="pathPage" class="page pathLayout">
+    <div class="panel mazePanel">
+      <div class="mazeTop"><h2>Path Game</h2><div class="runBar"><button id="runPath" class="primary">▶ Run</button><button id="testPath" class="gold">🏁 Test</button><button id="pausePath">⏸ Pause</button><button id="stepPath">» Step</button><button id="resetPath">↻ Reset</button><input id="speedSlider" type="range" min="0" max="2000" step="50" value="200"><span id="speedRead" class="speedRead">0.2s</span><button id="timerSettings" class="small gold">⚙ Timer</button></div></div>
+      <div class="mazeShell"><div id="playGrid" class="mazeGrid"></div></div>
+      <div class="inputHint"><span>👆 input module</span><span>↔ swipe left/right</span><span>↧ swipe down</span><span>↻ tap rotate</span><span>↓↓ double-tap down</span></div>
+      <div><div id="pathStatus" class="status">Build a path, then press Run or Test.</div><div class="kernelStrip"><div class="kernelChip">Preset: <b id="kernelPresetB">maze</b></div><div class="kernelChip">Grid: <b id="kernelGridB">—</b></div><div class="kernelChip">Active Piece: <b id="kernelPieceB">—</b></div><div class="kernelChip">Score: <b id="kernelScoreB">0</b></div></div><div id="score" class="scoreBox">Score: —</div></div>
+    </div>
+    <div class="pathSide">
+      <div class="panel"><h2>Piece Store</h2><div class="storeTools"><button id="importBlocksBtn" class="small gold">⬆ Import Block YAML/ZIP</button><input id="blockImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div><div id="pathStore" class="store"></div></div>
+      <div class="panel"><h2>Program Stack</h2><div id="programStack" class="stack"></div></div>
+    </div>
+  </section>
+
+<div id="settingsModal" class="modal"><div class="modalCard"><div class="modalHead"><b id="settingsTitle">Settings</b><button id="closeSettings">×</button></div><div id="settingsBody"></div></div></div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s), all=s=>[...document.querySelectorAll(s)], key=(x,y)=>x+','+y;
+const COLORS={I:'#22d3ee',O:'#facc15',T:'#a78bfa',S:'#4ade80',Z:'#fb7185',J:'#60a5fa',L:'#fb923c',R1:'#f97316',R2:'#14b8a6',R3:'#e879f9',C:'#f8fafc'};
+const SHAPES=[
+ {id:'I',name:'I Bar',color:COLORS.I,cells:[[0,0],[1,0],[2,0],[3,0]]},
+ {id:'O',name:'O Square',color:COLORS.O,cells:[[0,0],[1,0],[0,1],[1,1]]},
+ {id:'T',name:'T Shape',color:COLORS.T,cells:[[0,0],[1,0],[2,0],[1,1]]},
+ {id:'S',name:'S Shape',color:COLORS.S,cells:[[1,0],[2,0],[0,1],[1,1]]},
+ {id:'Z',name:'Z Shape',color:COLORS.Z,cells:[[0,0],[1,0],[1,1],[2,1]]},
+ {id:'J',name:'J Shape',color:COLORS.J,cells:[[0,0],[0,1],[1,1],[2,1]]},
+ {id:'L',name:'L Shape',color:COLORS.L,cells:[[2,0],[0,1],[1,1],[2,1]]},
+ {id:'1x1',name:'1×1',color:COLORS.R1,cells:[[0,0]]},
+ {id:'2x1',name:'2×1',color:COLORS.R2,cells:[[0,0],[1,0]]},
+ {id:'1x2',name:'1×2',color:COLORS.R2,cells:[[0,0],[0,1]]},
+ {id:'3x2',name:'3×2',color:COLORS.R3,cells:[[0,0],[1,0],[2,0],[0,1],[1,1],[2,1]]}
+];
+let maze={cols:8,rows:8,walls:new Set(),start:{x:0,y:7,dir:1},goal:{x:7,y:0},body:[[0,0]],bodyColor:COLORS.R1,bodyName:'1×1'};
+let tool='wall', customShapes=[], running=false, paused=false, activePiece=null, activeMazeKey=null, activeCode=null, state=null, steps=0;
+let timer={min:0,max:2000,step:50,defaultMs:200,limit:160};
+let program=[]; let dragIndex=null;
+let gamePreset='maze';
+let scoreModule={value:0,events:[]};
+let inputConfig={swipe:true,tapRotate:true,doubleTapDown:true,keyboard:true};
+function scoreReset(){scoreModule={value:0,events:[]};renderKernelStrip()}
+function scoreAdd(reason,points){if(!points)return;scoreModule.value+=points;scoreModule.events.push({reason,points,total:scoreModule.value});renderKernelStrip()}
+function kernelSnapshot(){return {preset:gamePreset,grid:{cols:maze.cols,rows:maze.rows},active_piece:{x:state?state.x:maze.start.x,y:state?state.y:maze.start.y,dir:state?state.dir:maze.start.dir,shape:maze.body.map(c=>[...c]),color:maze.bodyColor,name:maze.bodyName},score:{value:scoreModule.value,events:scoreModule.events.slice(-12)},input:{...inputConfig},timer:{step_ms:+($('#speedSlider')?.value||timer.defaultMs)}}}
+function renderKernelStrip(){const snap=kernelSnapshot();for(const id of ['kernelPresetA','kernelPresetB']){const el=$('#'+id);if(el)el.textContent=snap.preset}for(const id of ['kernelGridA','kernelGridB']){const el=$('#'+id);if(el)el.textContent=snap.grid.cols+'×'+snap.grid.rows}for(const id of ['kernelPieceA','kernelPieceB']){const el=$('#'+id);if(el)el.textContent=(snap.active_piece.name||'piece')+' '+snap.active_piece.shape.length+' cells'}for(const id of ['kernelScoreA','kernelScoreB']){const el=$('#'+id);if(el)el.textContent=snap.score.value}}
+const MAKER_PIECES=[['path','▫','Path','pathPiece'],['wall','■','Wall','wallPiece'],['start','⚡','Start Anchor','startPiece'],['avatar','🧍','Start Shape','shapePiece'],['goal','🏁','Goal','goalPiece'],['testMaze','🏁','Test Maze','testPiece'],['timer','⏱','Timer Step','timerPiece']];
+let STORE=[['timer','⏱ Timer Step','timerPiece'],['left','↺ Turn Left','turnPiece'],['right','↻ Turn Right','turnPiece'],['move','→ Move','movePiece'],['repeat','🔁 Loop x5','repeatPiece'],['randwall','🎲 Random Wall','wallRandPiece'],['input','👆 Tablet Input','inputPiece'],['score','★ Score Event','scorePiece'],['checkpoint','⚑ Checkpoint','checkPiece']];
+const TETRIS_LITE_DEFS=[
+ {type:'spawn_piece',label:'Spawn Random Piece',icon:'🎲',role:'flow',behavior:'spawn_piece',class:'shapePiece',defaults:{},source:`function spawnRandomPiece() {
+  active_piece = random(tetrominoTray)
+  active_piece.x = spawnColumn(grid)
+  active_piece.y = 0
+}`},
+ {type:'gravity_step',label:'Gravity Step',icon:'↓',role:'flow',behavior:'gravity',class:'movePiece',defaults:{},source:`async function gravityStep() {
+  if (canMove(active_piece, 0, 1)) {
+    active_piece.y += 1
+  } else {
+    lockPiece(active_piece)
+  }
+}`},
+ {type:'rotate_shape',label:'Rotate Shape',icon:'↻',role:'flow',behavior:'rotate_shape',class:'turnPiece',defaults:{},source:`function rotateShape() {
+  const rotated = rotateCells(active_piece.shape)
+  if (fits(rotated, active_piece.x, active_piece.y)) {
+    active_piece.shape = rotated
+  }
+}`},
+ {type:'lock_piece',label:'Lock Piece',icon:'🔒',role:'flow',behavior:'lock_piece',class:'wallPiece',defaults:{},source:`function lockPiece(piece) {
+  for (const cell of piece.cells) {
+    grid.locked.add(toGridKey(cell))
+  }
+}`},
+ {type:'clear_rows',label:'Clear Rows',icon:'▤',role:'flow',behavior:'clear_rows',class:'testPiece',defaults:{},source:`function clearFullRows() {
+  const fullRows = rowsWhereEveryCellIsLocked(grid)
+  removeRows(fullRows)
+  collapseRowsAbove(fullRows)
+  return fullRows.length
+}`},
+ {type:'score_lines',label:'Score Lines',icon:'★',role:'flow',behavior:'score_lines',class:'scorePiece',defaults:{points:100,reason:'line_clear'},source:`function scoreLines(linesCleared) {
+  score.add('line_clear', linesCleared * 100)
+}`}
+];
+const CUSTOM_BLOCKS=new Map();
+const DIRS=[[0,-1],[1,0],[0,1],[-1,0]];
+const SNIPPETS={
+ block_yaml:`# ComCody block definition YAML
+version: 0.1
+blocks:
+  - type: dash_two
+    label: Dash 2
+    icon: ⚡
+    role: flow
+    behavior: move
+    class: movePiece
+    defaults:
+      steps: 2
+  - type: random_wall_replace
+    label: Random Wall Replace
+    icon: 🎲
+    role: flow
+    behavior: random_wall
+    class: wallRandPiece
+    defaults:
+      count: 1
+      replaceExisting: true
+      persistent: false
+      ttlMoves: 3
+`,
+ wall:`function paintWall(x, y) {\n  walls.add(x + ',' + y)\n}\n\nfunction removeWall(x, y) {\n  walls.delete(x + ',' + y)\n}`,
+ path:`function paintPath(x, y) {\n  walls.delete(x + ',' + y)\n}`,
+ start:`function setStartAnchor(x, y) {\n  start.x = x\n  start.y = y\n}`,
+ avatar:`function setStartShape(cells, color) {\n  body = cells\n  bodyColor = color\n}\n\nfunction fitsBody(anchor) {\n  return body.every(([dx, dy]) => isOpen(anchor.x + dx, anchor.y + dy))\n}`,
+ goal:`function setGoal(x, y) {\n  goal.x = x\n  goal.y = y\n}`,
+ timer:`async function timerStep(piece) {\n  await highlight(piece)\n  await delay(piece.delayMs ?? globalDelayMs)\n}`,
+ move:`async function move(piece) {\n  for (let i = 0; i < piece.steps; i++) {\n    const next = ahead(state)\n    if (!avatarFits(next)) return blocked()\n    state.x = next.x\n    state.y = next.y\n  }\n}`,
+ left:`function turnLeft() {\n  state.dir = (state.dir + 3) % 4\n}`,
+ right:`function turnRight() {\n  state.dir = (state.dir + 1) % 4\n}`,
+ checkpoint:`function checkpoint(label) {\n  assert(state.x !== null && state.y !== null, label)\n}`,
+ repeat:`async function repeat(piece) {\n  for (let i = 0; i < piece.count; i++) {\n    for (const child of piece.children) {\n      await execPiece(child)\n    }\n  }\n}`,
+ randwall:`function placeRandomWall(piece) {\n  const candidates = openCellsNotOccupiedByAvatarOrGoal()\n  if (piece.replaceExisting && walls.size > 0) {\n    removeOneRandomWall()\n  }\n  placeWall(random(candidates))\n}`,
+ grid:`function resizeGrid(cols, rows) {\n  maze.cols = cols\n  maze.rows = rows\n  fitMazeToAvailableSpace()\n}`,
+ input:`function bindTabletInput() {\n  swipeLeft  -> moveActivePiece(-1, 0)\n  swipeRight -> moveActivePiece(1, 0)\n  swipeDown  -> moveActivePiece(0, 1)\n  tap        -> rotateActivePiece()\n  doubleTap  -> moveActivePiece(0, 1)\n}`
+};
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
+function pieceHtml(type,icon,label,cls,id=''){return `<div class="piece ${cls} ${tool===type?'selected':''}" data-tool="${type}" ${id?`data-id="${id}"`:''}><span>${icon}</span><span>${esc(label)}</span><span class="gear" data-gear="${type}" title="settings">⚙</span></div>`}
+function setPage(name){all('.page').forEach(p=>p.classList.remove('active'));$('#'+name+'Page').classList.add('active');all('.topActions button').forEach(b=>b.classList.remove('active'));$('#tab'+name[0].toUpperCase()+name.slice(1)).classList.add('active');fitMaze();renderAll()}
+$('#tabMaker').onclick=()=>setPage('maker');$('#tabPath').onclick=()=>setPage('path');$('#gameSetupBtn').onclick=openGameSetup;
+function fitMaze(){let best=0;for(const box of ['makerGrid','playGrid']){const grid=$('#'+box);if(!grid)return;const shell=grid.parentElement;if(!shell)return;const w=shell.clientWidth-36,h=shell.clientHeight-36;if(w<120||h<120)continue;const gap=5;const cell=Math.floor(Math.min((w-(maze.cols-1)*gap)/maze.cols,(h-(maze.rows-1)*gap)/maze.rows));best=Math.max(best,cell)}if(!best)best=64;document.documentElement.style.setProperty('--cell',Math.max(28,Math.min(best,110))+'px');document.documentElement.style.setProperty('--cols',maze.cols);document.documentElement.style.setProperty('--rows',maze.rows)}
+window.addEventListener('resize',()=>{fitMaze();renderAll()});
+function bodyAbs(anchor=maze.start){return maze.body.map(([dx,dy])=>[anchor.x+dx,anchor.y+dy])}
+function inGrid(x,y){return x>=0&&x<maze.cols&&y>=0&&y<maze.rows}
+function isBodyAt(x,y){return bodyAbs().some(([bx,by])=>bx===x&&by===y)}
+function bodyFitsAt(x,y){return maze.body.every(([dx,dy])=>{const ax=x+dx,ay=y+dy;return inGrid(ax,ay)&&!maze.walls.has(key(ax,ay))})}
+function canSetGoal(x,y){return !isBodyAt(x,y)&&!maze.walls.has(key(x,y))}
+function connected(cells){if(!cells.length)return false;const set=new Set(cells.map(c=>key(c[0],c[1]))), q=[cells[0]], seen=new Set([key(cells[0][0],cells[0][1])]);while(q.length){const [x,y]=q.shift();for(const [dx,dy] of DIRS){const k=key(x+dx,y+dy);if(set.has(k)&&!seen.has(k)){seen.add(k);q.push([x+dx,y+dy])}}}return seen.size===cells.length}
+function renderGrid(target,clickHandler){
+  const grid=$(target);
+  const isPlay=target==='#playGrid';
+  grid.style.setProperty('--cols',maze.cols);
+  grid.style.setProperty('--rows',maze.rows);
+  grid.innerHTML='';
+
+  const anchor=(isPlay&&state)?state:maze.start;
+  const bodyCells=maze.body.map(([dx,dy])=>[anchor.x+dx,anchor.y+dy]);
+  const body=new Map(bodyCells.map((p,i)=>[key(p[0],p[1]),i]));
+  const tempWalls=(isPlay&&state&&state.tempWalls)?state.tempWalls:new Map();
+
+  for(let y=0;y<maze.rows;y++)for(let x=0;x<maze.cols;x++){
+    const k=key(x,y);
+    const d=document.createElement('div');
+    d.className='cell path';
+    d.dataset.x=x;
+    d.dataset.y=y;
+
+    if(maze.walls.has(k)) d.className='cell wall';
+    if(tempWalls.has(k)) d.className='cell wall tempWall';
+    if(x===maze.goal.x&&y===maze.goal.y) d.className='cell goal';
+
+    if(body.has(k)){
+      d.className='cell body'+(body.get(k)===0?' head':'');
+      d.style.setProperty('--body',maze.bodyColor);
+      d.textContent=body.get(k)===0?(isPlay?'🧭':'⚡'):'';
+    }else if(x===maze.goal.x&&y===maze.goal.y){
+      d.textContent='🏁';
+    }else if(tempWalls.has(k)){
+      d.textContent='🎲';
+    }
+
+    if(isPlay&&state&&activeMazeKey&&body.has(k)){
+      d.classList.add('step');
+    }else if(activeMazeKey===k){
+      d.classList.add('step');
+    }
+
+    d.onclick=()=>clickHandler&&clickHandler(x,y,d);
+    grid.appendChild(d);
+  }
+}
+
+function makerClick(x,y){const k=key(x,y);if(tool==='wall'){if(!isBodyAt(x,y)&&!(x===maze.goal.x&&y===maze.goal.y))maze.walls.has(k)?maze.walls.delete(k):maze.walls.add(k)}else if(tool==='path'){maze.walls.delete(k)}else if(tool==='start'){if(bodyFitsAt(x,y)){maze.start.x=x;maze.start.y=y;maze.walls.delete(k)}}else if(tool==='goal'){if(canSetGoal(x,y)){maze.goal={x,y}}}else if(tool==='avatar'){const rel=[x-maze.start.x,y-maze.start.y], rk=key(rel[0],rel[1]);let next=maze.body.some(c=>key(c[0],c[1])===rk)?maze.body.filter(c=>key(c[0],c[1])!==rk):maze.body.concat([rel]);if(connected(next)&&next.every(([dx,dy])=>inGrid(maze.start.x+dx,maze.start.y+dy))){maze.body=next;maze.bodyName='Custom';if(state){state.x=maze.start.x;state.y=maze.start.y;state.dir=maze.start.dir;state.won=false;state.crash=false}customShapes.push({id:'custom'+customShapes.length,name:'Custom '+customShapes.length,color:maze.bodyColor,cells:maze.body.map(c=>[...c])})}}renderAll()}
+function runMakerTest(){const qs=[['Start shape exists',maze.body.length>0],['Start shape is connected',connected(maze.body)],['Start shape fits on grid',bodyFitsAt(maze.start.x,maze.start.y)],['Goal differs from start body',!isBodyAt(maze.goal.x,maze.goal.y)],['Route exists for full shape',routeExists()]];$('#makerQuests').innerHTML='';let score=0;qs.forEach(q=>{const li=document.createElement('li');li.className=q[1]?'pass':'fail';li.textContent=(q[1]?'✓ ':'✗ ')+q[0];$('#makerQuests').appendChild(li);if(q[1])score+=200});$('#makerScore').textContent='Maker quests: '+score+' / 1000';return score===1000}
+function routeExists(){const start=key(maze.start.x,maze.start.y), goal=key(maze.goal.x,maze.goal.y), q=[[maze.start.x,maze.start.y]], seen=new Set([start]);while(q.length){const [x,y]=q.shift();if(x===maze.goal.x&&y===maze.goal.y)return true;for(const [dx,dy] of DIRS){const nx=x+dx,ny=y+dy,nk=key(nx,ny);if(!seen.has(nk)&&bodyFitsAt(nx,ny)){seen.add(nk);q.push([nx,ny])}}}return false}
+function yaml(){return ['game_preset: '+gamePreset,'grid_runtime:','  cols: '+maze.cols,'  rows: '+maze.rows,'active_piece:','  role: player','  x: '+maze.start.x,'  y: '+maze.start.y,'  dir: '+maze.start.dir,'  color: '+maze.bodyColor,'  name: '+maze.bodyName,'  shape:',...maze.body.map(c=>'    - '+c[0]+','+c[1]),'goals:','  - '+maze.goal.x+','+maze.goal.y,'blocked_cells:',...[...maze.walls].sort().map(w=>'  - '+w),'score_module:','  value: '+scoreModule.value,'  reusable_by: [maze, tetris_lite]','input_module:','  swipe: '+inputConfig.swipe,'  tap_rotate: '+inputConfig.tapRotate,'  double_tap_down: '+inputConfig.doubleTapDown,'  keyboard: '+inputConfig.keyboard,'utility_modules:','  visible_as_pieces: true'].join('\n')}
+function renderMakerPieces(){const box=$('#makerPieces');box.innerHTML=MAKER_PIECES.map(p=>pieceHtml(p[0],p[1],p[2],p[3])).join('');box.querySelectorAll('.piece').forEach(p=>p.onclick=e=>{if(e.target.dataset.gear){openSettings(e.target.dataset.gear);return}tool=p.dataset.tool;renderMakerPieces();$('#makerStatus').textContent= tool==='avatar'?'Start Shape mode: click connected cells to add/remove the moving body.':'Selected: '+tool;});}
+function renderActions(){runMakerTest();$('#mazeYaml').textContent=yaml();renderKernelStrip()}
+function renderAll(){fitMaze();renderGrid('#makerGrid',makerClick);renderGrid('#playGrid');renderMakerPieces();renderProgram();renderCode();renderActions()}
+function demoMaze(){maze.cols=12;maze.rows=8;maze.walls=new Set(['3,2','3,3','3,4','4,4','5,4','6,4','7,4','8,4','8,3','8,2','2,6','3,6','4,6']);maze.start={x:0,y:7,dir:1};maze.goal={x:11,y:0};maze.body=[[0,0]];maze.bodyColor=COLORS.R1;maze.bodyName='1×1';renderAll()}$('#clearWalls').onclick=()=>{maze.walls.clear();renderAll()};$('#demoMaze').onclick=demoMaze;$('#testMazeMaker').onclick=()=>{runMakerTest();$('#makerStatus').textContent='Maze tested with visible quest results.'};$('#publishPlay').onclick=()=>{setPage('path');resetState();$('#pathStatus').textContent='Published maze. Build a path and press Run.'};
+
+function snippetKey(kind){
+  return ({timerConfig:'timer',timer:'timer',random_wall:'randwall',randwall:'randwall',avatar:'avatar',start:'start',input:'input',score:'score',repeat:'repeat',grid:'grid',left:'left',right:'right',move:'move',checkpoint:'checkpoint'}[kind]||kind)
+}
+function expertCodeLookup(target){
+  const kind = typeof target === 'object' && target ? (target.behavior || target.type) : target;
+  const type = typeof target === 'object' && target ? target.type : target;
+  if(typeof target === 'object' && target?.source) return target.source;
+  const def = CUSTOM_BLOCKS.get(type) || CUSTOM_BLOCKS.get(kind);
+  if(def?.source) return def.source;
+  return SNIPPETS[kind] || SNIPPETS[type] || `// ${type || kind}
+// No expert code registered yet.
+// Add a source: | block in the YAML definition to make this inspectable.`;
+}
+function expertCodePanelHtml(kind){
+  const code=expertCodeLookup(kind);
+  return `<div class="settingsExpert"><button id="togglePieceCode" class="purple small" type="button">🔍 Expert Code</button><pre id="pieceCode" class="pieceCode" hidden>${esc(code)}</pre></div>`
+}
+function bindExpertCodePanel(kind){
+  const btn=$('#togglePieceCode'), code=$('#pieceCode');
+  if(!btn||!code)return;
+  btn.onclick=()=>{code.hidden=!code.hidden;btn.textContent=code.hidden?'🔍 Expert Code':'▾ Hide Code'};
+}
+function openSettings(kind,index=null){const modal=$('#settingsModal'), body=$('#settingsBody');$('#settingsTitle').textContent='⚙ '+(index!==null?'Program Piece':'Maze Piece')+' Settings';let html='';if(kind==='grid'){html=`<div class="formGrid"><label>Columns<input id="setCols" type="number" min="4" max="16" value="${maze.cols}"></label><label>Rows<input id="setRows" type="number" min="4" max="16" value="${maze.rows}"></label></div><p class="muted">Canvas size updates immediately and keeps the maze dominant.</p><button id="saveGrid" class="primary">Save Grid</button>${expertCodePanelHtml('grid')}`;body.innerHTML=html;bindExpertCodePanel('grid');$('#saveGrid').onclick=()=>{resizeGrid(Number($('#setCols').value),Number($('#setRows').value));closeSettings()}}
+else if(kind==='avatar'){html=`<p class="muted">Choose a colored Tetris/rectangle body or keep editing custom cells on the maze with 🧍 Start Shape selected.</p><div id="shapeTray" class="shapeTray"></div><div style="margin-top:12px"><button id="saveCustom" class="gold">Save Current Custom Shape</button></div>${expertCodePanelHtml('avatar')}`;body.innerHTML=html;renderShapeTray();bindExpertCodePanel('avatar');$('#saveCustom').onclick=()=>{customShapes.push({id:'saved'+Date.now(),name:'Saved '+(customShapes.length+1),color:maze.bodyColor,cells:maze.body.map(c=>[...c])});renderShapeTray()}}
+else if(kind==='timerConfig'){html=`<div class="formGrid"><label>Default ms<input id="timerDefault" type="number" value="${timer.defaultMs}" min="0"></label><label>Min ms<input id="timerMin" type="number" value="${timer.min}" min="0"></label><label>Max ms<input id="timerMax" type="number" value="${timer.max}" min="0"></label><label>Step ms<input id="timerStep" type="number" value="${timer.step}" min="1"></label><label>Step limit<input id="timerLimit" type="number" value="${timer.limit}" min="1"></label></div><button id="saveTimer" class="primary">Save Timer</button>${expertCodePanelHtml('timer')}`;body.innerHTML=html;bindExpertCodePanel('timer');$('#saveTimer').onclick=()=>{timer.defaultMs=+$('#timerDefault').value;timer.min=+$('#timerMin').value;timer.max=+$('#timerMax').value;timer.step=+$('#timerStep').value;timer.limit=+$('#timerLimit').value;$('#speedSlider').min=timer.min;$('#speedSlider').max=timer.max;$('#speedSlider').step=timer.step;$('#speedSlider').value=timer.defaultMs;speedLabel();closeSettings()}}
+else if(index!==null){const p=program[index];function rerenderPieceSettings(){let extra='';const b=p.behavior||p.type;if(b==='move')extra='<label>Move steps<input id="pSteps" type="number" min="1" max="8" value="'+p.steps+'"></label>';if(b==='timer')extra='<label>Delay ms<input id="pDelay" type="number" min="0" value="'+(p.delay??'')+'"></label>';if(b==='repeat')extra='<label>Repeat count<input id="pCount" type="number" min="1" max="50" value="'+(p.count||5)+'"></label>';if(b==='random_wall')extra='<label>Walls to place<input id="pCount" type="number" min="1" max="20" value="'+(p.count||1)+'"></label><label>Replace existing?<select id="pReplace"><option value="false">No, add only</option><option value="true" '+(p.replaceExisting?'selected':'')+'>Yes, may replace</option></select></label><label>Persistent?<select id="pPersist"><option value="false">No, temporary</option><option value="true" '+(p.persistent?'selected':'')+'>Yes, keep wall</option></select></label><label>Disappear after moves<input id="pTtl" type="number" min="1" max="50" value="'+(p.ttlMoves||3)+'"></label>';if(b==='input')extra='<label>Swipe move?<select id="pSwipe"><option value="true" '+(p.swipe!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.swipe===false?'selected':'')+'>Disabled</option></select></label><label>Tap rotates?<select id="pTap"><option value="true" '+(p.tapRotate!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.tapRotate===false?'selected':'')+'>Disabled</option></select></label><label>Double tap down?<select id="pDouble"><option value="true" '+(p.doubleTapDown!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.doubleTapDown===false?'selected':'')+'>Disabled</option></select></label><label>Keyboard fallback?<select id="pKeyboard"><option value="true" '+(p.keyboard!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.keyboard===false?'selected':'')+'>Disabled</option></select></label>';if(b==='score')extra='<label>Reason<input id="pReason" value="'+esc(p.reason||'score')+'"></label><label>Points<input id="pPoints" type="number" value="'+(p.points||0)+'"></label>';body.innerHTML=`<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label)}"></label><label>Icon<input id="pIcon" value="${esc(p.icon)}"></label>${extra}</div>${b==='repeat'?loopEditorHtml(p):''}<button id="savePiece" class="primary">Save Piece</button>${expertCodePanelHtml(p)}`;if(b==='repeat')bindLoopEditor(p,rerenderPieceSettings);bindExpertCodePanel(p);$('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pCount')){if(b==='repeat')p.count=+$('#pCount').value;else p.count=+$('#pCount').value}if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings()}}
+function loopEditorHtml(p){const kids=p.children||[];return `<h3>Loop chain</h3><p class="muted">This chain runs inside the loop. Default is one Move piece. Add a full chain here.</p><div class="innerChain">${kids.map((c,ci)=>`<div class="innerRow"><div class="piece ${clsFor(c)}"><span>${esc(c.icon)}</span><span>${esc(c.label)}</span></div><button class="small" data-up="${ci}">↑</button><button class="small" data-down="${ci}">↓</button><button class="small danger" data-del="${ci}">×</button></div>`).join('')||'<div class="hint">No inner pieces yet.</div>'}</div><div>${['timer','left','right','move','randwall','input','score','checkpoint'].map(t=>`<button class="miniPieceBtn" data-add="${t}">${esc(make(t).icon)} ${esc(make(t).label)}</button>`).join('')}</div>`}
+function bindLoopEditor(p,rerender){if(!p.children)p.children=[];all('[data-add]').forEach(b=>b.onclick=()=>{p.children.push(make(b.dataset.add));rerender()});all('[data-del]').forEach(b=>b.onclick=()=>{p.children.splice(+b.dataset.del,1);rerender()});all('[data-up]').forEach(b=>b.onclick=()=>{const i=+b.dataset.up;if(i>0){[p.children[i-1],p.children[i]]=[p.children[i],p.children[i-1]];rerender()}});all('[data-down]').forEach(b=>b.onclick=()=>{const i=+b.dataset.down;if(i<p.children.length-1){[p.children[i+1],p.children[i]]=[p.children[i],p.children[i+1]];rerender()}})}
+rerenderPieceSettings()}
+else {html=`<p class="muted">${esc(kind)} piece settings.</p>${expertCodePanelHtml(kind)}`;body.innerHTML=html;bindExpertCodePanel(kind)}modal.classList.add('open')}
+function closeSettings(){$('#settingsModal').classList.remove('open')}$('#closeSettings').onclick=closeSettings;$('#mazeSettings').onclick=()=>openSettings('grid');$('#startSettingsTop').onclick=()=>openSettings('avatar');$('#timerSettings').onclick=()=>openSettings('timerConfig');
+function resizeGrid(cols,rows){cols=Math.max(4,Math.min(16,cols||maze.cols));rows=Math.max(4,Math.min(16,rows||maze.rows));maze.cols=cols;maze.rows=rows;maze.walls=new Set([...maze.walls].filter(k=>{const [x,y]=k.split(',').map(Number);return inGrid(x,y)}));maze.start.x=Math.min(maze.start.x,cols-1);maze.start.y=Math.min(maze.start.y,rows-1);maze.goal.x=Math.min(maze.goal.x,cols-1);maze.goal.y=Math.min(maze.goal.y,rows-1);while(!bodyFitsAt(maze.start.x,maze.start.y)){maze.start.x=0;maze.start.y=0;if(bodyFitsAt(0,0))break;maze.body=[[0,0]];maze.bodyName='1×1'}renderAll()}
+function renderShapeTray(){const tray=$('#shapeTray');if(!tray)return;const list=SHAPES.concat(customShapes);tray.innerHTML=list.map(s=>shapeCard(s)).join('');tray.querySelectorAll('.shapeCard').forEach(card=>card.onclick=()=>{const s=list.find(x=>x.id===card.dataset.sid);maze.body=s.cells.map(c=>[...c]);maze.bodyColor=s.color;maze.bodyName=s.name;if(!bodyFitsAt(maze.start.x,maze.start.y)){maze.start={x:0,y:0,dir:1}}if(state){state.x=maze.start.x;state.y=maze.start.y;state.dir=maze.start.dir;state.won=false;state.crash=false}renderAll();renderShapeTray()})}
+function shapeCard(s){const maxX=Math.max(...s.cells.map(c=>c[0])),maxY=Math.max(...s.cells.map(c=>c[1])),set=new Set(s.cells.map(c=>key(c[0],c[1])));let cells='';for(let y=0;y<=Math.max(maxY,1);y++)for(let x=0;x<=Math.max(maxX,2);x++)cells+=`<span class="miniCell ${set.has(key(x,y))?'':'empty'}"></span>`;const active=s.name===maze.bodyName?'active':'';return `<button class="shapeCard ${active}" data-sid="${s.id}" style="--shapeColor:${s.color}"><div class="miniShape" style="grid-template-columns:repeat(${Math.max(maxX+1,3)},18px)">${cells}</div><span>${esc(s.name)}</span></button>`}
+function resetState(){state={x:maze.start.x,y:maze.start.y,dir:maze.start.dir,won:false,crash:false,tempWalls:new Map()};steps=0;activePiece=null;activeMazeKey=null;activeCode=null;scoreReset();renderGrid('#playGrid');renderCode();renderKernelStrip()}
+function won(){return bodyAbs(state).some(([x,y])=>x===maze.goal.x&&y===maze.goal.y)}
+function isBlockedForRun(x,y){return maze.walls.has(key(x,y))||(state?.tempWalls&&state.tempWalls.has(key(x,y)))}
+function avatarFits(x,y){return maze.body.every(([dx,dy])=>inGrid(x+dx,y+dy)&&!isBlockedForRun(x+dx,y+dy))}
+function tickTemporaryWalls(){
+  if(!state?.tempWalls?.size)return;
+  for(const [k,v] of [...state.tempWalls.entries()]){
+    const next=(Number(v)||1)-1;
+    if(next<=0)state.tempWalls.delete(k);else state.tempWalls.set(k,next);
+  }
+}
+function clearTemporaryWalls(){if(state?.tempWalls)state.tempWalls.clear()}
+
+function make(type){const base={type,id:'p'+Math.random().toString(36).slice(2,8),steps:1};const def=CUSTOM_BLOCKS.get(type);if(def){const d=def.defaults||{};return {...base,behavior:def.behavior||type,icon:def.icon||'◆',label:def.label||type,class:def.class||classForBehavior(def.behavior||type),source:def.source||'',steps:d.steps??1,count:d.count??1,delay:d.delay??null,replaceExisting:!!d.replaceExisting,persistent:!!d.persistent,ttlMoves:d.ttlMoves??3,points:d.points??0,reason:d.reason||def.type,swipe:d.swipe??true,tapRotate:d.tapRotate??true,doubleTapDown:d.doubleTapDown??true,keyboard:d.keyboard??true,children:(d.children||[]).map(make)}}if(type==='timer')return {...base,behavior:'timer',icon:'⏱',label:'Timer Step',delay:null};if(type==='left')return {...base,behavior:'left',icon:'↺',label:'Turn Left'};if(type==='right')return {...base,behavior:'right',icon:'↻',label:'Turn Right'};if(type==='move')return {...base,behavior:'move',icon:'→',label:'Move',steps:1};if(type==='repeat')return {...base,behavior:'repeat',icon:'🔁',label:'Loop',count:5,children:[make('move')]};if(type==='randwall')return {...base,behavior:'random_wall',icon:'🎲',label:'Random Wall',count:1,replaceExisting:false,persistent:false,ttlMoves:3};if(type==='input')return {...base,behavior:'input',icon:'👆',label:'Tablet Input',swipe:true,tapRotate:true,doubleTapDown:true,keyboard:true};if(type==='score')return {...base,behavior:'score',icon:'★',label:'Score Event',points:10,reason:'custom_score'};return {...base,behavior:'checkpoint',icon:'⚑',label:'Checkpoint'} }
+function renderStore(){
+  const store=$('#pathStore');
+  store.innerHTML=STORE.map(s=>{
+    const raw=s[1]||'';
+    const icon=raw.trim().split(/\s+/)[0]||'◆';
+    const label=raw.replace(icon,'').trim()||s[0];
+    return `<div class="piece ${s[2]}" draggable="true" data-store="${s[0]}" title="Tap to add, drag to position"><span>${esc(icon)}</span><span>${esc(label)}</span></div>`
+  }).join('');
+  store.querySelectorAll('[data-store]').forEach(el=>{
+    el.ondragstart=e=>{e.dataTransfer.setData('text/plain','store:'+el.dataset.store)};
+    el.onclick=()=>{program.push(make(el.dataset.store));renderProgram();renderCode();setTimeout(()=>{$('#programStack').scrollTop=$('#programStack').scrollHeight},0)}
+  })
+}
+
+function childPiecesHtml(p,parentIndex){
+  if((p.behavior||p.type)!=='repeat')return '';
+  const kids=(p.children||[]);
+  const body=kids.length?kids.map((c,ci)=>`
+    <div class="loopChildItem" draggable="true" data-parent="${parentIndex}" data-child="${ci}">
+      <div class="piece ${clsFor(c)} ${activePiece===c.id?'activeStep':''}" data-id="${c.id}"><span>${esc(c.icon)}</span><span>${esc(c.label)}</span></div>
+      <button class="small childGear" title="Child settings">⚙</button>
+      <button class="small danger childDelete" title="Remove child">×</button>
+    </div>`).join(''):'<div class="hint" style="padding:12px">Drop pieces inside this loop.</div>';
+  return `<div class="loopChildren ${kids.length?'':'emptyTarget'}" data-loop="${parentIndex}">${body}</div>`
+}
+function bindLoopDom(row,loopIndex){
+  const loop=program[loopIndex];
+  if(!loop || (loop.behavior||loop.type)!=='repeat')return;
+  const header=row.querySelector('.piece');
+  header.ondragover=e=>{e.preventDefault();e.stopPropagation();header.classList.add('selected')};
+  header.ondragleave=()=>header.classList.remove('selected');
+  header.ondrop=e=>{e.preventDefault();e.stopPropagation();header.classList.remove('selected');dropToLoop(loopIndex,(loop.children||[]).length,e.dataTransfer.getData('text/plain'))};
+  const box=row.querySelector('.loopChildren');
+  if(box){
+    box.ondragover=e=>{e.preventDefault();e.stopPropagation();box.classList.add('dropInside')};
+    box.ondragleave=()=>box.classList.remove('dropInside');
+    box.ondrop=e=>{e.preventDefault();e.stopPropagation();box.classList.remove('dropInside');dropToLoop(loopIndex,(loop.children||[]).length,e.dataTransfer.getData('text/plain'))};
+  }
+  row.querySelectorAll('.loopChildItem').forEach(child=>{
+    const ci=+child.dataset.child;
+    child.ondragstart=e=>{e.stopPropagation();e.dataTransfer.setData('text/plain',`child:${loopIndex}:${ci}`);child.classList.add('dragging')};
+    child.ondragend=()=>child.classList.remove('dragging');
+    child.ondragover=e=>{e.preventDefault();e.stopPropagation();child.classList.add('insertBefore')};
+    child.ondragleave=()=>child.classList.remove('insertBefore');
+    child.ondrop=e=>{e.preventDefault();e.stopPropagation();child.classList.remove('insertBefore');dropToLoop(loopIndex,ci,e.dataTransfer.getData('text/plain'))};
+    const kid=loop.children[ci];
+    child.querySelector('.childGear').onclick=e=>{e.stopPropagation();openChildSettings(loopIndex,ci)};
+    child.querySelector('.childDelete').onclick=e=>{e.stopPropagation();loop.children.splice(ci,1);renderProgram();renderCode()};
+  })
+}
+function renderProgram(){
+  renderStore();
+  const stack=$('#programStack');
+  stack.innerHTML=program.length?'':'<div class="muted" style="padding:30px;text-align:center">Drag pieces here.</div>';
+  program.forEach((p,i)=>{
+    const row=document.createElement('div');
+    row.className='stackItem';row.draggable=true;row.dataset.index=i;
+    row.innerHTML=`<div class="piece ${clsFor(p)} ${activePiece===p.id?'activeStep':''}" data-id="${p.id}"><span>${esc(p.icon)}</span><span>${esc(p.label)}${(p.behavior||p.type)==='repeat'?' · '+(p.count||1)+'×':''}</span><span class="gear" title="settings">⚙</span></div>${childPiecesHtml(p,i)}<button class="small danger stackDelete">×</button>`;
+    row.ondragstart=e=>{dragIndex=i;e.dataTransfer.setData('text/plain','stack:'+i);row.classList.add('dragging')};
+    row.ondragend=()=>row.classList.remove('dragging');
+    row.ondragover=e=>{e.preventDefault();row.classList.add('insertBefore')};
+    row.ondragleave=()=>row.classList.remove('insertBefore');
+    row.ondrop=e=>{e.preventDefault();row.classList.remove('insertBefore');dropTo(i,e.dataTransfer.getData('text/plain'))};
+    const gear=row.querySelector('.piece .gear');
+    if(gear) gear.onclick=e=>{e.stopPropagation();openSettings(p.type,i)};
+    const del=row.querySelector('.stackDelete');
+    if(del) del.onclick=e=>{e.stopPropagation();program.splice(i,1);renderProgram();renderCode()};
+    stack.appendChild(row);
+    bindLoopDom(row,i);
+  });
+  stack.ondragover=e=>e.preventDefault();
+  stack.ondrop=e=>{e.preventDefault();dropTo(program.length,e.dataTransfer.getData('text/plain'))};
+  // v27: no auto-scroll/focus grabbing during run/test; highlight only.
+}
+function scrollActiveStackIntoView(){/* v27: intentionally no-op; plain highlight only. */}
+function takeDragged(data){
+  if(!data)return null;
+  if(data.startsWith('store:'))return {item:make(data.slice(6)),from:null};
+  if(data.startsWith('stack:')){const from=+data.slice(6);const [item]=program.splice(from,1);return {item,from:{kind:'stack',index:from}}}
+  if(data.startsWith('child:')){const [,lp,ci]=data.split(':');const loop=program[+lp];if(!loop||!loop.children)return null;const [item]=loop.children.splice(+ci,1);return {item,from:{kind:'child',loop:+lp,index:+ci}}}
+  return null;
+}
+function dropTo(pos,data){
+  const taken=takeDragged(data);if(!taken||!taken.item){renderProgram();renderCode();return}
+  if(taken.from?.kind==='stack' && taken.from.index<pos)pos--;
+  program.splice(pos,0,taken.item);
+  renderProgram();renderCode()
+}
+function dropToLoop(loopIndex,pos,data){
+  let loop=program[loopIndex];
+  if(!loop || (loop.behavior||loop.type)!=='repeat'){dropTo(loopIndex,data);return}
+  if(data.startsWith('stack:') && +data.slice(6)===loopIndex)return;
+  const taken=takeDragged(data);if(!taken||!taken.item){renderProgram();renderCode();return}
+  if(taken.item===loop)return;
+  if(taken.from?.kind==='stack' && taken.from.index<loopIndex)loopIndex--;
+  loop=program[loopIndex];
+  if(!loop.children)loop.children=[];
+  if(taken.from?.kind==='child' && taken.from.loop===loopIndex && taken.from.index<pos)pos--;
+  pos=Math.max(0,Math.min(pos,loop.children.length));
+  loop.children.splice(pos,0,taken.item);
+  renderProgram();renderCode()
+}
+function openChildSettings(loopIndex,childIndex){
+  const loop=program[loopIndex]; if(!loop||!loop.children||!loop.children[childIndex])return;
+  const p=loop.children[childIndex], body=$('#settingsBody');
+  $('#settingsTitle').textContent='⚙ Loop Child Settings';
+  function draw(){
+    const b=p.behavior||p.type;let extra='';
+    if(b==='move')extra='<label>Move steps<input id="pSteps" type="number" min="1" max="8" value="'+p.steps+'"></label>';
+    if(b==='timer')extra='<label>Delay ms<input id="pDelay" type="number" min="0" value="'+(p.delay??'')+'"></label>';
+    if(b==='repeat')extra='<label>Repeat count<input id="pCount" type="number" min="1" max="50" value="'+(p.count||5)+'"></label>';
+    if(b==='random_wall')extra='<label>Walls to place<input id="pCount" type="number" min="1" max="20" value="'+(p.count||1)+'"></label><label>Replace existing?<select id="pReplace"><option value="false">No, add only</option><option value="true" '+(p.replaceExisting?'selected':'')+'>Yes, may replace</option></select></label><label>Persistent?<select id="pPersist"><option value="false">No, temporary</option><option value="true" '+(p.persistent?'selected':'')+'>Yes, keep wall</option></select></label><label>Disappear after moves<input id="pTtl" type="number" min="1" max="50" value="'+(p.ttlMoves||3)+'"></label>';if(b==='input')extra='<label>Swipe move?<select id="pSwipe"><option value="true" '+(p.swipe!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.swipe===false?'selected':'')+'>Disabled</option></select></label><label>Tap rotates?<select id="pTap"><option value="true" '+(p.tapRotate!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.tapRotate===false?'selected':'')+'>Disabled</option></select></label><label>Double tap down?<select id="pDouble"><option value="true" '+(p.doubleTapDown!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.doubleTapDown===false?'selected':'')+'>Disabled</option></select></label><label>Keyboard fallback?<select id="pKeyboard"><option value="true" '+(p.keyboard!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.keyboard===false?'selected':'')+'>Disabled</option></select></label>';if(b==='score')extra='<label>Reason<input id="pReason" value="'+esc(p.reason||'score')+'"></label><label>Points<input id="pPoints" type="number" value="'+(p.points||0)+'"></label>';
+    body.innerHTML=`<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label)}"></label><label>Icon<input id="pIcon" value="${esc(p.icon)}"></label>${extra}</div>${b==='repeat'?loopEditorHtml(p):''}<button id="savePiece" class="primary">Save Child</button>${expertCodePanelHtml(p)}`;bindExpertCodePanel(p);
+    if(b==='repeat')bindLoopEditor(p,draw);
+    $('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pCount')){if(b==='repeat')p.count=+$('#pCount').value;else p.count=+$('#pCount').value}if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings()}
+  }
+  draw();$('#settingsModal').classList.add('open')
+}
+function clsFor(t){const type=typeof t==='string'?t:t.type;const behavior=typeof t==='string'?t:(t.behavior||t.type);const def=CUSTOM_BLOCKS.get(type);if(def?.class)return def.class;if(behavior==='timer')return 'timerPiece';if(behavior==='move')return 'movePiece';if(behavior==='left'||behavior==='right')return 'turnPiece';if(behavior==='repeat')return 'repeatPiece';if(behavior==='random_wall')return 'wallRandPiece';if(behavior==='input')return 'inputPiece';if(behavior==='score')return 'scorePiece';return 'checkPiece'}
+function speedLabel(){const v=+$('#speedSlider').value;$('#speedRead').textContent=v===0?'0s':(v/1000).toFixed(1)+'s'}$('#speedSlider').oninput=speedLabel;speedLabel();
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}async function waitPause(){while(paused&&running)await sleep(60)}async function delay(ms){const start=Date.now();while(Date.now()-start<ms){await waitPause();if(!running)return;await sleep(40)}}function highlight(p,codeIndex){activePiece=p.id;activeMazeKey=null;activeCode=codeIndex;renderProgram();renderGrid('#playGrid');renderCode()}
+function ensureLiveState(){if(!state)resetState();return !!state}
+function userMove(dx,dy,reason='input'){
+  if(paused)return false;
+  if(!ensureLiveState())return false;
+  const nx=state.x+dx, ny=state.y+dy;
+  if(!avatarFits(nx,ny)){
+    $('#pathStatus').textContent='Blocked: '+reason;
+    return false;
+  }
+  state.x=nx;state.y=ny;activeMazeKey=key(state.x,state.y);
+  tickTemporaryWalls();
+  state.won=won();
+  if(state.won)scoreAdd('goal_reached',100);
+  renderGrid('#playGrid');renderKernelStrip();
+  $('#pathStatus').textContent=state.won?'Goal reached by '+reason+'.':'User input: '+reason;
+  return true;
+}
+function userRotate(reason='tap rotate'){
+  if(paused)return false;
+  if(!ensureLiveState())return false;
+  const oldBody=maze.body.map(c=>[...c]);
+  const rotated=rotateCells(maze.body);
+  const kicks=[[0,0],[-1,0],[1,0],[0,-1],[-2,0],[2,0],[0,1]];
+  for(const [kx,ky] of kicks){
+    maze.body=rotated.map(c=>[...c]);
+    if(avatarFits(state.x+kx,state.y+ky)){
+      state.x+=kx;state.y+=ky;activeMazeKey=key(state.x,state.y);scoreAdd('rotate_input',1);
+      renderGrid('#playGrid');renderKernelStrip();
+      $('#pathStatus').textContent='User input: '+reason;
+      return true;
+    }
+  }
+  maze.body=oldBody;
+  $('#pathStatus').textContent='Blocked: rotation does not fit.';
+  renderGrid('#playGrid');
+  return false;
+}
+function applyInputPiece(p){inputConfig={swipe:p.swipe!==false,tapRotate:p.tapRotate!==false,doubleTapDown:p.doubleTapDown!==false,keyboard:p.keyboard!==false};}
+function bindTabletInput(){
+  const grid=$('#playGrid');
+  if(!grid||grid.dataset.inputBound==='1')return;
+  grid.dataset.inputBound='1';
+  let down=null,lastTap=0;
+  const point=e=>({x:e.clientX,y:e.clientY,t:Date.now()});
+  grid.addEventListener('pointerdown',e=>{down=point(e);grid.setPointerCapture?.(e.pointerId);e.preventDefault()},{passive:false});
+  grid.addEventListener('pointerup',e=>{
+    if(!down)return;
+    const up=point(e),dx=up.x-down.x,dy=up.y-down.y,adx=Math.abs(dx),ady=Math.abs(dy),dt=up.t-down.t;
+    down=null;
+    const threshold=34;
+    if(adx>threshold||ady>threshold){
+      if(inputConfig.swipe!==false){
+        if(adx>ady)userMove(dx>0?1:-1,0,dx>0?'swipe right':'swipe left');
+        else if(dy>0)userMove(0,1,'swipe down');
+        else if(inputConfig.tapRotate!==false)userRotate('swipe up rotate');
+      }
+      return;
+    }
+    if(dt<360){
+      const now=Date.now();
+      if(now-lastTap<320){lastTap=0;if(inputConfig.doubleTapDown!==false)userMove(0,1,'double tap down')}
+      else{lastTap=now;setTimeout(()=>{if(Date.now()-lastTap>=300){lastTap=0;if(inputConfig.tapRotate!==false)userRotate('tap rotate')}},310)}
+    }
+  },{passive:false});
+  window.addEventListener('keydown',e=>{
+    const tag=(document.activeElement?.tagName||'').toLowerCase();
+    if(['input','textarea','select'].includes(tag)||inputConfig.keyboard===false)return;
+    if(e.key==='ArrowLeft'){e.preventDefault();userMove(-1,0,'keyboard left')}
+    else if(e.key==='ArrowRight'){e.preventDefault();userMove(1,0,'keyboard right')}
+    else if(e.key==='ArrowDown'){e.preventDefault();userMove(0,1,'keyboard down')}
+    else if(e.key==='ArrowUp'||e.key===' '){e.preventDefault();userRotate('keyboard rotate')}
+  });
+}
+function randomOpenCells(){
+  const occupied=new Set(bodyAbs(state).map(([x,y])=>key(x,y)));
+  occupied.add(key(maze.goal.x,maze.goal.y));
+  const cells=[];
+  for(let y=0;y<maze.rows;y++)for(let x=0;x<maze.cols;x++){
+    const k=key(x,y);
+    if(!maze.walls.has(k)&&!(state?.tempWalls&&state.tempWalls.has(k))&&!occupied.has(k))cells.push([x,y]);
+  }
+  return cells;
+}
+function placeRandomWalls(p){
+  let placed=0;
+  if(!state.tempWalls)state.tempWalls=new Map();
+  for(let n=0;n<(p.count||1);n++){
+    let cells=randomOpenCells();
+    if(!cells.length&&p.replaceExisting){
+      const tempKeys=[...state.tempWalls.keys()];
+      const staticKeys=[...maze.walls];
+      const pool=[...tempKeys,...(p.persistent?staticKeys:[])];
+      if(pool.length){
+        const victim=pool[Math.floor(Math.random()*pool.length)];
+        state.tempWalls.delete(victim);
+        if(p.persistent)maze.walls.delete(victim);
+        cells=randomOpenCells();
+      }
+    }
+    if(!cells.length)break;
+    if(p.replaceExisting&&Math.random()<0.5){
+      const tempKeys=[...state.tempWalls.keys()];
+      const staticKeys=[...maze.walls];
+      const pool=[...tempKeys,...(p.persistent?staticKeys:[])];
+      if(pool.length){
+        const victim=pool[Math.floor(Math.random()*pool.length)];
+        state.tempWalls.delete(victim);
+        if(p.persistent)maze.walls.delete(victim);
+      }
+    }
+    const [x,y]=cells[Math.floor(Math.random()*cells.length)];
+    const k=key(x,y);
+    if(p.persistent)maze.walls.add(k);else state.tempWalls.set(k,Math.max(1,p.ttlMoves||3));
+    activeMazeKey=k;
+    placed++;
+  }
+  return placed;
+}
+
+function rotateCells(cells){
+  if(!cells||!cells.length)return [[0,0]];
+  const rotated=cells.map(([x,y])=>[-y,x]);
+  const minX=Math.min(...rotated.map(c=>c[0])), minY=Math.min(...rotated.map(c=>c[1]));
+  return rotated.map(([x,y])=>[x-minX,y-minY]);
+}
+function clearFullRows(){
+  let cleared=0;
+  for(let y=0;y<maze.rows;y++){
+    let full=true;
+    for(let x=0;x<maze.cols;x++){ if(!maze.walls.has(key(x,y))){full=false;break} }
+    if(full){
+      for(let x=0;x<maze.cols;x++)maze.walls.delete(key(x,y));
+      cleared++;
+    }
+  }
+  return cleared;
+}
+
+async function execPiece(p,i=null){const b=p.behavior||p.type;steps++;if(steps>timer.limit)throw Error('Step limit reached');highlight(p,i);await delay(p.delay??+$('#speedSlider').value);if(b==='timer')return;if(b==='left')state.dir=(state.dir+3)%4;else if(b==='right')state.dir=(state.dir+1)%4;else if(b==='repeat'){for(let r=0;r<(p.count||1);r++){for(const child of (p.children||[])){if(!running||state.won||state.crash)return;await execPiece(child,null);if(state.won||state.crash)return}highlight(p,i);await delay(Math.min(+$('#speedSlider').value,250))}}else if(b==='spawn_piece'){const s=SHAPES[Math.floor(Math.random()*7)];maze.body=s.cells.map(c=>[...c]);maze.bodyColor=s.color;maze.bodyName=s.name;state.x=Math.max(0,Math.floor((maze.cols-3)/2));state.y=0;activeMazeKey=key(state.x,state.y);scoreAdd('spawn_piece',5);renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500))}else if(b==='gravity'){const ny=state.y+1;if(avatarFits(state.x,ny)){state.y=ny;activeMazeKey=key(state.x,state.y);scoreAdd('gravity',1)}else{state.crash=true;scoreAdd('lock_candidate',10)}renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500))}else if(b==='rotate_shape'){maze.body=rotateCells(maze.body);scoreAdd('rotate',1);renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500))}else if(b==='lock_piece'){bodyAbs(state).forEach(([x,y])=>{if(inGrid(x,y))maze.walls.add(key(x,y))});scoreAdd('lock_piece',20);renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500))}else if(b==='clear_rows'){const cleared=clearFullRows();scoreAdd('clear_rows',cleared*100);renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500))}else if(b==='score_lines'){scoreAdd('score_tick',10);renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500))}else if(b==='input'){applyInputPiece(p);renderKernelStrip();await delay(Math.min(+$('#speedSlider').value,250))}else if(b==='score'){scoreAdd(p.reason||'score',p.points||0);renderKernelStrip();await delay(Math.min(+$('#speedSlider').value,250))}else if(b==='random_wall'){const placed=placeRandomWalls(p);scoreAdd('random_wall',placed*5);renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500))}else if(b==='move'){for(let n=0;n<p.steps;n++){const d=DIRS[state.dir],nx=state.x+d[0],ny=state.y+d[1];if(!avatarFits(nx,ny)){state.crash=true;break}state.x=nx;state.y=ny;scoreAdd('move',1);tickTemporaryWalls();state.won=won();if(state.won)scoreAdd('goal_reached',100);activeMazeKey=key(state.x,state.y);renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500));if(state.won)break}}else if(b==='checkpoint'){}renderGrid('#playGrid')}
+async function runPath(){if(running)return;resetState();running=true;paused=false;$('#pausePath').textContent='⏸ Pause';try{for(let i=0;i<program.length;i++){if(!running||state.won||state.crash)break;await execPiece(program[i],i)}}catch(e){$('#pathStatus').textContent='Error: '+e.message}running=false;clearTemporaryWalls();activePiece=null;activeMazeKey=null;activeCode=null;renderProgram();renderGrid('#playGrid');renderCode();$('#pathStatus').textContent=state.won?'Won in '+steps+' steps.':state.crash?'Blocked after '+steps+' steps.':'Stopped after '+steps+' steps.'}
+async function testPath(){await runPath();const qs=[program.length>0,!state.crash,state.won,steps<=timer.limit];const score=qs.filter(Boolean).length*250;$('#score').textContent='Quest Score: '+score+' / 1000 · Runtime Score: '+scoreModule.value}
+$('#runPath').onclick=runPath;$('#testPath').onclick=testPath;$('#pausePath').onclick=()=>{if(!running)return;paused=!paused;$('#pausePath').textContent=paused?'▶ Resume':'⏸ Pause'};$('#stepPath').onclick=async()=>{if(!running){$('#speedSlider').value=0;speedLabel();runPath();paused=true;$('#pausePath').textContent='▶ Resume'}else{paused=false;setTimeout(()=>{paused=true;$('#pausePath').textContent='▶ Resume'},80)}};$('#resetPath').onclick=()=>{running=false;resetState();$('#pathStatus').textContent='Reset.'};
+function codeLines(){const lines=[{text:'async function runFlow() {',id:null}];function emit(p,depth){const pad='  '.repeat(depth);const b=p.behavior||p.type;if(b==='move')lines.push({text:pad+`await move(${p.steps})`,id:p.id});else if(b==='left')lines.push({text:pad+'turnLeft()',id:p.id});else if(b==='right')lines.push({text:pad+'turnRight()',id:p.id});else if(b==='timer')lines.push({text:pad+`await wait(${p.delay??'slider'}ms)`,id:p.id});else if(b==='random_wall')lines.push({text:pad+`placeRandomWall(count=${p.count||1}, temporary=${!p.persistent}, ttl=${p.ttlMoves||3})`,id:p.id});else if(b==='input')lines.push({text:pad+`inputModule(swipe=${p.swipe!==false}, tap=${p.tapRotate!==false}, keyboard=${p.keyboard!==false})`,id:p.id});else if(b==='score')lines.push({text:pad+`scoreEvent("${p.reason||'score'}", ${p.points||0})`,id:p.id});else if(b==='repeat'){lines.push({text:pad+`for repeat ${p.count||1} times {`,id:p.id});(p.children||[]).forEach(c=>emit(c,depth+1));lines.push({text:pad+'}',id:p.id})}else if(b==='spawn_piece')lines.push({text:pad+'spawnRandomPiece()',id:p.id});else if(b==='gravity')lines.push({text:pad+'gravityStep()',id:p.id});else if(b==='rotate_shape')lines.push({text:pad+'rotateShape()',id:p.id});else if(b==='lock_piece')lines.push({text:pad+'lockPiece()',id:p.id});else if(b==='clear_rows')lines.push({text:pad+'clearFullRows()',id:p.id});else if(b==='score_lines')lines.push({text:pad+'scoreLines()',id:p.id});else lines.push({text:pad+`checkpoint("${p.label}")`,id:p.id})}program.forEach(p=>emit(p,1));lines.push({text:'}',id:null});return lines}
+function renderCode(){const lines=codeLines();const html=lines.map(l=>`<span class="codeLine ${activePiece&&l.id===activePiece?'activeLine':''}">${esc(l.text)}</span>`).join('\n');const out=$('#codeOut');if(out)out.innerHTML=html;}
+function exportProject(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([yaml()+'\n\nprogram:\n'+program.map(p=>'  - '+p.type).join('\n')],{type:'text/yaml'}));a.download='comcody-lab-v32.yaml';a.click()}$('#exportBtn').onclick=exportProject;
+function renderExpert(){/* v31: expert list removed. Code opens inside piece settings only. */}
+
+async function readZipTextFiles(file){
+  const buf=await file.arrayBuffer(),view=new DataView(buf),u8=new Uint8Array(buf),dec2=new TextDecoder(),out=new Map();
+  let eocd=-1;for(let i=u8.length-22;i>=Math.max(0,u8.length-65558);i--)if(view.getUint32(i,true)===0x06054b50){eocd=i;break}
+  if(eocd<0)throw Error('ZIP end directory missing');
+  let total=view.getUint16(eocd+10,true),ptr=view.getUint32(eocd+16,true);
+  for(let n=0;n<total;n++){
+    if(view.getUint32(ptr,true)!==0x02014b50)throw Error('central directory broken');
+    let method=view.getUint16(ptr+10,true),comp=view.getUint32(ptr+20,true),nameLen=view.getUint16(ptr+28,true),extra=view.getUint16(ptr+30,true),comment=view.getUint16(ptr+32,true),local=view.getUint32(ptr+42,true);
+    let name=dec2.decode(u8.slice(ptr+46,ptr+46+nameLen)).replaceAll('\\','/');ptr+=46+nameLen+extra+comment;if(name.endsWith('/'))continue;
+    let lfName=view.getUint16(local+26,true),lfExtra=view.getUint16(local+28,true),start=local+30+lfName+lfExtra,data=u8.slice(start,start+comp),content;
+    if(method===0)content=data;else if(method===8){const stream=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));content=new Uint8Array(await new Response(stream).arrayBuffer())}else continue;
+    if(/\.(ya?ml|txt)$/i.test(name))out.set(name,dec2.decode(content));
+  }
+  return out;
+}
+function parseBlockDefsYAML(text){
+  const blocks=[];let cur=null,section=null,sourceMode=false,sourceIndent=0,sourceLines=[];
+  function finishSource(){if(cur&&sourceMode){cur.source=sourceLines.join('\n').replace(/\n$/,'');sourceMode=false;sourceLines=[]}}
+  const lines=text.split(/\r?\n/);
+  for(const raw of lines){
+    if(sourceMode){
+      const leading=(raw.match(/^\s*/)||[''])[0].length;
+      if(raw.trim()==='' || leading>sourceIndent){sourceLines.push(raw.slice(Math.min(raw.length,sourceIndent+2)));continue}
+      finishSource();
+    }
+    const noComment=raw.replace(/#.*$/,'');if(!noComment.trim())continue;
+    const trimmed=noComment.trim();
+    const item=trimmed.match(/^-\s+type:\s*(.+)$/);if(item){finishSource();cur={type:item[1].trim()};blocks.push(cur);section=null;continue}
+    if(!cur)continue;
+    const sec=trimmed.match(/^(defaults):\s*$/);if(sec){section=sec[1];cur[section]=cur[section]||{};continue}
+    const src=trimmed.match(/^source:\s*\|\s*$/);if(src){sourceMode=true;sourceIndent=(raw.match(/^\s*/)||[''])[0].length;sourceLines=[];section=null;continue}
+    const kv=trimmed.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);if(kv){let [,k,v]=kv;v=v.trim().replace(/^['"]|['"]$/g,'');if(v==='true')v=true;else if(v==='false')v=false;else if(v!==''&&!Number.isNaN(Number(v)))v=Number(v);if(section)cur[section][k]=v;else cur[k]=v}
+  }
+  finishSource();
+  return blocks.filter(b=>b.type&&b.label&&b.behavior);
+}
+function classForBehavior(b){return b==='move'?'movePiece':b==='left'||b==='right'?'turnPiece':b==='timer'?'timerPiece':b==='repeat'?'repeatPiece':b==='random_wall'?'wallRandPiece':'customPiece'}
+function registerBlockDefs(defs){
+  let added=0;
+  for(const def of defs){
+    if(STORE.some(s=>s[0]===def.type))continue;
+    CUSTOM_BLOCKS.set(def.type,def);
+    STORE.push([def.type,`${def.icon||'◆'} ${def.label}`,def.class||classForBehavior(def.behavior)]);
+    added++;
+  }
+  renderStore();renderExpert();
+  $('#pathStatus').textContent=added?`Imported ${added} block definition(s).`:'No new block definitions found.';
+}
+async function importBlockFile(file){
+  let texts=[];
+  if(/\.zip$/i.test(file.name)){const map=await readZipTextFiles(file);texts=[...map.values()];}
+  else texts=[await file.text()];
+  const defs=texts.flatMap(parseBlockDefsYAML);
+  registerBlockDefs(defs);
+}
+$('#importBlocksBtn').onclick=()=>$('#blockImportInput').click();
+$('#blockImportInput').onchange=e=>{const f=e.target.files?.[0];if(f)importBlockFile(f).catch(err=>$('#pathStatus').textContent='Block import failed: '+err.message);e.target.value=''};
+
+
+function applyBlankGame(){
+  gamePreset='blank';
+  maze.cols=10;maze.rows=10;maze.walls=new Set();maze.start={x:0,y:9,dir:1};maze.goal={x:9,y:0};
+  maze.body=[[0,0]];maze.bodyColor=COLORS.R1;maze.bodyName='1×1';program=[];scoreReset();resetState();renderAll();setPage('maker');
+  $('#makerStatus').textContent='Blank game template ready. Import pieces or build a new flow.';
+}
+function registerTetrisLiteBlocks(){registerBlockDefs(TETRIS_LITE_DEFS);return TETRIS_LITE_DEFS.length}
+function applyTetrisLiteScaffold(){
+  registerTetrisLiteBlocks();
+  gamePreset='tetris_lite_scaffold';
+  maze.cols=10;maze.rows=20;maze.walls=new Set();maze.start={x:4,y:0,dir:2};maze.goal={x:4,y:19};
+  const t=SHAPES.find(s=>s.id==='T')||SHAPES[2];maze.body=t.cells.map(c=>[...c]);maze.bodyColor=t.color;maze.bodyName='T Shape';
+  const loop=make('repeat');loop.label='Gravity Loop';loop.count=20;loop.children=[make('gravity_step')];
+  program=[make('input'),make('spawn_piece'),make('timer'),loop,make('score'),make('checkpoint')];
+  scoreReset();resetState();renderAll();setPage('path');
+  $('#pathStatus').textContent='Tetris Lite scaffold loaded: same grid runtime, active piece, timer, and score module. Next refactor adds lock/row-clear execution.';
+}
+function openGameSetup(){
+  const modal=$('#settingsModal'), body=$('#settingsBody');
+  $('#settingsTitle').textContent='🎛 Game Setup';
+  body.innerHTML=`<p class="muted">This is the transition layer from Maze to Tetris: reuse the same grid, active piece, timer, program stack, debugger, and score modules. Start blank, import pieces, or auto-scaffold Tetris Lite.</p>
+  <div class="gameSetupGrid">
+    <div class="setupCard"><h3>Blank Game</h3><p>Clear the maze into a neutral 10×10 board. Use this for new game experiments.</p><button id="blankGameBtn" class="primary">Create Blank Game</button></div>
+    <div class="setupCard"><h3>Tetris Lite Scaffold</h3><p>Switch to a 10×20 grid, register Tetris-like pieces, and build a starter gravity loop in the same Program Stack.</p><button id="tetrisScaffoldBtn" class="gold">Auto Setup Tetris Lite</button></div>
+    <div class="setupCard"><h3>Import Piece Pack</h3><p>Import YAML or ZIP packs with block definitions. The pack adds pieces to the existing Piece Store.</p><button id="setupImportBtn" class="gold">Import YAML/ZIP</button><input id="setupImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden><div id="setupImportStatus" class="importStatus">No pack imported in this session.</div></div>
+    <div class="setupCard"><h3>Next Composition Step</h3><p>After scaffold: implement lock, row clear, scoring, and keyboard control as reusable block behaviors, not as a separate game.</p><button id="goPathBtn">Open Program Stack</button></div>
+  </div>`;
+  $('#blankGameBtn').onclick=()=>{closeSettings();applyBlankGame()};
+  $('#tetrisScaffoldBtn').onclick=()=>{closeSettings();applyTetrisLiteScaffold()};
+  $('#goPathBtn').onclick=()=>{closeSettings();setPage('path')};
+  $('#setupImportBtn').onclick=()=>$('#setupImportInput').click();
+  $('#setupImportInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;importBlockFile(f).then(()=>{$('#setupImportStatus').textContent='Imported '+f.name+' into Piece Store.'}).catch(err=>{$('#setupImportStatus').textContent='Import failed: '+err.message}).finally(()=>{e.target.value=''})};
+  modal.classList.add('open');
+}
+
+function initDemoPath(){const loop=make('repeat');loop.count=4;loop.children=[make('move')];program=[make('input'),make('timer'),make('left'),loop,make('right'),make('move'),make('move'),make('move'),make('move'),make('move'),make('checkpoint')];renderProgram();renderCode()}
+function defaultMaze(){maze.cols=12;maze.rows=8;maze.walls=new Set(['3,2','3,3','3,4','4,4','5,4','6,4','7,4','8,4','8,3','8,2']);maze.start={x:0,y:7,dir:1};maze.goal={x:11,y:0};maze.body=[[0,0]];maze.bodyColor=COLORS.R1;maze.bodyName='1×1'}
+defaultMaze();initDemoPath();resetState();renderAll();renderKernelStrip();bindTabletInput();setTimeout(()=>{fitMaze();renderAll();renderKernelStrip()},60);
+})();
+</script>
+</body>
+</html>

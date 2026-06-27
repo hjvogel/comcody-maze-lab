@@ -1,0 +1,41 @@
+version: 0.1
+format: comcody.pieces
+
+# A ComCody piece definition maps a visual Blockly-like piece to an existing runtime behavior.
+# MVP behaviors supported by index.html:
+#   move          -> move the active body forward
+#   left          -> turn left
+#   right         -> turn right
+#   timer         -> wait/highlight step
+#   repeat        -> loop over child pieces
+#   random_wall   -> place/replace random walls on the maze grid
+#   checkpoint    -> visual/test checkpoint
+
+blocks:
+  - type: dash_two
+    label: Dash 2
+    icon: ⚡
+    role: flow
+    behavior: move
+    class: movePiece
+    defaults:
+      steps: 2
+
+  - type: random_wall_replace
+    label: Random Wall Replace
+    icon: 🎲
+    role: flow
+    behavior: random_wall
+    class: wallRandPiece
+    defaults:
+      count: 1
+      replaceExisting: true
+
+  - type: wait_50
+    label: Wait 50ms
+    icon: ⏱
+    role: flow
+    behavior: timer
+    class: timerPiece
+    defaults:
+      delay: 50
