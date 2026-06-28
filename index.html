@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>ComCody Lab v43</title>
+<title>ComCody Lab v51</title>
 <style>
 :root{
   --bg:#07111f;--panel:#101b2d;--panel2:#07101d;--ink:#f8fafc;--muted:#a9b9d6;--line:#2b4364;
@@ -96,37 +96,59 @@ h1{font-size:clamp(24px,3.4vw,40px)}
 @media(max-width:1050px){.pathLayout{grid-template-columns:1fr!important}.pieceDrawer{position:fixed;left:12px;right:12px;top:96px;width:auto;max-height:calc(100dvh - 120px)}.pathSide{grid-template-rows:minmax(420px,60dvh)!important}.pieceDrawer .store{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.pieceDrawer .store{grid-template-columns:1fr}.pathSide{grid-template-rows:minmax(360px,62dvh)!important}.pieceLine{gap:6px!important}}
 
+
+.storyCard{margin:12px 0;padding:12px;border:1px solid #334a70;border-radius:16px;background:#07101dcc;box-shadow:inset 0 0 0 1px #ffffff0f}.storyCard h3{margin:0 0 8px;color:#fde68a;font-size:17px}.storyGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.storyGrid label{display:grid;gap:6px;color:#dbeafe;font-weight:850}.storyGrid textarea,.storyGrid input,.storeSearch,.bundleStory textarea,.bundleStory input{width:100%;border:1px solid #37567f;border-radius:12px;background:#050b14;color:#f8fafc;padding:9px;font-weight:700}.storyGrid textarea{min-height:72px;resize:vertical}.storyMeta{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.storyPill{border:1px solid #3d5d8a;border-radius:999px;padding:5px 8px;background:#101b2d;color:#c7d2fe;font-size:12px;font-weight:900}.healthList{display:grid;gap:6px;margin-top:8px}.healthOk{color:#86efac}.healthWarn{color:#fde68a}.healthBad{color:#fda4af}.storeSearchWrap{margin-bottom:10px}.storeSearch{font-size:15px}.storeStory{display:block;font-size:11px;line-height:1.25;color:#cbd5e1;font-weight:750;margin-top:2px;opacity:.9}.piece .storeText{min-width:0;overflow:hidden;text-overflow:ellipsis}.piece .storeText b{display:block;overflow:hidden;text-overflow:ellipsis}.bundleStory{margin:12px 0;padding:12px;border:1px solid #3d5d8a;border-radius:16px;background:#050b14}.bundleStory h3{margin:0 0 8px;color:#86efac}.bundleStory .formGrid{margin-top:8px}.downloadReadyLink{word-break:break-word}@media(max-width:760px){.storyGrid{grid-template-columns:1fr}}
+
+/* v49 Arcade Clean UI: no text spam on first screen. Story/docs remain available behind inspect/details. */
+header{height:70px!important;padding:8px 14px!important;align-items:center!important;background:linear-gradient(180deg,#13294d,#07111f)!important}
+h1{font-size:clamp(26px,3.2vw,42px)!important;letter-spacing:-.04em!important}.sub{font-size:13px!important;margin-top:3px!important;color:#8bd3ff!important;font-weight:900!important;letter-spacing:.04em!important;text-transform:uppercase!important}.app{height:calc(100dvh - 70px)!important}.topActions button{min-height:38px!important;padding:8px 11px!important}
+.panel h2{font-size:17px!important;letter-spacing:-.01em}.panel h3{font-size:13px!important;text-transform:uppercase;letter-spacing:.04em;color:#b8c7df!important}.status{font-size:13px!important;opacity:.9}.kernelStrip{margin:5px 0!important}.kernelChip{font-size:11px!important;padding:5px 8px!important;border-radius:999px!important;background:#06101dcc!important}.scoreBox{font-size:12px!important;padding:6px 8px!important}.questsPanel .quests{max-height:72px!important;overflow:auto!important;font-size:12px!important;opacity:.82}.questsPanel{grid-template-rows:auto minmax(0,72px)!important}.inputHint.compactInput{position:absolute;left:18px;top:58px;z-index:5;margin:0!important;opacity:.86}.inputHint.compactInput span{font-size:14px!important;width:28px;height:28px;padding:0!important;display:grid;place-items:center;border-radius:10px!important;background:#06101ddd!important}.storeStory{display:none!important}.storeSearch{font-size:13px!important;padding:8px 10px!important}.pieceDrawerHead h2{margin:0!important}.storeTools{display:flex;gap:8px;margin-bottom:8px}.piece .storeText b{font-size:13px!important}
+.arcadeHero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:12px;border:1px solid #315176;border-radius:18px;background:radial-gradient(circle at 0 0,#1c4b8a,#06101d 65%);margin-bottom:12px}.arcadeIcon{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:30px;background:#102743;box-shadow:inset 0 0 0 2px #57a6ff66}.arcadeHero b{display:block;font-size:18px}.arcadeHero span{display:block;color:#b8c7df;font-size:13px;font-weight:800;margin-top:2px}.packActionGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:10px 0}.packActionGrid button{min-height:58px;border-radius:18px;font-size:15px}.arcadeDetails{border:1px solid #263b58;border-radius:16px;background:#050b14;margin:10px 0;overflow:hidden}.arcadeDetails>summary{cursor:pointer;padding:12px 14px;font-weight:950;color:#dbeafe;list-style:none;display:flex;align-items:center;justify-content:space-between}.arcadeDetails>summary:after{content:'+';color:#ffd166;font-size:20px}.arcadeDetails[open]>summary:after{content:'–'}.arcadeDetailsBody{padding:0 12px 12px}.packChecklist{margin:0!important}.packStatus{font-size:13px!important;padding:9px 10px!important;margin-top:10px!important}.packLog{max-height:150px!important}.storyCard{padding:0!important;border-radius:16px!important;overflow:hidden!important}.storyCard h3{display:none!important}.storyCompact{padding:12px}.storyCompact summary{cursor:pointer;font-weight:950;color:#fde68a;list-style:none}.storyCompact summary:after{content:'  +';color:#ffd166}.storyCompact[open] summary:after{content:'  –'}.storyGrid{margin-top:10px}.storyMeta{margin:8px 0 0!important}.storyPill{font-size:11px!important;padding:4px 7px!important}.downloadReadyLink{display:inline-block;margin-top:6px;padding:8px 10px;border-radius:12px;background:#123a22;border:1px solid #38e078;color:#d1fae5;font-weight:950;text-decoration:none}
+@media(max-width:780px){header{height:auto!important}.app{height:auto!important}.packActionGrid{grid-template-columns:1fr}.inputHint.compactInput{position:static;margin:4px 0!important}.questsPanel{display:none!important}}
+
+/* v51 Piece Inspector MVP: hidden until a piece is opened. */
+.inspectorHero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;margin-bottom:10px;padding:12px;border:1px solid #315176;border-radius:18px;background:linear-gradient(135deg,#07101d,#11233d)}
+.inspectorHero .bigIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:#16243a;font-size:30px;box-shadow:inset 0 0 0 2px #ffffff22}
+.inspectorHero b{display:block;font-size:20px;line-height:1.1}.inspectorHero span{display:block;color:#a9b9d6;font-weight:800;font-size:13px;margin-top:4px}
+.inspectorActions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.inspectorDetails{margin:8px 0;border:1px solid #2d476b;border-radius:16px;background:#050b14;overflow:hidden}.inspectorDetails>summary{cursor:pointer;font-weight:950;padding:11px 12px;color:#dbeafe;background:#0b1728}.inspectorDetailsBody{padding:12px}.miniGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.miniStat{border:1px solid #263b58;border-radius:12px;padding:9px;background:#07101d}.miniStat small{display:block;color:#93a4c0;font-weight:850}.miniStat b{color:#fde68a}.depTree{display:grid;gap:6px}.depNode{border-left:3px solid #57a6ff;padding:5px 0 5px 9px;color:#dbeafe;font-weight:850}.depNode small{color:#a9b9d6}.testResult{margin-top:8px;border-radius:14px;border:1px solid #315176;background:#07101d;padding:10px;font-weight:850}.testResult.ok{border-color:#38e078;color:#86efac}.testResult.bad{border-color:#ff5a65;color:#fda4af}.sourceGrid{display:grid;gap:10px}.sourceGrid pre{max-height:240px}
+@media(max-width:760px){.miniGrid{grid-template-columns:1fr}.inspectorHero{grid-template-columns:1fr}.inspectorHero .bigIcon{width:46px;height:46px}}
+/* v54 Gamer-first inspector: short story first, expert tools hidden. */
+.gamerHook{display:inline-flex;align-items:center;gap:6px;border:1px solid #38e07855;background:#092518;color:#bbf7d0;border-radius:999px;padding:5px 9px;font-weight:950;font-size:12px;margin-top:6px}
+.gamerStoryBox{margin:10px 0 8px;border:1px solid #315176;border-radius:18px;background:linear-gradient(135deg,#06101d,#0b1f31);padding:12px}
+.gamerStoryBox b{display:block;color:#fde68a;font-size:14px;margin-bottom:4px}.gamerStoryBox p{margin:0;color:#dbeafe;font-weight:850;line-height:1.35}.gamerStoryBox details{margin-top:8px}.gamerStoryBox summary{cursor:pointer;color:#9bdcff;font-weight:950}.gamerStoryBox textarea{width:100%;min-height:64px;border:1px solid #37567f;border-radius:12px;background:#050b14;color:#f8fafc;padding:9px;font-weight:750;resize:vertical}
+.inspectorExpertGate{margin-top:10px}.inspectorExpertGate>summary{background:#111827!important;color:#fcd34d!important}.inspectorExpertGrid{display:grid;gap:10px}
+
 </style>
 </head>
 <body>
 <header>
-  <div><h1>🧩 ComCody Maze Lab</h1><p class="sub">v47: clean Pack Studio export — one export home, tested fallback logging.</p></div>
-  <div class="topActions"><button id="tabMaker" class="gold active">🧱 Maze Maker</button><button id="tabPath">▶ Path Game</button><button id="gameSetupBtn" class="gold">🎛 Game Setup</button><button id="packStudioBtn" class="gold">📦 Packs</button></div>
+  <div><h1>🧩 ComCody</h1><p class="sub">Build · Play · Share</p></div>
+  <div class="topActions"><button id="tabMaker" class="gold active">🧱 Build</button><button id="tabPath">▶ Play</button><button id="gameSetupBtn" class="gold">🎛 Setup</button><button id="packStudioBtn" class="gold">📦 Packs</button></div>
 </header>
 <div class="app">
   <section id="makerPage" class="page active makerLayout">
     <div class="panel mazePanel">
-      <div class="mazeTop"><h2>Maze Canvas</h2><div><button id="mazeSettings" class="gold small">⚙ Maze Settings</button><button id="startSettingsTop" class="gold small">🧍 Start Shape</button></div></div>
+      <div class="mazeTop"><h2>Maze</h2><div><button id="mazeSettings" class="gold small">⚙ Maze Settings</button><button id="startSettingsTop" class="gold small">🧍 Start Shape</button></div></div>
       <div class="mazeShell"><div id="makerGrid" class="mazeGrid"></div></div>
-      <div><div id="makerStatus" class="status">Ready. Choose a piece and paint the maze.</div><div class="kernelStrip"><div class="kernelChip">Preset: <b id="kernelPresetA">maze</b></div><div class="kernelChip">Grid: <b id="kernelGridA">—</b></div><div class="kernelChip">Active Piece: <b id="kernelPieceA">—</b></div><div class="kernelChip">Score: <b id="kernelScoreA">0</b></div></div><div class="scoreBox" id="makerScore">Maker quests: —</div></div>
+      <div><div id="makerStatus" class="status">Paint the maze.</div><div class="kernelStrip"><div class="kernelChip">Mode <b id="kernelPresetA">maze</b></div><div class="kernelChip">▦ <b id="kernelGridA">—</b></div><div class="kernelChip">◆ <b id="kernelPieceA">—</b></div><div class="kernelChip">★ <b id="kernelScoreA">0</b></div></div><div class="scoreBox" id="makerScore">Quests: —</div></div>
     </div>
     <div class="rightRail">
-      <div class="panel builderPanel"><h2>Maze Piece Builder</h2><div class="pieceLists"><div class="pieceCol"><h3>Paint pieces</h3><div id="makerPieces"></div></div><div class="pieceCol"><h3>Actions</h3><div class="actionStack"><button id="clearWalls" class="danger">Clear Walls</button><button id="demoMaze" class="gold">Load Demo Maze</button><button id="testMazeMaker" class="primary">Test Maze</button><button id="publishPlay" class="primary">Publish & Play</button></div></div></div></div>
-      <div class="panel questsPanel"><h2>Maker Quests</h2><ol id="makerQuests" class="quests"></ol><div class="yamlBox"><h2>Maze YAML</h2><pre id="mazeYaml"></pre></div></div>
+      <div class="panel builderPanel"><h2>Builder</h2><div class="pieceLists"><div class="pieceCol"><h3>Paint</h3><div id="makerPieces"></div></div><div class="pieceCol"><h3>Actions</h3><div class="actionStack"><button id="clearWalls" class="danger">Clear Walls</button><button id="demoMaze" class="gold">Load Demo Maze</button><button id="testMazeMaker" class="primary">Test Maze</button><button id="publishPlay" class="primary">Publish & Play</button></div></div></div></div>
+      <div class="panel questsPanel"><h2>Quests</h2><ol id="makerQuests" class="quests"></ol><div class="yamlBox"><h2>Maze YAML</h2><pre id="mazeYaml"></pre></div></div>
     </div>
   </section>
 
   <section id="pathPage" class="page pathLayout">
     <div class="panel mazePanel">
-      <div class="mazeTop"><h2>Path Game</h2><div class="runBar"><button id="runPath" class="primary">▶ Run</button><button id="testPath" class="gold">🏁 Test</button><button id="pausePath">⏸ Pause</button><button id="stepPath">» Step</button><button id="resetPath">↻ Reset</button><button id="toggleStore" class="small gold">🧩 Pieces</button><input id="speedSlider" type="range" min="0" max="2000" step="50" value="200"><span id="speedRead" class="speedRead">0.2s</span><button id="timerSettings" class="small gold">⚙ Timer</button></div></div>
+      <div class="mazeTop"><h2>Play</h2><div class="runBar"><button id="runPath" class="primary">▶ Run</button><button id="testPath" class="gold">🏁 Test</button><button id="pausePath">⏸ Pause</button><button id="stepPath">» Step</button><button id="resetPath">↻ Reset</button><button id="toggleStore" class="small gold">🧩 Pieces</button><input id="speedSlider" type="range" min="0" max="2000" step="50" value="200"><span id="speedRead" class="speedRead">0.2s</span><button id="timerSettings" class="small gold">⚙ Timer</button></div></div>
       <div class="mazeShell"><div id="playGrid" class="mazeGrid"></div></div>
-      <div class="inputHint"><span>👆 input module</span><span>↔ swipe left/right</span><span>↧ swipe down</span><span>↻ tap rotate</span><span>↓↓ double-tap down</span></div>
-      <div><div id="pathStatus" class="status">Build a path, then press Run or Test.</div><div class="kernelStrip"><div class="kernelChip">Preset: <b id="kernelPresetB">maze</b></div><div class="kernelChip">Grid: <b id="kernelGridB">—</b></div><div class="kernelChip">Active Piece: <b id="kernelPieceB">—</b></div><div class="kernelChip">Score: <b id="kernelScoreB">0</b></div></div><div id="score" class="scoreBox">Score: —</div></div>
+      <div class="inputHint compactInput"><span title="Tablet input">👆</span><span title="Swipe left/right">↔</span><span title="Swipe down">↧</span><span title="Tap rotate">↻</span><span title="Double-tap down">↓↓</span></div>
+      <div><div id="pathStatus" class="status">Build. Run. Test.</div><div class="kernelStrip"><div class="kernelChip">Mode <b id="kernelPresetB">maze</b></div><div class="kernelChip">▦ <b id="kernelGridB">—</b></div><div class="kernelChip">◆ <b id="kernelPieceB">—</b></div><div class="kernelChip">★ <b id="kernelScoreB">0</b></div></div><div id="score" class="scoreBox">Score: —</div></div>
     </div>
     <div id="pieceDrawer" class="pieceDrawer">
       <div class="panel">
         <div class="pieceDrawerHead"><h2>Piece Store</h2><button id="closeStore" class="small danger">×</button></div>
-        <div class="storeTools"><button id="importBlocksBtn" class="small gold">⬆ Import Pack</button><button id="exportGameStoreBtn" class="small">⬇ Export Game</button><input id="blockImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div>
+        <div class="storeTools"><button id="importBlocksBtn" class="small gold">⬆ Import</button><input id="blockImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div>
         <div id="pathStore" class="store"></div>
       </div>
     </div>
@@ -155,6 +177,27 @@ const SHAPES=[
  {id:'3x2',name:'3×2',color:COLORS.R3,cells:[[0,0],[1,0],[2,0],[0,1],[1,1],[2,1]]}
 ];
 let maze={cols:8,rows:8,walls:new Set(),locked:new Map(),start:{x:0,y:7,dir:1},goal:{x:7,y:0},body:[[0,0]],bodyColor:COLORS.R1,bodyName:'1×1'};
+let playMaze=null;
+function cloneMazeModel(m=maze){
+  const locked=(m.locked instanceof Map)?m.locked:new Map();
+  return {
+    cols:m.cols,rows:m.rows,
+    walls:new Set([...(m.walls||new Set())]),
+    locked:new Map([...locked.entries()].map(([k,v])=>[k,(v&&typeof v==='object')?JSON.parse(JSON.stringify(v)):v])),
+    start:{...(m.start||{x:0,y:0,dir:1})},
+    goal:{...(m.goal||{x:0,y:0})},
+    body:(m.body||[[0,0]]).map(c=>[...c]),
+    bodyColor:m.bodyColor,bodyName:m.bodyName
+  };
+}
+function ensurePlayMazeFromCreator(){playMaze=cloneMazeModel(maze);return playMaze}
+function playMazeModel(){return playMaze||ensurePlayMazeFromCreator()}
+async function withPlayMazeAsync(fn){
+  const creatorMaze=maze;
+  maze=playMazeModel();
+  try{return await fn()}
+  finally{playMaze=maze;maze=creatorMaze}
+}
 let gridTheme={board:'#07101d',cell:'#16243a',wall:'#334155',goal:'#22c55e',goal2:'#86efac',locked:'#64748b'};
 let tool='wall', customShapes=[], running=false, paused=false, activePiece=null, activeMazeKey=null, activeCode=null, state=null, steps=0;
 let timer={min:0,max:2000,step:50,defaultMs:200,limit:160};
@@ -162,11 +205,16 @@ let program=[]; let dragIndex=null;
 let gamePreset='maze';
 let scoreModule={value:0,events:[]};
 let inputConfig={swipe:true,tapRotate:true,doubleTapDown:true,keyboard:true};
+let bundleStory={title:'Maze Lab Starter',intention:'Teach creators how blocks become playable game logic.',audience:'No-code gamers first; coders can inspect YAML and JavaScript under each block.',tags:'maze, starter, no-code, composable',reuse:'Export this game as a ZIP, import elsewhere, then replace or extend pieces without losing the visible Program Stack.'};
 function isTetris(){return String(gamePreset).startsWith('tetris')}
 function lockedCells(){if(!(maze.locked instanceof Map))maze.locked=new Map();return maze.locked}
 function clearLockedCells(){lockedCells().clear()}
+function runtimeMaze(){return playMaze||maze}
+function runtimeLockedCells(){const m=runtimeMaze();if(!(m.locked instanceof Map))m.locked=new Map();return m.locked}
+function runtimeInGrid(x,y){const m=runtimeMaze();return x>=0&&x<m.cols&&y>=0&&y<m.rows}
+function runtimeBodyAbs(anchor=(state||runtimeMaze().start)){const m=runtimeMaze();return (m.body||[[0,0]]).map(([dx,dy])=>[anchor.x+dx,anchor.y+dy])}
 function applyGridTheme(){const r=document.documentElement;r.style.setProperty('--board-bg',gridTheme.board);r.style.setProperty('--cell-bg',gridTheme.cell);r.style.setProperty('--wall-bg',gridTheme.wall);r.style.setProperty('--goal-bg',gridTheme.goal);r.style.setProperty('--goal-bg2',gridTheme.goal2||gridTheme.goal);r.style.setProperty('--locked-bg',gridTheme.locked)}
-function lockMeta(color=maze.bodyColor,name=maze.bodyName){return {color,name,ts:Date.now()}}
+function lockMeta(color=runtimeMaze().bodyColor,name=runtimeMaze().bodyName){return {color,name,ts:Date.now()}}
 
 function scoreReset(){scoreModule={value:0,events:[]};renderKernelStrip()}
 function scoreAdd(reason,points){if(!points)return;scoreModule.value+=points;scoreModule.events.push({reason,points,total:scoreModule.value});renderKernelStrip()}
@@ -254,7 +302,7 @@ blocks:
 };
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
 
-const PACK_VERSION='1.1';
+const PACK_VERSION='1.4';
 function slugify(s){return String(s||'piece').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,48)||'piece'}
 function yamlScalar(v){if(v===undefined||v===null)return '';return String(v).replace(/\n/g,'\\n').replace(/:/g,'-')}
 function normalizeTypeRef(ref){
@@ -548,38 +596,39 @@ function connected(cells){if(!cells.length)return false;const set=new Set(cells.
 function renderGrid(target,clickHandler){
   const grid=$(target);
   const isPlay=target==='#playGrid';
-  grid.style.setProperty('--cols',maze.cols);
-  grid.style.setProperty('--rows',maze.rows);
+  const viewMaze=(isPlay&&playMaze)?playMaze:maze;
+  grid.style.setProperty('--cols',viewMaze.cols);
+  grid.style.setProperty('--rows',viewMaze.rows);
   grid.innerHTML='';
 
-  const anchor=(isPlay&&state)?state:maze.start;
-  const bodyCells=maze.body.map(([dx,dy])=>[anchor.x+dx,anchor.y+dy]);
+  const anchor=(isPlay&&state)?state:viewMaze.start;
+  const bodyCells=(viewMaze.body||[[0,0]]).map(([dx,dy])=>[anchor.x+dx,anchor.y+dy]);
   const body=new Map(bodyCells.map((p,i)=>[key(p[0],p[1]),i]));
   const tempWalls=(isPlay&&state&&state.tempWalls)?state.tempWalls:new Map();
-  const locked=lockedCells();
+  const locked=(viewMaze.locked instanceof Map)?viewMaze.locked:new Map();
   const showGoal=true;
 
-  for(let y=0;y<maze.rows;y++)for(let x=0;x<maze.cols;x++){
+  for(let y=0;y<viewMaze.rows;y++)for(let x=0;x<viewMaze.cols;x++){
     const k=key(x,y);
     const d=document.createElement('div');
     d.className='cell path';
     d.dataset.x=x;
     d.dataset.y=y;
 
-    if(maze.walls.has(k)) d.className='cell wall';
+    if(viewMaze.walls.has(k)) d.className='cell wall';
     if(locked.has(k)){
       d.className='cell locked';
       const meta=locked.get(k);
       d.style.setProperty('--locked',typeof meta==='string'?meta:(meta?.color||'#64748b'));
     }
     if(tempWalls.has(k)) d.className='cell wall tempWall';
-    if(showGoal&&x===maze.goal.x&&y===maze.goal.y&&!maze.walls.has(k)&&!locked.has(k)&&!tempWalls.has(k)) d.className='cell goal';
+    if(showGoal&&x===viewMaze.goal.x&&y===viewMaze.goal.y&&!viewMaze.walls.has(k)&&!locked.has(k)&&!tempWalls.has(k)) d.className='cell goal';
 
     if(body.has(k)){
       d.className='cell body'+(body.get(k)===0?' head':'');
-      d.style.setProperty('--body',maze.bodyColor);
+      d.style.setProperty('--body',viewMaze.bodyColor);
       d.textContent=body.get(k)===0?(isPlay?(isTetris()?'':'🧭'):'⚡'):'';
-    }else if(showGoal&&x===maze.goal.x&&y===maze.goal.y){
+    }else if(showGoal&&x===viewMaze.goal.x&&y===viewMaze.goal.y){
       d.textContent='🏁';
     }else if(tempWalls.has(k)){
       d.textContent='🎲';
@@ -597,7 +646,7 @@ function renderGrid(target,clickHandler){
 }
 
 function makerClick(x,y){const k=key(x,y);if(tool==='wall'){if(!isBodyAt(x,y)&&!(x===maze.goal.x&&y===maze.goal.y))maze.walls.has(k)?maze.walls.delete(k):maze.walls.add(k)}else if(tool==='path'){maze.walls.delete(k)}else if(tool==='start'){if(bodyFitsAt(x,y)){maze.start.x=x;maze.start.y=y;maze.walls.delete(k)}}else if(tool==='goal'){if(canSetGoal(x,y)){maze.goal={x,y}}}else if(tool==='avatar'){const rel=[x-maze.start.x,y-maze.start.y], rk=key(rel[0],rel[1]);let next=maze.body.some(c=>key(c[0],c[1])===rk)?maze.body.filter(c=>key(c[0],c[1])!==rk):maze.body.concat([rel]);if(connected(next)&&next.every(([dx,dy])=>inGrid(maze.start.x+dx,maze.start.y+dy))){maze.body=next;maze.bodyName='Custom';if(state){state.x=maze.start.x;state.y=maze.start.y;state.dir=maze.start.dir;state.won=false;state.crash=false}customShapes.push({id:'custom'+customShapes.length,name:'Custom '+customShapes.length,color:maze.bodyColor,cells:maze.body.map(c=>[...c])})}}renderAll()}
-function runMakerTest(){const qs=[['Start shape exists',maze.body.length>0],['Start shape is connected',connected(maze.body)],['Start shape fits on grid',bodyFitsAt(maze.start.x,maze.start.y)],['Goal differs from start body',!isBodyAt(maze.goal.x,maze.goal.y)],['Route exists for full shape',routeExists()]];$('#makerQuests').innerHTML='';let score=0;qs.forEach(q=>{const li=document.createElement('li');li.className=q[1]?'pass':'fail';li.textContent=(q[1]?'✓ ':'✗ ')+q[0];$('#makerQuests').appendChild(li);if(q[1])score+=200});$('#makerScore').textContent='Maker quests: '+score+' / 1000';return score===1000}
+function runMakerTest(){const qs=[['Start shape exists',maze.body.length>0],['Start shape is connected',connected(maze.body)],['Start shape fits on grid',bodyFitsAt(maze.start.x,maze.start.y)],['Goal differs from start body',!isBodyAt(maze.goal.x,maze.goal.y)],['Route exists for full shape',routeExists()]];$('#makerQuests').innerHTML='';let score=0;qs.forEach(q=>{const li=document.createElement('li');li.className=q[1]?'pass':'fail';li.textContent=(q[1]?'✓ ':'✗ ')+q[0];$('#makerQuests').appendChild(li);if(q[1])score+=200});$('#makerScore').textContent='Quests: '+score+' / 1000';return score===1000}
 function routeExists(){const start=key(maze.start.x,maze.start.y), goal=key(maze.goal.x,maze.goal.y), q=[[maze.start.x,maze.start.y]], seen=new Set([start]);while(q.length){const [x,y]=q.shift();if(x===maze.goal.x&&y===maze.goal.y)return true;for(const [dx,dy] of DIRS){const nx=x+dx,ny=y+dy,nk=key(nx,ny);if(!seen.has(nk)&&bodyFitsAt(nx,ny)){seen.add(nk);q.push([nx,ny])}}}return false}
 function yaml(){return ['game_preset: '+gamePreset,'grid_runtime:','  cols: '+maze.cols,'  rows: '+maze.rows,'grid_theme:','  board: '+gridTheme.board,'  empty_cell: '+gridTheme.cell,'  wall: '+gridTheme.wall,'  goal: '+gridTheme.goal,'  locked_fallback: '+gridTheme.locked,'active_piece:','  role: player','  x: '+maze.start.x,'  y: '+maze.start.y,'  dir: '+maze.start.dir,'  color: '+maze.bodyColor,'  name: '+maze.bodyName,'  shape:',...maze.body.map(c=>'    - '+c[0]+','+c[1]),'goals:','  - '+maze.goal.x+','+maze.goal.y,'blocked_cells:',...[...maze.walls].sort().map(w=>'  - '+w),'locked_cells:',...[...lockedCells().keys()].sort().map(w=>'  - '+w),'score_module:','  value: '+scoreModule.value,'  reusable_by: [maze, tetris_lite]','input_module:','  swipe: '+inputConfig.swipe,'  tap_rotate: '+inputConfig.tapRotate,'  double_tap_down: '+inputConfig.doubleTapDown,'  keyboard: '+inputConfig.keyboard,'utility_modules:','  visible_as_pieces: true'].join('\n')}
 function renderMakerPieces(){const box=$('#makerPieces');box.innerHTML=MAKER_PIECES.map(p=>pieceHtml(p[0],p[1],p[2],p[3])).join('');box.querySelectorAll('.piece').forEach(p=>{p.onclick=e=>{tool=p.dataset.tool;renderMakerPieces();$('#makerStatus').textContent= tool==='avatar'?'Start Shape mode: click connected cells to add/remove the moving body.':'Selected: '+tool;};p.ondblclick=e=>{e.stopPropagation();openSettings(p.dataset.tool)}});}
@@ -630,12 +679,39 @@ function bindExpertCodePanel(kind){
 function openSettings(kind,index=null){const modal=$('#settingsModal'), body=$('#settingsBody');$('#settingsTitle').textContent='⚙ '+(index!==null?'Program Piece':'Maze Piece')+' Settings';let html='';if(kind==='grid'){html=`<div class="formGrid"><label>Columns<input id="setCols" type="number" min="4" max="20" value="${maze.cols}"></label><label>Rows<input id="setRows" type="number" min="4" max="24" value="${maze.rows}"></label><label>Grid background<input id="setBoardColor" type="color" value="${gridTheme.board}"></label><label>Empty cell color<input id="setCellColor" type="color" value="${gridTheme.cell}"></label><label>Wall / manual block color<input id="setWallColor" type="color" value="${gridTheme.wall}"></label><label>Goal color<input id="setGoalColor" type="color" value="${gridTheme.goal}"></label><label>Locked fallback color<input id="setLockedColor" type="color" value="${gridTheme.locked}"></label></div><p class="muted">These are shared grid item colors: Maze walls, Tetris manual blocks, goal markers, empty cells, and locked fallback cells.</p><button id="saveGrid" class="primary">Save Grid + Colors</button>${expertCodePanelHtml('grid')}`;body.innerHTML=html;bindExpertCodePanel('grid');$('#saveGrid').onclick=()=>{gridTheme.board=$('#setBoardColor').value;gridTheme.cell=$('#setCellColor').value;gridTheme.wall=$('#setWallColor').value;gridTheme.goal=$('#setGoalColor').value;gridTheme.goal2=gridTheme.goal;gridTheme.locked=$('#setLockedColor').value;applyGridTheme();resizeGrid(Number($('#setCols').value),Number($('#setRows').value));closeSettings()}}
 else if(kind==='avatar'){html=`<p class="muted">Choose a colored Tetris/rectangle body or keep editing custom cells on the maze with 🧍 Start Shape selected.</p><div id="shapeTray" class="shapeTray"></div><div style="margin-top:12px"><button id="saveCustom" class="gold">Save Current Custom Shape</button></div>${expertCodePanelHtml('avatar')}`;body.innerHTML=html;renderShapeTray();bindExpertCodePanel('avatar');$('#saveCustom').onclick=()=>{customShapes.push({id:'saved'+Date.now(),name:'Saved '+(customShapes.length+1),color:maze.bodyColor,cells:maze.body.map(c=>[...c])});renderShapeTray()}}
 else if(kind==='timerConfig'){html=`<div class="formGrid"><label>Default ms<input id="timerDefault" type="number" value="${timer.defaultMs}" min="0"></label><label>Min ms<input id="timerMin" type="number" value="${timer.min}" min="0"></label><label>Max ms<input id="timerMax" type="number" value="${timer.max}" min="0"></label><label>Step ms<input id="timerStep" type="number" value="${timer.step}" min="1"></label><label>Step limit<input id="timerLimit" type="number" value="${timer.limit}" min="1"></label></div><button id="saveTimer" class="primary">Save Timer</button>${expertCodePanelHtml('timer')}`;body.innerHTML=html;bindExpertCodePanel('timer');$('#saveTimer').onclick=()=>{timer.defaultMs=+$('#timerDefault').value;timer.min=+$('#timerMin').value;timer.max=+$('#timerMax').value;timer.step=+$('#timerStep').value;timer.limit=+$('#timerLimit').value;$('#speedSlider').min=timer.min;$('#speedSlider').max=timer.max;$('#speedSlider').step=timer.step;$('#speedSlider').value=timer.defaultMs;speedLabel();closeSettings()}}
-else if(index!==null){const p=program[index];function rerenderPieceSettings(){let extra='';const b=p.behavior||p.type;if(b==='move')extra='<label>Move steps<input id="pSteps" type="number" min="1" max="8" value="'+p.steps+'"></label>';if(b==='timer')extra='<label>Delay ms<input id="pDelay" type="number" min="0" value="'+(p.delay??'')+'"></label>';if(b==='face_dir')extra='<label>Direction<select id="pDir"><option value="0" '+(p.dir===0?'selected':'')+'>Up</option><option value="1" '+(p.dir===1?'selected':'')+'>Right</option><option value="2" '+(p.dir===2?'selected':'')+'>Down</option><option value="3" '+(p.dir===3?'selected':'')+'>Left</option></select></label>';if(b==='repeat')extra='<label>Repeat count<input id="pCount" type="number" min="1" max="50" value="'+(p.count||5)+'"></label>';if(b==='random_wall')extra='<label>Walls to place<input id="pCount" type="number" min="1" max="20" value="'+(p.count||1)+'"></label><label>Replace existing?<select id="pReplace"><option value="false">No, add only</option><option value="true" '+(p.replaceExisting?'selected':'')+'>Yes, may replace</option></select></label><label>Persistent?<select id="pPersist"><option value="false">No, temporary</option><option value="true" '+(p.persistent?'selected':'')+'>Yes, keep wall</option></select></label><label>Disappear after moves<input id="pTtl" type="number" min="1" max="50" value="'+(p.ttlMoves||3)+'"></label>';if(b==='input')extra='<label>Swipe move?<select id="pSwipe"><option value="true" '+(p.swipe!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.swipe===false?'selected':'')+'>Disabled</option></select></label><label>Tap rotates?<select id="pTap"><option value="true" '+(p.tapRotate!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.tapRotate===false?'selected':'')+'>Disabled</option></select></label><label>Double tap down?<select id="pDouble"><option value="true" '+(p.doubleTapDown!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.doubleTapDown===false?'selected':'')+'>Disabled</option></select></label><label>Keyboard fallback?<select id="pKeyboard"><option value="true" '+(p.keyboard!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.keyboard===false?'selected':'')+'>Disabled</option></select></label>';if(b==='score'||b==='score_lines')extra='<label>Reason<input id="pReason" value="'+esc(p.reason||'score')+'"></label><label>Points<input id="pPoints" type="number" value="'+(p.points||0)+'"></label>';body.innerHTML=`<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label)}"></label><label>Icon<input id="pIcon" value="${esc(p.icon)}"></label>${extra}</div>${(b==='repeat'||b==='composite')?loopEditorHtml(p):''}${b==='input'?inputBindingEditorHtml(p):''}<div class="settingsActions"><button id="savePiece" class="primary">Save Piece</button><button id="exportPiecePackBtn" class="gold" type="button">Export Piece ZIP</button><button id="deletePieceFromSettings" class="danger" type="button">Remove Piece</button></div>${expertCodePanelHtml(p)}`;const exportBtn=$('#exportPiecePackBtn'); if(exportBtn)exportBtn.onclick=()=>exportPiecePack(p);if(b==='repeat'||b==='composite')bindLoopEditor(p,rerenderPieceSettings);if(b==='input')bindInputBindingEditor(p,rerenderPieceSettings);bindExpertCodePanel(p);$('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pDir'))p.dir=+$('#pDir').value;if($('#pCount')){if(b==='repeat')p.count=+$('#pCount').value;else p.count=+$('#pCount').value}if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings()};const delFromSettings=$('#deletePieceFromSettings');if(delFromSettings)delFromSettings.onclick=()=>{program.splice(index,1);renderProgram();renderCode();closeSettings()}}
+else if(index!==null){const p=program[index];function rerenderPieceSettings(){let extra='';const b=p.behavior||p.type;if(b==='move')extra='<label>Move steps<input id="pSteps" type="number" min="1" max="8" value="'+p.steps+'"></label>';if(b==='timer')extra='<label>Delay ms<input id="pDelay" type="number" min="0" value="'+(p.delay??'')+'"></label>';if(b==='face_dir')extra='<label>Direction<select id="pDir"><option value="0" '+(p.dir===0?'selected':'')+'>Up</option><option value="1" '+(p.dir===1?'selected':'')+'>Right</option><option value="2" '+(p.dir===2?'selected':'')+'>Down</option><option value="3" '+(p.dir===3?'selected':'')+'>Left</option></select></label>';if(b==='repeat')extra='<label>Repeat count<input id="pCount" type="number" min="1" max="50" value="'+(p.count||5)+'"></label>';if(b==='random_wall')extra='<label>Walls to place<input id="pCount" type="number" min="1" max="20" value="'+(p.count||1)+'"></label><label>Replace existing?<select id="pReplace"><option value="false">No, add only</option><option value="true" '+(p.replaceExisting?'selected':'')+'>Yes, may replace</option></select></label><label>Persistent?<select id="pPersist"><option value="false">No, temporary</option><option value="true" '+(p.persistent?'selected':'')+'>Yes, keep wall</option></select></label><label>Disappear after moves<input id="pTtl" type="number" min="1" max="50" value="'+(p.ttlMoves||3)+'"></label>';if(b==='input')extra='<label>Swipe move?<select id="pSwipe"><option value="true" '+(p.swipe!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.swipe===false?'selected':'')+'>Disabled</option></select></label><label>Tap rotates?<select id="pTap"><option value="true" '+(p.tapRotate!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.tapRotate===false?'selected':'')+'>Disabled</option></select></label><label>Double tap down?<select id="pDouble"><option value="true" '+(p.doubleTapDown!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.doubleTapDown===false?'selected':'')+'>Disabled</option></select></label><label>Keyboard fallback?<select id="pKeyboard"><option value="true" '+(p.keyboard!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.keyboard===false?'selected':'')+'>Disabled</option></select></label>';if(b==='score'||b==='score_lines')extra='<label>Reason<input id="pReason" value="'+esc(p.reason||'score')+'"></label><label>Points<input id="pPoints" type="number" value="'+(p.points||0)+'"></label>';body.innerHTML=`<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label)}"></label><label>Icon<input id="pIcon" value="${esc(p.icon)}"></label>${extra}</div>${(b==='repeat'||b==='composite')?loopEditorHtml(p):''}${b==='input'?inputBindingEditorHtml(p):''}<div class="settingsActions"><button id="savePiece" class="primary">Save Piece</button><button id="exportPiecePackBtn" class="gold" type="button">Export Piece ZIP</button><button id="deletePieceFromSettings" class="danger" type="button">Remove Piece</button></div>${expertCodePanelHtml(p)}`;const exportBtn=$('#exportPiecePackBtn'); if(exportBtn)exportBtn.onclick=()=>exportPiecePack(p);if(b==='repeat'||b==='composite')bindLoopEditor(p,rerenderPieceSettings);if(b==='input')bindInputBindingEditor(p,rerenderPieceSettings);bindExpertCodePanel(p);$('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pDir'))p.dir=+$('#pDir').value;if($('#pCount')){if(b==='repeat')p.count=+$('#pCount').value;else p.count=+$('#pCount').value}if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings({commit:true})};const delFromSettings=$('#deletePieceFromSettings');if(delFromSettings)delFromSettings.onclick=()=>{program.splice(index,1);renderProgram();renderCode();closeSettings({commit:true})}}
 function loopEditorHtml(p){const kids=p.children||[];const b=p.behavior||p.type;const title=b==='repeat'?'Loop chain':'Template assembly';const help=b==='repeat'?'This chain runs inside the loop. Add reusable pieces here.':'This piece is a template made by assembling existing pieces. Do not duplicate movement code here.';return `<h3>${title}</h3><p class="muted">${help}</p><div class="innerChain">${kids.map((c,ci)=>`<div class="innerRow"><div class="piece ${clsFor(c)}"><span>${esc(c.icon)}</span><span>${esc(c.label)}</span></div><button class="small" data-up="${ci}">↑</button><button class="small" data-down="${ci}">↓</button><button class="small danger" data-del="${ci}">×</button></div>`).join('')||'<div class="hint">No inner pieces yet.</div>'}</div><div>${STORE.map(s=>s[0]).concat(['face_up','face_right','face_down','face_left','rotate_shape']).map(t=>{const mp=make(t);return `<button class="miniPieceBtn" data-add="${t}">${esc(mp.icon)} ${esc(mp.label)}</button>`}).join('')}</div>`}
 function bindLoopEditor(p,rerender){if(!p.children)p.children=[];all('[data-add]').forEach(b=>b.onclick=()=>{p.children.push(make(b.dataset.add));rerender()});all('[data-del]').forEach(b=>b.onclick=()=>{p.children.splice(+b.dataset.del,1);rerender()});all('[data-up]').forEach(b=>b.onclick=()=>{const i=+b.dataset.up;if(i>0){[p.children[i-1],p.children[i]]=[p.children[i],p.children[i-1]];rerender()}});all('[data-down]').forEach(b=>b.onclick=()=>{const i=+b.dataset.down;if(i<p.children.length-1){[p.children[i+1],p.children[i]]=[p.children[i],p.children[i+1]];rerender()}})}
 rerenderPieceSettings()}
 else {html=`<p class="muted">${esc(kind)} piece settings.</p>${expertCodePanelHtml(kind)}`;body.innerHTML=html;bindExpertCodePanel(kind)}modal.classList.add('open')}
-function closeSettings(){$('#settingsModal').classList.remove('open')}$('#closeSettings').onclick=closeSettings;$('#mazeSettings').onclick=()=>openSettings('grid');$('#startSettingsTop').onclick=()=>openSettings('avatar');$('#timerSettings').onclick=()=>openSettings('timerConfig');
+
+let settingsStateGuard=null;
+function plainClone(v){return JSON.parse(JSON.stringify(v))}
+function snapshotGameForSettings(){
+  return {
+    gamePreset,
+    maze:{
+      cols:maze.cols,rows:maze.rows,walls:[...maze.walls],locked:[...lockedCells().entries()],
+      start:{...maze.start},goal:{...maze.goal},body:maze.body.map(c=>[...c]),bodyColor:maze.bodyColor,bodyName:maze.bodyName
+    },
+    gridTheme:{...gridTheme},timer:{...timer},program:plainClone(program),scoreModule:plainClone(scoreModule),
+    state:state?plainClone(state):null,steps,activePiece,activeMazeKey,activeCode
+  };
+}
+function restoreGameFromSettings(s){
+  if(!s)return;
+  gamePreset=s.gamePreset;
+  maze.cols=s.maze.cols;maze.rows=s.maze.rows;maze.walls=new Set(s.maze.walls||[]);maze.locked=new Map(s.maze.locked||[]);
+  maze.start={...s.maze.start};maze.goal={...s.maze.goal};maze.body=(s.maze.body||[[0,0]]).map(c=>[...c]);maze.bodyColor=s.maze.bodyColor;maze.bodyName=s.maze.bodyName;
+  Object.assign(gridTheme,s.gridTheme||{});Object.assign(timer,s.timer||{});
+  program=plainClone(s.program||[]).map(normalizePieceTree);scoreModule=plainClone(s.scoreModule||{value:0,events:[]});
+  state=s.state?plainClone(s.state):null;steps=s.steps||0;activePiece=s.activePiece||null;activeMazeKey=s.activeMazeKey||null;activeCode=s.activeCode??null;
+  applyGridTheme();renderAll();renderKernelStrip();
+}
+function beginSettingsGuard(reason){settingsStateGuard={reason,snapshot:snapshotGameForSettings(),committed:false}}
+function commitSettingsGuard(){if(settingsStateGuard)settingsStateGuard.committed=true}
+function closeSettings(opts={}){if(opts&&opts.commit)commitSettingsGuard();$('#settingsModal').classList.remove('open');if(settingsStateGuard&&!settingsStateGuard.committed){restoreGameFromSettings(settingsStateGuard.snapshot)}settingsStateGuard=null}
+$('#closeSettings').onclick=()=>closeSettings();$('#mazeSettings').onclick=()=>openSettings('grid');$('#startSettingsTop').onclick=()=>openSettings('avatar');$('#timerSettings').onclick=()=>openSettings('timerConfig');
 
 // Shared loop editor: single source of truth for all loop-like/container pieces.
 // Required by both top-level program pieces and nested child pieces.
@@ -659,10 +735,10 @@ function bindLoopEditor(p,rerender){return sharedBindLoopEditor(p,rerender)}
 function resizeGrid(cols,rows){cols=Math.max(4,Math.min(20,cols||maze.cols));rows=Math.max(4,Math.min(24,rows||maze.rows));maze.cols=cols;maze.rows=rows;maze.walls=new Set([...maze.walls].filter(k=>{const [x,y]=k.split(',').map(Number);return inGrid(x,y)}));maze.start.x=Math.min(maze.start.x,cols-1);maze.start.y=Math.min(maze.start.y,rows-1);maze.goal.x=Math.min(maze.goal.x,cols-1);maze.goal.y=Math.min(maze.goal.y,rows-1);while(!bodyFitsAt(maze.start.x,maze.start.y)){maze.start.x=0;maze.start.y=0;if(bodyFitsAt(0,0))break;maze.body=[[0,0]];maze.bodyName='1×1'}renderAll()}
 function renderShapeTray(){const tray=$('#shapeTray');if(!tray)return;const list=SHAPES.concat(customShapes);tray.innerHTML=list.map(s=>shapeCard(s)).join('');tray.querySelectorAll('.shapeCard').forEach(card=>card.onclick=()=>{const s=list.find(x=>x.id===card.dataset.sid);maze.body=s.cells.map(c=>[...c]);maze.bodyColor=s.color;maze.bodyName=s.name;if(!bodyFitsAt(maze.start.x,maze.start.y)){maze.start={x:0,y:0,dir:1}}if(state){state.x=maze.start.x;state.y=maze.start.y;state.dir=maze.start.dir;state.won=false;state.crash=false}renderAll();renderShapeTray()})}
 function shapeCard(s){const maxX=Math.max(...s.cells.map(c=>c[0])),maxY=Math.max(...s.cells.map(c=>c[1])),set=new Set(s.cells.map(c=>key(c[0],c[1])));let cells='';for(let y=0;y<=Math.max(maxY,1);y++)for(let x=0;x<=Math.max(maxX,2);x++)cells+=`<span class="miniCell ${set.has(key(x,y))?'':'empty'}"></span>`;const active=s.name===maze.bodyName?'active':'';return `<button class="shapeCard ${active}" data-sid="${s.id}" style="--shapeColor:${s.color}"><div class="miniShape" style="grid-template-columns:repeat(${Math.max(maxX+1,3)},18px)">${cells}</div><span>${esc(s.name)}</span></button>`}
-function resetState(){if(isTetris())clearLockedCells();state={x:maze.start.x,y:maze.start.y,dir:maze.start.dir,won:false,crash:false,tempWalls:new Map(),lockPending:false,needsSpawn:isTetris(),lastClearRows:0,activeShapeId:null};steps=0;activePiece=null;activeMazeKey=null;activeCode=null;scoreReset();renderGrid('#playGrid');renderCode();renderKernelStrip()}
-function won(){return !isTetris()&&bodyAbs(state).some(([x,y])=>x===maze.goal.x&&y===maze.goal.y)}
-function isBlockedForRun(x,y){const k=key(x,y);return maze.walls.has(k)||lockedCells().has(k)||(state?.tempWalls&&state.tempWalls.has(k))}
-function avatarFits(x,y){return maze.body.every(([dx,dy])=>inGrid(x+dx,y+dy)&&!isBlockedForRun(x+dx,y+dy))}
+function resetState(){playMaze=cloneMazeModel(maze);if(isTetris())playMaze.locked=new Map();state={x:playMaze.start.x,y:playMaze.start.y,dir:playMaze.start.dir,won:false,crash:false,tempWalls:new Map(),lockPending:false,needsSpawn:isTetris(),lastClearRows:0,activeShapeId:null};steps=0;activePiece=null;activeMazeKey=null;activeCode=null;scoreReset();renderGrid('#playGrid');renderCode();renderKernelStrip()}
+function won(){const m=runtimeMaze();return !isTetris()&&runtimeBodyAbs(state).some(([x,y])=>x===m.goal.x&&y===m.goal.y)}
+function isBlockedForRun(x,y){const m=runtimeMaze();const k=key(x,y);return m.walls.has(k)||runtimeLockedCells().has(k)||(state?.tempWalls&&state.tempWalls.has(k))}
+function avatarFits(x,y){const m=runtimeMaze();return (m.body||[[0,0]]).every(([dx,dy])=>runtimeInGrid(x+dx,y+dy)&&!isBlockedForRun(x+dx,y+dy))}
 function tickTemporaryWalls(){
   if(!state?.tempWalls?.size)return;
   for(const [k,v] of [...state.tempWalls.entries()]){
@@ -887,7 +963,7 @@ function openChildSettings(loopIndex,childIndex){
     const exportBtn=$('#exportPiecePackBtn'); if(exportBtn)exportBtn.onclick=()=>exportPiecePack(p);
     if(b==='repeat'||b==='composite')bindLoopEditor(p,draw);
     if(b==='input')bindInputBindingEditor(p,draw);
-    $('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pDir'))p.dir=+$('#pDir').value;if($('#pCount'))p.count=+$('#pCount').value;if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings()};const delNested=$('#deleteNestedPieceFromSettings');if(delNested)delNested.onclick=()=>{removePieceByPath(path);renderProgram();renderCode();closeSettings()}
+    $('#savePiece').onclick=()=>{p.label=$('#pLabel').value||p.label;p.icon=$('#pIcon').value||p.icon;if($('#pSteps'))p.steps=+$('#pSteps').value;if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;if($('#pDir'))p.dir=+$('#pDir').value;if($('#pCount'))p.count=+$('#pCount').value;if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';if($('#pPersist'))p.persistent=$('#pPersist').value==='true';if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';if($('#pTap'))p.tapRotate=$('#pTap').value==='true';if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';if($('#pReason'))p.reason=$('#pReason').value||p.reason;if($('#pPoints'))p.points=+$('#pPoints').value||0;renderProgram();renderCode();closeSettings({commit:true})};const delNested=$('#deleteNestedPieceFromSettings');if(delNested)delNested.onclick=()=>{removePieceByPath(path);renderProgram();renderCode();closeSettings()}
   }
   draw();$('#settingsModal').classList.add('open')
 }
@@ -940,11 +1016,12 @@ function userMove(dx,dy,reason='input'){
 function userRotate(reason='tap rotate'){
   if(paused)return false;
   if(!ensureLiveState())return false;
-  const oldBody=maze.body.map(c=>[...c]);
-  const rotated=rotateCells(maze.body);
+  const m=runtimeMaze();
+  const oldBody=(m.body||[[0,0]]).map(c=>[...c]);
+  const rotated=rotateCells(m.body);
   const kicks=[[0,0],[-1,0],[1,0],[0,-1],[-2,0],[2,0],[0,1]];
   for(const [kx,ky] of kicks){
-    maze.body=rotated.map(c=>[...c]);
+    m.body=rotated.map(c=>[...c]);
     if(avatarFits(state.x+kx,state.y+ky)){
       state.x+=kx;state.y+=ky;activeMazeKey=key(state.x,state.y);scoreAdd('rotate_input',1);
       renderGrid('#playGrid');renderKernelStrip();
@@ -952,7 +1029,7 @@ function userRotate(reason='tap rotate'){
       return true;
     }
   }
-  maze.body=oldBody;
+  m.body=oldBody;
   $('#pathStatus').textContent='Blocked: rotation does not fit.';
   renderGrid('#playGrid');
   return false;
@@ -994,45 +1071,47 @@ function bindTabletInput(){
   });
 }
 function randomOpenCells(){
-  const occupied=new Set(bodyAbs(state).map(([x,y])=>key(x,y)));
-  occupied.add(key(maze.goal.x,maze.goal.y));
+  const m=runtimeMaze();
+  const occupied=new Set(runtimeBodyAbs(state).map(([x,y])=>key(x,y)));
+  occupied.add(key(m.goal.x,m.goal.y));
   const cells=[];
-  for(let y=0;y<maze.rows;y++)for(let x=0;x<maze.cols;x++){
+  for(let y=0;y<m.rows;y++)for(let x=0;x<m.cols;x++){
     const k=key(x,y);
-    if(!maze.walls.has(k)&&!(state?.tempWalls&&state.tempWalls.has(k))&&!occupied.has(k))cells.push([x,y]);
+    if(!m.walls.has(k)&&!(state?.tempWalls&&state.tempWalls.has(k))&&!occupied.has(k))cells.push([x,y]);
   }
   return cells;
 }
 function placeRandomWalls(p){
+  const m=runtimeMaze();
   let placed=0;
   if(!state.tempWalls)state.tempWalls=new Map();
   for(let n=0;n<(p.count||1);n++){
     let cells=randomOpenCells();
     if(!cells.length&&p.replaceExisting){
       const tempKeys=[...state.tempWalls.keys()];
-      const staticKeys=[...maze.walls];
+      const staticKeys=[...m.walls];
       const pool=[...tempKeys,...(p.persistent?staticKeys:[])];
       if(pool.length){
         const victim=pool[Math.floor(Math.random()*pool.length)];
         state.tempWalls.delete(victim);
-        if(p.persistent)maze.walls.delete(victim);
+        if(p.persistent)m.walls.delete(victim);
         cells=randomOpenCells();
       }
     }
     if(!cells.length)break;
     if(p.replaceExisting&&Math.random()<0.5){
       const tempKeys=[...state.tempWalls.keys()];
-      const staticKeys=[...maze.walls];
+      const staticKeys=[...m.walls];
       const pool=[...tempKeys,...(p.persistent?staticKeys:[])];
       if(pool.length){
         const victim=pool[Math.floor(Math.random()*pool.length)];
         state.tempWalls.delete(victim);
-        if(p.persistent)maze.walls.delete(victim);
+        if(p.persistent)m.walls.delete(victim);
       }
     }
     const [x,y]=cells[Math.floor(Math.random()*cells.length)];
     const k=key(x,y);
-    if(p.persistent)maze.walls.add(k);else state.tempWalls.set(k,Math.max(1,p.ttlMoves||3));
+    if(p.persistent)m.walls.add(k);else state.tempWalls.set(k,Math.max(1,p.ttlMoves||3));
     activeMazeKey=k;
     placed++;
   }
@@ -1046,48 +1125,68 @@ function rotateCells(cells){
   return rotated.map(([x,y])=>[x-minX,y-minY]);
 }
 function occupiedForLineClear(x,y){
+  // Shared grid rule: a line clear counts every occupied cell, regardless of origin.
+  // Manual wall/paint cells and locked falling-piece cells are equal occupants.
+  // During Run/Test this reads the Play sandbox only, never the Builder source grid.
+  const m=runtimeMaze();
   const k=key(x,y);
-  return lockedCells().has(k) || (isTetris() && maze.walls.has(k));
+  return runtimeLockedCells().has(k) || m.walls.has(k) || (state?.tempWalls&&state.tempWalls.has(k));
 }
 function clearFullRows(){
-  const locked=lockedCells();
+  const m=runtimeMaze();
+  const locked=runtimeLockedCells();
   const full=[];
-  for(let y=0;y<maze.rows;y++){
+  for(let y=0;y<m.rows;y++){
     let isFull=true;
-    for(let x=0;x<maze.cols;x++){ if(!occupiedForLineClear(x,y)){isFull=false;break} }
+    for(let x=0;x<m.cols;x++){ if(!occupiedForLineClear(x,y)){isFull=false;break} }
     if(isFull)full.push(y);
   }
   if(!full.length){ if(state)state.lastClearRows=0; return 0; }
   const fullSet=new Set(full);
   const dropFor=y=>full.filter(row=>row>y).length;
+
   const nextLocked=new Map();
   for(const [k,meta] of locked.entries()){
     const [x,y]=k.split(',').map(Number);
     if(fullSet.has(y))continue;
-    nextLocked.set(key(x,y+dropFor(y)),meta);
+    const ny=y+dropFor(y);
+    if(x>=0&&x<m.cols&&ny>=0&&ny<m.rows)nextLocked.set(key(x,ny),meta);
   }
-  maze.locked=nextLocked;
-  if(isTetris()){
-    const nextWalls=new Set();
-    for(const k of maze.walls){
+  m.locked=nextLocked;
+
+  const nextWalls=new Set();
+  for(const k of m.walls){
+    const [x,y]=k.split(',').map(Number);
+    if(fullSet.has(y))continue;
+    const ny=y+dropFor(y);
+    if(x>=0&&x<m.cols&&ny>=0&&ny<m.rows)nextWalls.add(key(x,ny));
+  }
+  m.walls=nextWalls;
+
+  if(state?.tempWalls){
+    const nextTemp=new Map();
+    for(const [k,ttl] of state.tempWalls.entries()){
       const [x,y]=k.split(',').map(Number);
       if(fullSet.has(y))continue;
-      nextWalls.add(key(x,y+dropFor(y)));
+      const ny=y+dropFor(y);
+      if(x>=0&&x<m.cols&&ny>=0&&ny<m.rows)nextTemp.set(key(x,ny),ttl);
     }
-    maze.walls=nextWalls;
+    state.tempWalls=nextTemp;
   }
+
   if(state)state.lastClearRows=full.length;
   return full.length;
 }
 function spawnTetrisPiece(force=false){
   if(!isTetris())return false;
   if(!force && state && state.needsSpawn===false)return false;
+  const m=runtimeMaze();
   const tray=SHAPES.slice(0,7);
   const s=tray[Math.floor(Math.random()*tray.length)];
-  maze.body=s.cells.map(c=>[...c]);
-  maze.bodyColor=s.color;maze.bodyName=s.name;
-  const maxX=Math.max(...maze.body.map(c=>c[0]));
-  state.x=Math.max(0,Math.min(maze.cols-maxX-1,Math.floor((maze.cols-maxX-1)/2)));
+  m.body=s.cells.map(c=>[...c]);
+  m.bodyColor=s.color;m.bodyName=s.name;
+  const maxX=Math.max(...m.body.map(c=>c[0]));
+  state.x=Math.max(0,Math.min(m.cols-maxX-1,Math.floor((m.cols-maxX-1)/2)));
   state.y=0;state.dir=2;state.lockPending=false;state.needsSpawn=false;state.activeShapeId=s.id;state.lastClearRows=0;
   if(!avatarFits(state.x,state.y)){state.crash=true;$('#pathStatus').textContent='Tetris stack reached the spawn area.';return false}
   activeMazeKey=key(state.x,state.y);
@@ -1108,10 +1207,11 @@ function gravityStep(){
 }
 function lockActivePiece(){
   if(!state||!isTetris()||!state.lockPending)return 0;
+  const m=runtimeMaze();
   let locked=0;
-  const meta=lockMeta(maze.bodyColor,maze.bodyName);
-  for(const [x,y] of bodyAbs(state)){
-    if(inGrid(x,y)){lockedCells().set(key(x,y),meta);locked++;}
+  const meta=lockMeta(m.bodyColor,m.bodyName);
+  for(const [x,y] of runtimeBodyAbs(state)){
+    if(x>=0&&x<m.cols&&y>=0&&y<m.rows){runtimeLockedCells().set(key(x,y),meta);locked++;}
   }
   state.lockPending=false;state.needsSpawn=true;state.lastClearRows=0;
   scoreAdd('lock_piece',locked*5);
@@ -1148,7 +1248,7 @@ async function execPiece(p,i=null,opts={}){
     await execComposedChildren(p.children||[],opts);
   }else if(b==='spawn_piece'){
     if(isTetris())spawnTetrisPiece(false);
-    else{const s=SHAPES[Math.floor(Math.random()*7)];maze.body=s.cells.map(c=>[...c]);maze.bodyColor=s.color;maze.bodyName=s.name;state.x=Math.max(0,Math.floor((maze.cols-3)/2));state.y=0;activeMazeKey=key(state.x,state.y);scoreAdd('spawn_piece',5)}
+    else{const m=runtimeMaze();const s=SHAPES[Math.floor(Math.random()*7)];m.body=s.cells.map(c=>[...c]);m.bodyColor=s.color;m.bodyName=s.name;state.x=Math.max(0,Math.floor((m.cols-3)/2));state.y=0;activeMazeKey=key(state.x,state.y);scoreAdd('spawn_piece',5)}
     renderGrid('#playGrid');await delay(Math.min(+$('#speedSlider').value,500));
   }else if(b==='gravity'){
     // Legacy compatibility only: convert old gravity behavior into the same child-tree execution.
@@ -1189,8 +1289,25 @@ async function execPiece(p,i=null,opts={}){
   renderGrid('#playGrid');renderKernelStrip();
 }
 async function runPath(){if(running)return;resetState();running=true;paused=false;$('#pausePath').textContent='⏸ Pause';try{for(let i=0;i<program.length;i++){if(!running||state.won||state.crash)break;await execPiece(program[i],i)}}catch(e){$('#pathStatus').textContent='Error: '+e.message}running=false;clearTemporaryWalls();activePiece=null;activeMazeKey=null;activeCode=null;renderProgram();renderGrid('#playGrid');renderCode();$('#pathStatus').textContent=state.crash?'Blocked after '+steps+' steps.':state.won?'Won in '+steps+' steps.':isTetris()?'Tetris flow stopped after '+steps+' visible piece steps.':'Stopped after '+steps+' steps.'}
-async function testPath(){await runPath();const qs=isTetris()?[program.length>0,!state.crash,steps>0,lockedCells().size>=0]:[program.length>0,!state.crash,state.won,steps<=timer.limit];const score=qs.filter(Boolean).length*250;$('#score').textContent=(isTetris()?'Tetris Quest Score: ':'Quest Score: ')+score+' / 1000 · Runtime Score: '+scoreModule.value}
-$('#runPath').onclick=runPath;$('#testPath').onclick=testPath;$('#pausePath').onclick=()=>{if(!running)return;paused=!paused;$('#pausePath').textContent=paused?'▶ Resume':'⏸ Pause'};$('#stepPath').onclick=async()=>{if(!running){$('#speedSlider').value=0;speedLabel();runPath();paused=true;$('#pausePath').textContent='▶ Resume'}else{paused=false;setTimeout(()=>{paused=true;$('#pausePath').textContent='▶ Resume'},80)}};$('#resetPath').onclick=()=>{running=false;resetState();$('#pathStatus').textContent='Reset.'};
+async function testPath(){
+  // FAANG-quality play sandbox: Test runs mutate only the Play grid copy.
+  // Builder/Maze setup is the persistent source of truth and is never changed by Run/Test.
+  const testSnapshot=snapshotGameForSettings();
+  await runPath();
+  const result={
+    crash:!!state?.crash,
+    won:!!state?.won,
+    steps,
+    runtimeScore:scoreModule.value,
+    lockedCount:lockedCells().size
+  };
+  const qs=isTetris()?[program.length>0,!result.crash,result.steps>0,result.lockedCount>=0]:[program.length>0,!result.crash,result.won,result.steps<=timer.limit];
+  const score=qs.filter(Boolean).length*250;
+  restoreGameFromSettings(testSnapshot);
+  $('#score').textContent=(isTetris()?'Tetris Quest Score: ':'Quest Score: ')+score+' / 1000 · Runtime Score: '+result.runtimeScore;
+  $('#pathStatus').textContent='Test complete. Builder grid stayed unchanged. Reset copies Builder → Play.';
+}
+$('#runPath').onclick=runPath;$('#testPath').onclick=testPath;$('#pausePath').onclick=()=>{if(!running)return;paused=!paused;$('#pausePath').textContent=paused?'▶ Resume':'⏸ Pause'};$('#stepPath').onclick=async()=>{if(!running){$('#speedSlider').value=0;speedLabel();runPath();paused=true;$('#pausePath').textContent='▶ Resume'}else{paused=false;setTimeout(()=>{paused=true;$('#pausePath').textContent='▶ Resume'},80)}};$('#resetPath').onclick=()=>{running=false;resetState();$('#pathStatus').textContent='Reset. Play grid copied from Builder.'};
 function codeLines(){
   normalizeProgram();
   const lines=[{text:'async function runFlow() {',id:null}];
@@ -1349,6 +1466,316 @@ function openGameSetup(){
   $('#setupImportInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;handlePackImportFile(f,'#setupImportStatus').finally(()=>{e.target.value=''})};
   modal.classList.add('open');
 }
+
+
+
+// v48 Creator Stories: every piece/bundle should explain intent, reuse path, dependencies, and source health.
+const STORY_DEFAULTS={
+  timer:{intent:'Pause the flow so players can see each step.',how:'Use inside loops or game ticks to control pacing.',used:'Maze tests and Tetris tick loops.',tags:'timer, pacing, debug'},
+  move:{intent:'Move the active piece one or more steps forward.',how:'Combine with Face Direction or Turn blocks to create movement recipes.',used:'Maze navigation and Tetris gravity/input assemblies.',tags:'movement, primitive, reusable'},
+  left:{intent:'Turn the active piece left relative to its current direction.',how:'Use before Move for maze-style relative navigation.',used:'Maze navigation.',tags:'turn, maze, primitive'},
+  right:{intent:'Turn the active piece right relative to its current direction.',how:'Use before Move for maze-style relative navigation.',used:'Maze navigation.',tags:'turn, maze, primitive'},
+  repeat:{intent:'Run a child chain repeatedly.',how:'Use as the standard container for higher-level pieces; count=1 is a valid named composition.',used:'Loops, Tetris Tick Loop, and Gravity = Face Down + Move.',tags:'container, loop, composition'},
+  random_wall:{intent:'Create uncertainty by placing temporary or persistent manual cells.',how:'Use as a visible grid modifier, not hidden runtime code.',used:'Maze obstacle generation and Tetris manual blocks.',tags:'grid, wall, obstacle'},
+  input:{intent:'Map player gestures or keyboard input to visible nested piece chains.',how:'Keep gesture internals inside this block settings panel while preserving child-piece composition.',used:'Tablet play controls for Maze and Tetris.',tags:'input, tablet, event router'},
+  score:{intent:'Record a named scoring event.',how:'Reuse for line clears, checkpoints, bonuses, or challenge rewards.',used:'Maze quests and Tetris line clears.',tags:'score, reward, economy'},
+  checkpoint:{intent:'Mark a meaningful point in a flow.',how:'Use when a creator wants a visible label or simple assertion in a program.',used:'Maze tutorials and imported starter pieces.',tags:'checkpoint, debug'},
+  face_dir:{intent:'Set an absolute direction without reimplementing movement.',how:'Assemble with Move to create left/right/down movement recipes.',used:'Tetris input and Gravity.',tags:'direction, primitive, tetris'},
+  rotate_shape:{intent:'Rotate the active piece if the rotated shape fits.',how:'Use inside tablet input or puzzle rules.',used:'Tetris Lite.',tags:'rotation, tetris'},
+  spawn_piece:{intent:'Create the next active falling piece.',how:'Use at game start and after lock/clear.',used:'Tetris Lite.',tags:'spawn, tetris'},
+  lock_piece:{intent:'Convert the active piece into occupied grid cells.',how:'Use after movement can no longer continue downward.',used:'Tetris Lite.',tags:'lock, grid, tetris'},
+  clear_rows:{intent:'Find full occupied rows, clear them, and collapse cells above.',how:'Pair with Score Event to reward cleared rows.',used:'Tetris Lite line clear.',tags:'rows, tetris, grid'}
+};
+function storyKey(p){const b=(p&&typeof p==='object'?(p.behavior||p.type):p)||'checkpoint'; if(b==='random_wall')return 'random_wall'; return b;}
+function defForPiece(p){if(!p||typeof p!=='object')return null;return CUSTOM_BLOCKS.get(p.type)||CUSTOM_BLOCKS.get(p.behavior)}
+function normalizeStory(raw={}){return {intent:raw.intent||raw.intention||'',how:raw.how||raw.usage||raw.use_case||'',used:raw.used||raw.where||raw.used_in||'',tags:raw.tags||'',notes:raw.notes||raw.story||raw.description||''}}
+function pieceStory(p){
+  const def=defForPiece(p);
+  const base=STORY_DEFAULTS[storyKey(p)]||{intent:'Reusable ComCody piece.',how:'Inspect settings, children, source, and tests before reuse.',used:'Custom creator flow.',tags:'custom, piece'};
+  const fromDef=normalizeStory(def||{}), fromPiece=normalizeStory((p&&p.story)||p||{});
+  return {intent:fromPiece.intent||fromDef.intent||base.intent,how:fromPiece.how||fromDef.how||base.how,used:fromPiece.used||fromDef.used||base.used,tags:fromPiece.tags||fromDef.tags||base.tags,notes:fromPiece.notes||fromDef.notes||base.notes||''};
+}
+function pieceDeps(p){const deps=[];(p?.children||[]).forEach(c=>deps.push(c.label||c.type)); if(p?.bindings)Object.entries(p.bindings).forEach(([k,arr])=>(arr||[]).forEach(c=>deps.push(k+': '+(c.label||c.type)))); return [...new Set(deps)].filter(Boolean)}
+function pieceHealth(p){const b=p?.behavior||p?.type;const st=pieceStory(p);const deps=pieceDeps(p);const code=expertCodeLookup(p);return [
+  {ok:!!p?.label,msg:'Has visible name'},
+  {ok:!!b,msg:'Has behavior'},
+  {ok:!!(st.intent&&st.how),msg:'Has story + reuse intent'},
+  {ok:!!(code&&!/^\/\//.test(String(code).trim())),warn:!!(code&&/^\/\//.test(String(code).trim())),msg:'Has source or generated implementation'},
+  {ok:deps.length>0||!['repeat','composite','input'].includes(b),warn:['repeat','composite','input'].includes(b)&&deps.length===0,msg:deps.length?'Dependencies visible: '+deps.join(', '):'No child dependencies'}
+]}
+function storyPills(st){return String(st.tags||'').split(',').map(x=>x.trim()).filter(Boolean).slice(0,8).map(t=>`<span class="storyPill">#${esc(t)}</span>`).join('')}
+function storyEditorHtml(p){const st=pieceStory(p), deps=pieceDeps(p), health=pieceHealth(p);return `<div class="storyCard"><h3>Story / Intent / Reuse</h3><div class="storyMeta">${storyPills(st)}${deps.length?`<span class="storyPill">uses ${esc(deps.join(' + '))}</span>`:'<span class="storyPill">standalone</span>'}</div><div class="storyGrid"><label>Intention<textarea id="storyIntent">${esc(st.intent)}</textarea></label><label>Where it is used<textarea id="storyUsed">${esc(st.used)}</textarea></label><label>How to reuse / extend<textarea id="storyHow">${esc(st.how)}</textarea></label><label>Tags<input id="storyTags" value="${esc(st.tags)}"><span class="hint">comma-separated search terms</span></label></div><details style="margin-top:10px"><summary style="cursor:pointer;font-weight:950;color:#c7d2fe">Health check</summary><div class="healthList">${health.map(h=>`<div class="${h.ok?'healthOk':h.warn?'healthWarn':'healthBad'}">${h.ok?'✅':h.warn?'⚠':'❌'} ${esc(h.msg)}</div>`).join('')}</div></details></div>`}
+function bindStoryEditor(p){if(!p||typeof p!=='object')return;const sync=()=>{p.story={intent:$('#storyIntent')?.value||'',used:$('#storyUsed')?.value||'',how:$('#storyHow')?.value||'',tags:$('#storyTags')?.value||'',notes:p.story?.notes||''};};['storyIntent','storyUsed','storyHow','storyTags'].forEach(id=>{const el=$('#'+id);if(el)el.oninput=sync})}
+const oldExpertCodePanelHtml=expertCodePanelHtml;
+expertCodePanelHtml=function(kind){return (typeof kind==='object'&&kind?storyEditorHtml(kind):'')+oldExpertCodePanelHtml(kind)};
+const oldBindExpertCodePanel=bindExpertCodePanel;
+bindExpertCodePanel=function(kind){bindStoryEditor(kind);oldBindExpertCodePanel(kind)};
+
+function storyYamlLines(p,indent=''){
+  const st=pieceStory(p);return [indent+'story:',indent+'  intent: '+yamlScalar(st.intent),indent+'  used: '+yamlScalar(st.used),indent+'  how: '+yamlScalar(st.how),indent+'  tags: '+yamlScalar(st.tags)];
+}
+pieceToYaml=function(p,opts={}){
+  const type=opts.type||p.type||slugify(p.label);const b=p.behavior||p.type;
+  const lines=['version: '+PACK_VERSION,'kind: piece','id: comcody.user.'+slugify(type),'type: '+type,'name: '+yamlScalar(p.label),'label: '+yamlScalar(p.label),'icon: '+yamlScalar(p.icon||'◆'),'role: flow','behavior: '+b,'class: '+(p.class||clsFor(p)),...storyYamlLines(p)];
+  const d=pieceDefaults(p); if(Object.keys(d).length){lines.push('defaults:');for(const [k,v] of Object.entries(d))lines.push('  '+k+': '+v)}
+  if(Array.isArray(p.children)&&p.children.length){lines.push('children:');for(const c of p.children){lines.push('  - type: '+(c.type||slugify(c.label)));lines.push('    label: '+yamlScalar(c.label));}}
+  lines.push('source:','  file: piece.js');return lines.join('\n')+'\n';
+};
+pieceReadme=function(p){const st=pieceStory(p), deps=pieceDeps(p);return `# ${p.label}\n\n## Intention\n${st.intent}\n\n## Where it is used\n${st.used}\n\n## How to reuse or extend\n${st.how}\n\n## Tags\n${st.tags}\n\n## Dependencies\n${deps.length?deps.map(d=>'- '+d).join('\n'):'- Standalone piece'}\n\n## Files\n- \`piece.yaml\` — no-code block manifest and story metadata\n- \`piece.js\` — real JavaScript implementation under the block\n- \`tests.yaml\` — smoke tests for import/runtime visibility\n\nImport this ZIP in ComCody with **Import Pack**.\n`;};
+pieceTestsYaml=function(p){const st=pieceStory(p);return `version: ${PACK_VERSION}\ntests:\n  - name: import registers piece\n    expect:\n      type: ${p.type||slugify(p.label)}\n      label: ${yamlScalar(p.label)}\n  - name: story is discoverable\n    expect:\n      intent: ${yamlScalar(st.intent)}\n      tags: ${yamlScalar(st.tags)}\n  - name: expert code is visible\n    expect:\n      source: piece.js\n`;};
+function bundleStoryMarkdown(){return `# ${bundleStory.title}\n\n## Intention\n${bundleStory.intention}\n\n## Audience\n${bundleStory.audience}\n\n## Tags\n${bundleStory.tags}\n\n## Reuse / Extension Path\n${bundleStory.reuse}\n`;}
+function saveBundleStoryFromStudio(){const ids=['bundleTitle','bundleIntent','bundleAudience','bundleTags','bundleReuse'];if(!ids.some(id=>$('#'+id)))return;bundleStory.title=$('#bundleTitle')?.value||bundleStory.title;bundleStory.intention=$('#bundleIntent')?.value||bundleStory.intention;bundleStory.audience=$('#bundleAudience')?.value||bundleStory.audience;bundleStory.tags=$('#bundleTags')?.value||bundleStory.tags;bundleStory.reuse=$('#bundleReuse')?.value||bundleStory.reuse;}
+projectJson=function(){return {version:PACK_VERSION,kind:'game',preset:gamePreset,bundleStory:{...bundleStory},maze:{cols:maze.cols,rows:maze.rows,walls:[...maze.walls],locked:[...lockedCells().entries()],start:maze.start,goal:maze.goal,body:maze.body,bodyColor:maze.bodyColor,bodyName:maze.bodyName},gridTheme:{...gridTheme},timer:{...timer},score:{...scoreModule},input:{...inputConfig},program:program.map(p=>JSON.parse(JSON.stringify(p)))} };
+const oldApplyProjectJson=applyProjectJson;
+applyProjectJson=function(data){oldApplyProjectJson(data);Object.assign(bundleStory,data.bundleStory||{});};
+exportGameBundleZip=async function(){
+  try{saveBundleStoryFromStudio();announcePackStatus('Preparing full game ZIP export …');normalizeProgram();const storyMd=bundleStoryMarkdown();
+    const files=[{name:'comcody-pack.yaml',text:`version: ${PACK_VERSION}\nkind: game_bundle\nname: ${yamlScalar(bundleStory.title||gamePreset)}\nentry: game.json\nstory: bundle-story.md\n`},{name:'bundle-story.md',text:storyMd},{name:'game.yaml',text:yaml()+'\n'},{name:'game.json',text:JSON.stringify(projectJson(),null,2)},{name:'game.js',text:`export async function run(ctx, game) {\n  await ctx.runProgram(game.program)\n}\n`},{name:'tests.yaml',text:`version: ${PACK_VERSION}\ntests:\n  - name: game bundle imports\n    expect:\n      kind: game\n  - name: bundle story exists\n    expect:\n      title: ${yamlScalar(bundleStory.title)}\n  - name: program has visible pieces\n    expect:\n      minPieces: ${program.length}\n`},{name:'README.md',text:`# ${bundleStory.title||'ComCody Game Bundle'}\n\n${storyMd}\n\nOpen ComCody and use **Import Pack**. This bundle restores the no-code game, story metadata, piece manifests, and real JS source files.\n`}];
+    const unique=collectUniquePieces(program); for(const [type,p] of unique){const dir='pieces/'+slugify(type)+'/';files.push({name:dir+'piece.yaml',text:pieceToYaml(p,{type})},{name:dir+'piece.js',text:packSourceForPiece(p)},{name:dir+'tests.yaml',text:pieceTestsYaml(p)},{name:dir+'README.md',text:pieceReadme(p)});}return await downloadZip(files,`comcody-game-${slugify(bundleStory.title||gamePreset)}.zip`);
+  }catch(err){announceExportError(err);return null;}
+};
+const oldParsePieceManifestYAML=parsePieceManifestYAML;
+parsePieceManifestYAML=function(text,path,map){const d=oldParsePieceManifestYAML(text,path,map);if(!d)return d;const story={};let sec=null;for(const raw of text.split(/\r?\n/)){const line=raw.replace(/#.*$/,'');if(!line.trim())continue;const indent=(line.match(/^\s*/)||[''])[0].length,t=line.trim();if(indent===0&&/^story:\s*$/.test(t)){sec='story';continue}const kv=t.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);if(kv){const [,k,v]=kv;if(sec==='story'&&indent>0)story[k]=parseScalar(v);else if(indent===0&&['intent','intention','used','how','tags','story','description'].includes(k))story[k]=parseScalar(v);else if(indent===0)sec=null;}}d.story=normalizeStory(story);d.intent=d.story.intent;d.how=d.story.how;d.used=d.story.used;d.tags=d.story.tags;return d;};
+function searchableStoryForType(type,label){const def=CUSTOM_BLOCKS.get(type);const temp=def?{...def,label:def.label||label,type:def.type||type,behavior:def.behavior}:{type,behavior:type,label};const st=pieceStory(temp);return (label+' '+st.intent+' '+st.used+' '+st.how+' '+st.tags).toLowerCase();}
+function ensureStoreSearchUI(){const drawer=$('#pieceDrawer .panel');if(!drawer)return;let wrap=$('#storeSearchWrap');if(!wrap){wrap=document.createElement('div');wrap.id='storeSearchWrap';wrap.className='storeSearchWrap';wrap.innerHTML='<input id="storeSearch" class="storeSearch" placeholder="Find pieces by story, purpose, tag, e.g. movement, tetris, score …" autocomplete="off">';const store=$('#pathStore');drawer.insertBefore(wrap,store);$('#storeSearch').oninput=()=>renderStore();}}
+renderStore=function(){ensureStoreSearchUI();const q=($('#storeSearch')?.value||'').toLowerCase().trim();const store=$('#pathStore');const rows=STORE.filter(s=>!q||searchableStoryForType(s[0],s[1]||s[0]).includes(q));store.innerHTML=rows.map(s=>{const raw=s[1]||'',icon=raw.trim().split(/\s+/)[0]||'◆',label=raw.replace(icon,'').trim()||s[0],st=pieceStory(CUSTOM_BLOCKS.get(s[0])||{type:s[0],behavior:s[0],label});return `<div class="piece ${s[2]}" draggable="true" data-store="${s[0]}" title="${esc(st.intent)}"><span>${esc(icon)}</span><span class="storeText"><b>${esc(label)}</b><small class="storeStory">${esc(st.intent)}</small></span></div>`}).join('')||'<div class="hint">No pieces match this story/search.</div>';store.querySelectorAll('[data-store]').forEach(el=>{el.ondragstart=e=>{e.dataTransfer.setData('text/plain','store:'+el.dataset.store)};el.onclick=()=>{program.push(make(el.dataset.store));renderProgram();renderCode();togglePieceDrawer(false)}})};
+openPackStudio=function(){const body=$('#settingsBody');$('#settingsTitle').textContent='📦 ComCody Pack Studio';body.innerHTML=`<p class="muted">Create and import real composable packs. No-code users see blocks; coders get YAML + JavaScript + tests under every block. v48 adds story metadata so creators can find purpose, usage, and extension paths.</p><div class="packChecklist"><div>✓ Piece ZIP: <b>piece.yaml</b> + <b>piece.js</b> + <b>tests.yaml</b> + story README</div><div>✓ Game ZIP: <b>game.json</b> + <b>bundle-story.md</b> + real piece source files</div><div>✓ Import validates manifest, registers pieces, and makes pieces searchable by intention/tags</div></div><div class="bundleStory"><h3>Bundle Story</h3><p class="muted">This travels with exported games so creators know why this bundle exists and how to reuse it.</p><div class="formGrid"><label>Title<input id="bundleTitle" value="${esc(bundleStory.title)}"></label><label>Tags<input id="bundleTags" value="${esc(bundleStory.tags)}"></label><label>Intention<textarea id="bundleIntent">${esc(bundleStory.intention)}</textarea></label><label>Audience<textarea id="bundleAudience">${esc(bundleStory.audience)}</textarea></label><label style="grid-column:1/-1">Reuse / extension path<textarea id="bundleReuse">${esc(bundleStory.reuse)}</textarea></label></div></div><div class="packActions"><button id="packImportBtn" type="button" class="gold">⬆ Import Pack ZIP/YAML</button><button id="packExportGameBtn" type="button" class="primary">⬇ Export Full Game ZIP</button><button id="packExportFirstBtn" type="button">⬇ Export First Program Piece</button><input id="packImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div><div id="packStudioStatus" class="packStatus" aria-live="polite">Ready. Import a pack or export the current game.</div><div class="muted" style="margin-top:8px;font-weight:900">Export log</div><div id="packStudioLog" class="packLog">No export actions yet.</div>`;['bundleTitle','bundleTags','bundleIntent','bundleAudience','bundleReuse'].forEach(id=>{const el=$('#'+id);if(el)el.oninput=saveBundleStoryFromStudio});bindPackStudioButtons();packLog('info','Pack Studio opened');$('#packImportInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;handlePackImportFile(f,'#packStudioStatus').finally(()=>{e.target.value=''})};$('#settingsModal').classList.add('open');};
+const psbV48=$('#packStudioBtn');if(psbV48)psbV48.onclick=openPackStudio;
+
+
+// v49 Arcade Clean UI: stories are discoverable, not front-loaded.
+function compactStoryEditorHtmlV49(p){
+  const st=pieceStory(p), deps=pieceDeps(p), health=pieceHealth(p);
+  return `<div class="storyCard"><details class="storyCompact"><summary>Story · Reuse · Health</summary><div class="storyMeta">${storyPills(st)}${deps.length?`<span class="storyPill">uses ${esc(deps.join(' + '))}</span>`:'<span class="storyPill">standalone</span>'}</div><div class="storyGrid"><label>Intention<textarea id="storyIntent">${esc(st.intent)}</textarea></label><label>Where used<textarea id="storyUsed">${esc(st.used)}</textarea></label><label>Reuse / extend<textarea id="storyHow">${esc(st.how)}</textarea></label><label>Tags<input id="storyTags" value="${esc(st.tags)}"><span class="hint">Search terms</span></label></div><details style="margin-top:10px"><summary style="cursor:pointer;font-weight:950;color:#c7d2fe">Health check</summary><div class="healthList">${health.map(h=>`<div class="${h.ok?'healthOk':h.warn?'healthWarn':'healthBad'}">${h.ok?'✅':h.warn?'⚠':'❌'} ${esc(h.msg)}</div>`).join('')}</div></details></details></div>`;
+}
+storyEditorHtml=compactStoryEditorHtmlV49;
+function ensureStoreSearchUIV49(){const drawer=$('#pieceDrawer .panel');if(!drawer)return;let wrap=$('#storeSearchWrap');if(!wrap){wrap=document.createElement('div');wrap.id='storeSearchWrap';wrap.className='storeSearchWrap';wrap.innerHTML='<input id="storeSearch" class="storeSearch" placeholder="Search pieces…" autocomplete="off">';const store=$('#pathStore');drawer.insertBefore(wrap,store);$('#storeSearch').oninput=()=>renderStore();}}
+renderStore=function(){ensureStoreSearchUIV49();const q=($('#storeSearch')?.value||'').toLowerCase().trim();const store=$('#pathStore');const rows=STORE.filter(s=>!q||searchableStoryForType(s[0],s[1]||s[0]).includes(q));store.innerHTML=rows.map(s=>{const raw=s[1]||'',icon=raw.trim().split(/\s+/)[0]||'◆',label=raw.replace(icon,'').trim()||s[0],st=pieceStory(CUSTOM_BLOCKS.get(s[0])||{type:s[0],behavior:s[0],label});return `<div class="piece ${s[2]}" draggable="true" data-store="${s[0]}" title="${esc(st.intent)}"><span>${esc(icon)}</span><span class="storeText"><b>${esc(label)}</b></span></div>`}).join('')||'<div class="hint">No pieces match.</div>';store.querySelectorAll('[data-store]').forEach(el=>{el.ondragstart=e=>{e.dataTransfer.setData('text/plain','store:'+el.dataset.store)};el.onclick=()=>{program.push(make(el.dataset.store));renderProgram();renderCode();togglePieceDrawer(false)}})};
+openPackStudio=function(){const body=$('#settingsBody');$('#settingsTitle').textContent='📦 Packs';body.innerHTML=`<div class="arcadeHero"><div class="arcadeIcon">📦</div><div><b>Import · Export · Share</b><span>Blocks, source, tests, and story travel together.</span></div></div><div class="packActionGrid"><button id="packImportBtn" type="button" class="gold">⬆ Import</button><button id="packExportGameBtn" type="button" class="primary">⬇ Export Game</button><button id="packExportFirstBtn" type="button">⬇ Export Piece</button><input id="packImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div><div id="packStudioStatus" class="packStatus" aria-live="polite">Ready.</div><details class="arcadeDetails"><summary>Bundle story</summary><div class="arcadeDetailsBody"><div class="formGrid"><label>Title<input id="bundleTitle" value="${esc(bundleStory.title)}"></label><label>Tags<input id="bundleTags" value="${esc(bundleStory.tags)}"></label><label>Intention<textarea id="bundleIntent">${esc(bundleStory.intention)}</textarea></label><label>Audience<textarea id="bundleAudience">${esc(bundleStory.audience)}</textarea></label><label style="grid-column:1/-1">Reuse / extension path<textarea id="bundleReuse">${esc(bundleStory.reuse)}</textarea></label></div></div></details><details class="arcadeDetails"><summary>What is inside?</summary><div class="arcadeDetailsBody"><div class="packChecklist"><div>Piece ZIP: <b>piece.yaml</b> + <b>piece.js</b> + <b>tests.yaml</b> + README</div><div>Game ZIP: <b>game.json</b> + <b>bundle-story.md</b> + source files</div><div>Import validates and registers searchable pieces.</div></div></div></details><details class="arcadeDetails"><summary>Export log</summary><div class="arcadeDetailsBody"><div id="packStudioLog" class="packLog">No export actions yet.</div></div></details>`;['bundleTitle','bundleTags','bundleIntent','bundleAudience','bundleReuse'].forEach(id=>{const el=$('#'+id);if(el)el.oninput=saveBundleStoryFromStudio});bindPackStudioButtons();packLog('info','Pack Studio opened');$('#packImportInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;handlePackImportFile(f,'#packStudioStatus').finally(()=>{e.target.value=''})};$('#settingsModal').classList.add('open');};
+const psbV49=$('#packStudioBtn');if(psbV49)psbV49.onclick=openPackStudio;
+
+
+// v51 Piece Inspector MVP: every piece can explain, test, and export itself without front-screen text.
+function pieceKindLabelV51(p){const b=p?.behavior||p?.type; if(b==='repeat')return 'Loop / container'; if(b==='input')return 'Input router'; if(Array.isArray(p?.children)&&p.children.length)return 'Assembled piece'; return 'Primitive / action';}
+function sourceStatusV51(p){const src=String(expertCodeLookup(p)||'').trim(); if(!src)return 'missing source'; if(src.includes('Source not declared'))return 'generated placeholder'; if(src.startsWith('//'))return 'documented snippet'; return 'real source';}
+function depTreeHtmlV51(p,depth=0,label=''){
+  if(!p)return '';
+  const b=p.behavior||p.type;
+  const name=(label?label+': ':'')+(p.label||p.type||'piece');
+  let html=`<div class="depNode" style="margin-left:${Math.min(depth*14,56)}px"><b>${esc(name)}</b> <small>${esc(b||'')}</small></div>`;
+  (p.children||[]).forEach(c=>{html+=depTreeHtmlV51(c,depth+1)});
+  if(p.bindings)Object.entries(p.bindings).forEach(([k,arr])=>(arr||[]).forEach(c=>{html+=depTreeHtmlV51(c,depth+1,k)}));
+  return html;
+}
+function compactHealthHtmlV51(p){return pieceHealth(p).map(h=>`<div class="${h.ok?'healthOk':h.warn?'healthWarn':'healthBad'}">${h.ok?'✅':h.warn?'⚠':'❌'} ${esc(h.msg)}</div>`).join('')}
+function settingsFieldsHtmlV51(p){
+  const b=p.behavior||p.type;let extra='';
+  if(b==='move')extra='<label>Move steps<input id="pSteps" type="number" min="1" max="8" value="'+(p.steps||1)+'"></label>';
+  if(b==='timer')extra='<label>Delay ms<input id="pDelay" type="number" min="0" value="'+(p.delay??'')+'"></label>';
+  if(b==='face_dir')extra='<label>Direction<select id="pDir"><option value="0" '+(p.dir===0?'selected':'')+'>Up</option><option value="1" '+(p.dir===1?'selected':'')+'>Right</option><option value="2" '+(p.dir===2?'selected':'')+'>Down</option><option value="3" '+(p.dir===3?'selected':'')+'>Left</option></select></label>';
+  if(b==='repeat')extra='<label>Repeat count<input id="pCount" type="number" min="1" max="120" value="'+(p.count||1)+'"></label>';
+  if(b==='random_wall')extra='<label>Walls to place<input id="pCount" type="number" min="1" max="20" value="'+(p.count||1)+'"></label><label>Replace existing?<select id="pReplace"><option value="false">No</option><option value="true" '+(p.replaceExisting?'selected':'')+'>Yes</option></select></label><label>Persistent?<select id="pPersist"><option value="false">Temporary</option><option value="true" '+(p.persistent?'selected':'')+'>Persistent</option></select></label><label>Disappear after moves<input id="pTtl" type="number" min="1" max="50" value="'+(p.ttlMoves||3)+'"></label>';
+  if(b==='input')extra='<label>Swipe move?<select id="pSwipe"><option value="true" '+(p.swipe!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.swipe===false?'selected':'')+'>Disabled</option></select></label><label>Tap rotates?<select id="pTap"><option value="true" '+(p.tapRotate!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.tapRotate===false?'selected':'')+'>Disabled</option></select></label><label>Double tap down?<select id="pDouble"><option value="true" '+(p.doubleTapDown!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.doubleTapDown===false?'selected':'')+'>Disabled</option></select></label><label>Keyboard fallback?<select id="pKeyboard"><option value="true" '+(p.keyboard!==false?'selected':'')+'>Enabled</option><option value="false" '+(p.keyboard===false?'selected':'')+'>Disabled</option></select></label>';
+  if(b==='score'||b==='score_lines')extra='<label>Reason<input id="pReason" value="'+esc(p.reason||'score')+'"></label><label>Points<input id="pPoints" type="number" value="'+(p.points||0)+'"></label>';
+  return `<div class="formGrid"><label>Label<input id="pLabel" value="${esc(p.label||'')}"></label><label>Icon<input id="pIcon" value="${esc(p.icon||'◆')}"></label>${extra}</div>`;
+}
+function saveSettingsFieldsV51(p){
+  if($('#pLabel'))p.label=$('#pLabel').value||p.label;
+  if($('#pIcon'))p.icon=$('#pIcon').value||p.icon;
+  if($('#pSteps'))p.steps=+$('#pSteps').value||1;
+  if($('#pDelay'))p.delay=$('#pDelay').value===''?null:+$('#pDelay').value;
+  if($('#pDir'))p.dir=+$('#pDir').value;
+  if($('#pCount'))p.count=+$('#pCount').value||1;
+  if($('#pReplace'))p.replaceExisting=$('#pReplace').value==='true';
+  if($('#pPersist'))p.persistent=$('#pPersist').value==='true';
+  if($('#pTtl'))p.ttlMoves=+$('#pTtl').value||3;
+  if($('#pSwipe'))p.swipe=$('#pSwipe').value==='true';
+  if($('#pTap'))p.tapRotate=$('#pTap').value==='true';
+  if($('#pDouble'))p.doubleTapDown=$('#pDouble').value==='true';
+  if($('#pKeyboard'))p.keyboard=$('#pKeyboard').value==='true';
+  if($('#pReason'))p.reason=$('#pReason').value||p.reason;
+  if($('#pPoints'))p.points=+$('#pPoints').value||0;
+}
+function pieceTestsPreviewV51(p){return pieceTestsYaml(p)+`\n# Local inspector checks\n- has_label\n- has_behavior\n- has_source_or_children\n- can_export_zip\n`;}
+function runPieceTestV51(p){
+  const checks=[
+    ['visible name',!!p?.label],
+    ['behavior',!!(p?.behavior||p?.type)],
+    ['source or children',sourceStatusV51(p)!=='missing source'||(p.children||[]).length>0||p.bindings],
+    ['YAML manifest',pieceToYaml(p).includes('kind: piece')],
+    ['tests manifest',pieceTestsYaml(p).includes('tests:')],
+    ['exportable',typeof exportPiecePack==='function']
+  ];
+  const ok=checks.every(x=>x[1]);
+  const el=$('#pieceTestResult');
+  if(el){el.className='testResult '+(ok?'ok':'bad');el.innerHTML=(ok?'✅ Piece check passed':'❌ Piece check failed')+'<br>'+checks.map(([n,v])=>(v?'✅ ':'❌ ')+esc(n)).join('<br>')}
+  return ok;
+}
+function gamerHookV53(p){
+  const b=p?.behavior||p?.type;
+  if(b==='repeat')return 'Repeat Magic';
+  if(b==='move')return 'Move Hero';
+  if(b==='input')return 'Touch Control';
+  if(b==='timer')return 'Game Beat';
+  if(b==='face_dir')return 'Aim Move';
+  if(b==='random_wall')return 'Drop Blocks';
+  if(b==='score'||b==='score_lines')return 'Add Score';
+  if(b==='clear_rows')return 'Clear Line';
+  if(b==='rotate')return 'Spin Piece';
+  if(b==='spawn_random')return 'New Piece';
+  if(b==='checkpoint')return 'Win Goal';
+  const words=String(p?.label||'Game Piece').replace(/[=+]/g,' ').trim().split(/\s+/).filter(Boolean).slice(0,3);
+  return words.join(' ')||'Game Piece';
+}
+function gamerStoryTextV53(p){
+  const b=p?.behavior||p?.type, st=pieceStory(p);
+  const map={
+    repeat:'Use this to repeat a move, rhythm, or mini-pattern while the game runs.',
+    move:'Moves the player or active piece one step through the grid.',
+    input:'Lets players control the game with swipes, taps, or keyboard keys.',
+    timer:'Adds a beat so actions can happen after a short delay.',
+    face_dir:'Points the active piece before another block moves it.',
+    random_wall:'Drops surprise blocks onto the board to make levels change.',
+    score:'Adds points when the player earns a reward.',
+    score_lines:'Adds points when rows or goals are cleared.',
+    clear_rows:'Clears full rows and drops the board above them.',
+    rotate:'Spins the active shape for puzzle placement.',
+    spawn_random:'Creates the next playable shape.',
+    checkpoint:'Marks the target or win moment for the player.'
+  };
+  return map[b]||st.intent||'A reusable game move you can play, tune, and share.';
+}
+function openChildSettings(loopIndex,childIndex){
+  const path=childIndex===undefined?String(loopIndex):`${loopIndex}.${childIndex}`;
+  const p=getPieceByPath(path); if(!p)return;
+  beginSettingsGuard('piece:'+path);
+  const body=$('#settingsBody');
+  function draw(){
+    const b=p.behavior||p.type, deps=pieceDeps(p), src=expertCodeLookup(p), yamlText=pieceToYaml(p), testsText=pieceTestsPreviewV51(p), st=pieceStory(p);
+    $('#settingsTitle').textContent='Inspect Piece';
+    body.innerHTML=`<div class="inspectorHero"><div class="bigIcon">${esc(p.icon||'◆')}</div><div><b>${esc(p.label||'Piece')}</b><span class="gamerHook">${esc(gamerHookV53(p))}</span></div></div>
+      <div class="gamerStoryBox"><b>What it does</b><p>${esc(gamerStoryTextV53(p))}</p><details><summary>Full use story</summary><p style="margin-top:8px">${esc(st.used||'Use it inside a game flow, test it, then share it as part of a bundle.')}</p><p style="margin-top:8px">${esc(st.how||'Reuse it as-is or extend it by changing settings and child pieces.')}</p></details></div>
+      <details class="inspectorDetails" open><summary>Settings</summary><div class="inspectorDetailsBody">${settingsFieldsHtmlV51(p)}${(b==='repeat'||b==='composite')?loopEditorHtml(p):''}${b==='input'?inputBindingEditorHtml(p):''}<div class="settingsActions"><button id="savePiece" class="primary" type="button">Save</button><button id="deleteNestedPieceFromSettings" class="danger" type="button">× Remove</button></div></div></details>
+      <details class="inspectorDetails inspectorExpertGate"><summary>Expert</summary><div class="inspectorDetailsBody inspectorExpertGrid">
+        <div class="inspectorActions"><button id="runPieceTestBtn" class="primary" type="button">▶ Test Piece</button><button id="exportPiecePackBtn" class="gold" type="button">⬇ Export Piece ZIP</button></div>
+        <div id="pieceTestResult" class="testResult">Ready to test this piece.</div>
+        <details class="inspectorDetails"><summary>Composition</summary><div class="inspectorDetailsBody"><div class="miniGrid"><div class="miniStat"><small>Dependencies</small><b>${deps.length}</b></div><div class="miniStat"><small>Type</small><b>${esc(b||'')}</b></div></div><div class="depTree" style="margin-top:10px">${depTreeHtmlV51(p)}</div></div></details>
+        <details class="inspectorDetails"><summary>Story metadata</summary><div class="inspectorDetailsBody"><div class="storyGrid"><label>Intention<textarea id="storyIntent">${esc(st.intent)}</textarea></label><label>Where used<textarea id="storyUsed">${esc(st.used)}</textarea></label><label>Reuse / extend<textarea id="storyHow">${esc(st.how)}</textarea></label><label>Tags<input id="storyTags" value="${esc(st.tags)}"><span class="hint">Search terms</span></label></div></div></details>
+        <details class="inspectorDetails"><summary>Health</summary><div class="inspectorDetailsBody"><div class="healthList">${compactHealthHtmlV51(p)}</div></div></details>
+        <details class="inspectorDetails"><summary>Source</summary><div class="inspectorDetailsBody sourceGrid"><pre>${esc(src)}</pre><pre>${esc(yamlText)}</pre></div></details>
+        <details class="inspectorDetails"><summary>Tests</summary><div class="inspectorDetailsBody"><pre>${esc(testsText)}</pre></div></details>
+      </div></details>`;
+    if(b==='repeat'||b==='composite')bindLoopEditor(p,draw);
+    if(b==='input')bindInputBindingEditor(p,draw);
+    bindStoryEditor(p);
+    $('#savePiece').onclick=()=>{saveSettingsFieldsV51(p);renderProgram();renderCode();closeSettings({commit:true})};
+    const testBtn=$('#runPieceTestBtn'); if(testBtn)testBtn.onclick=()=>runPieceTestV51(p);
+    const exportBtn=$('#exportPiecePackBtn'); if(exportBtn)exportBtn.onclick=()=>exportPiecePack(p);
+    $('#deleteNestedPieceFromSettings').onclick=()=>{removePieceByPath(path);renderProgram();renderCode();closeSettings({commit:true})};
+  }
+  draw();$('#settingsModal').classList.add('open')
+}
+
+
+// v56 Bundle Builder + Safe Inspector: export chosen pieces/templates without bloating the gamer UI.
+function listProgramPiecePathsV56(list=program,prefix=''){
+  const out=[];
+  (list||[]).forEach((p,i)=>{
+    const path=prefix?prefix+'.'+i:String(i);
+    out.push({path,p});
+    if(Array.isArray(p.children)) out.push(...listProgramPiecePathsV56(p.children,path));
+  });
+  return out;
+}
+function getBundleBuilderSelectionV56(){
+  const sel=$('#bundlePieceSelect');
+  if(!sel)return program[0]||null;
+  return getPieceByPath(sel.value)||program[0]||null;
+}
+function pieceManifestFilesV56(p,base='piece'){
+  const safe=slugify(p?.type||p?.label||'piece');
+  const dir=(base||'piece').replace(/\/$/,'')+'/';
+  return [
+    {name:dir+'piece.yaml',text:pieceToYaml(p,{type:p.type||safe})},
+    {name:dir+'piece.js',text:packSourceForPiece(p)},
+    {name:dir+'tests.yaml',text:pieceTestsYaml(p)},
+    {name:dir+'README.md',text:pieceReadme(p)}
+  ];
+}
+async function exportSelectedPieceWithDepsV56(){
+  try{
+    const p=getBundleBuilderSelectionV56();
+    if(!p)throw Error('No Program Stack piece selected.');
+    announcePackStatus('Preparing piece + dependencies ZIP …');
+    const files=[
+      {name:'comcody-pack.yaml',text:`version: ${PACK_VERSION}\nkind: piece_bundle\nname: ${yamlScalar(p.label||'Piece bundle')}\nentry: root/piece.yaml\n`},
+      {name:'README.md',text:`# ${p.label||'Piece bundle'}\n\nA composable ComCody piece bundle. Import it in Pack Studio.\n\nIncludes the selected block plus its visible child/dependency pieces.\n`}
+    ];
+    files.push(...pieceManifestFilesV56(p,'root'));
+    const unique=collectUniquePieces([p]);
+    for(const [type,dep] of unique){
+      if(dep===p)continue;
+      files.push(...pieceManifestFilesV56(dep,'dependencies/'+slugify(type)));
+    }
+    return await downloadZip(files,`comcody-piece-bundle-${slugify(p.label||'piece')}.zip`);
+  }catch(err){announceExportError(err);throw err}
+}
+function programTemplateJsonV56(){
+  return {version:PACK_VERSION,kind:'program_template',name:(bundleStory?.title||'ComCody Program Template'),preset:gamePreset,story:{...bundleStory},program:program.map(p=>JSON.parse(JSON.stringify(p)))};
+}
+async function exportProgramTemplateV56(){
+  try{
+    saveBundleStoryFromStudio();
+    announcePackStatus('Preparing Program Stack template ZIP …');
+    const template=programTemplateJsonV56();
+    const files=[
+      {name:'comcody-pack.yaml',text:`version: ${PACK_VERSION}\nkind: program_template\nname: ${yamlScalar(template.name)}\nentry: template.json\n`},
+      {name:'template.json',text:JSON.stringify(template,null,2)},
+      {name:'template.yaml',text:`version: ${PACK_VERSION}\nkind: program_template\nname: ${yamlScalar(template.name)}\npreset: ${yamlScalar(gamePreset)}\npieces: ${program.length}\n`},
+      {name:'README.md',text:`# ${template.name}\n\nImport this template to restore the visible Program Stack.\n\nIt is for no-code builders first; coder source files are included below each reusable piece.\n`},
+      {name:'tests.yaml',text:`version: ${PACK_VERSION}\ntests:\n  - name: template has pieces\n    expect:\n      minPieces: ${program.length}\n`}
+    ];
+    const unique=collectUniquePieces(program);
+    for(const [type,p] of unique) files.push(...pieceManifestFilesV56(p,'pieces/'+slugify(type)));
+    return await downloadZip(files,`comcody-template-${slugify(template.name)}.zip`);
+  }catch(err){announceExportError(err);throw err}
+}
+async function runBundleAuditV56(){
+  const out=$('#bundleAuditResult'); if(!out)return;
+  const pieces=listProgramPiecePathsV56();
+  const unique=collectUniquePieces(program);
+  const missing=[];
+  for(const {p} of pieces){
+    if(!p.label)missing.push('piece without visible name');
+    if(!(p.behavior||p.type))missing.push((p.label||'piece')+' missing behavior');
+  }
+  const score=missing.length?'warn':'ok';
+  out.className='testResult '+(score==='ok'?'ok':'bad');
+  out.innerHTML=(missing.length?'⚠ Bundle needs attention':'✅ Bundle ready')+'<br>'+`Pieces: ${pieces.length}<br>Reusable types: ${unique.size}`+(missing.length?'<br>'+missing.map(esc).join('<br>'):'' );
+  packLog(missing.length?'warn':'info', missing.length?'Bundle audit found warnings.':'Bundle audit passed.');
+}
+function bindBundleBuilderV56(){
+  const one=$('#bundleExportSelectedBtn'); if(one)one.onclick=()=>{const p=getBundleBuilderSelectionV56(); if(p)return exportPiecePack(p)};
+  const deps=$('#bundleExportDepsBtn'); if(deps)deps.onclick=exportSelectedPieceWithDepsV56;
+  const tmpl=$('#bundleExportTemplateBtn'); if(tmpl)tmpl.onclick=exportProgramTemplateV56;
+  const audit=$('#bundleAuditBtn'); if(audit)audit.onclick=runBundleAuditV56;
+}
+function bundleBuilderHtmlV56(){
+  const opts=listProgramPiecePathsV56().map(({path,p})=>`<option value="${esc(path)}">${esc((Number(path.split('.')[0])+1||1)+'. '+(p.icon||'◆')+' '+(p.label||'Piece'))}</option>`).join('');
+  return `<details class="arcadeDetails" open><summary>Bundle Builder + Safe Inspector</summary><div class="arcadeDetailsBody"><div class="formGrid"><label>Piece<select id="bundlePieceSelect">${opts||'<option>No Program Stack pieces</option>'}</select></label></div><div class="packActionGrid" style="margin-top:10px"><button id="bundleExportSelectedBtn" type="button">⬇ Piece</button><button id="bundleExportDepsBtn" type="button">⬇ Piece + deps</button><button id="bundleExportTemplateBtn" type="button" class="primary">⬇ Stack Template</button><button id="bundleAuditBtn" type="button" class="gold">✓ Check Bundle</button></div><div id="bundleAuditResult" class="testResult">Choose what to share.</div></div></details>`;
+}
+const oldOpenPackStudioV56=openPackStudio;
+openPackStudio=function(){
+  const body=$('#settingsBody');
+  $('#settingsTitle').textContent='📦 Packs';
+  body.innerHTML=`<div class="arcadeHero"><div class="arcadeIcon">📦</div><div><b>Import · Export · Share</b><span>Blocks, templates, source, tests, and story travel together.</span></div></div><div class="packActionGrid"><button id="packImportBtn" type="button" class="gold">⬆ Import</button><button id="packExportGameBtn" type="button" class="primary">⬇ Export Game</button><button id="packExportFirstBtn" type="button">⬇ First Piece</button><input id="packImportInput" type="file" accept=".yaml,.yml,.zip,application/zip" hidden></div><div id="packStudioStatus" class="packStatus" aria-live="polite">Ready.</div>${bundleBuilderHtmlV56()}<details class="arcadeDetails"><summary>Bundle story</summary><div class="arcadeDetailsBody"><div class="formGrid"><label>Title<input id="bundleTitle" value="${esc(bundleStory.title)}"></label><label>Tags<input id="bundleTags" value="${esc(bundleStory.tags)}"></label><label>Intention<textarea id="bundleIntent">${esc(bundleStory.intention)}</textarea></label><label>Audience<textarea id="bundleAudience">${esc(bundleStory.audience)}</textarea></label><label style="grid-column:1/-1">Reuse / extension path<textarea id="bundleReuse">${esc(bundleStory.reuse)}</textarea></label></div></div></details><details class="arcadeDetails"><summary>What is inside?</summary><div class="arcadeDetailsBody"><div class="packChecklist"><div>Piece ZIP: <b>piece.yaml</b> + <b>piece.js</b> + <b>tests.yaml</b> + README</div><div>Template ZIP: <b>template.json</b> + piece dependencies</div><div>Game ZIP: <b>game.json</b> + <b>bundle-story.md</b> + source files</div></div></div></details><details class="arcadeDetails"><summary>Export log</summary><div class="arcadeDetailsBody"><div id="packStudioLog" class="packLog">No export actions yet.</div></div></details>`;
+  ['bundleTitle','bundleTags','bundleIntent','bundleAudience','bundleReuse'].forEach(id=>{const el=$('#'+id);if(el)el.oninput=saveBundleStoryFromStudio});
+  bindPackStudioButtons();bindBundleBuilderV56();packLog('info','Pack Studio opened');
+  $('#packImportInput').onchange=e=>{const f=e.target.files?.[0];if(!f)return;handlePackImportFile(f,'#packStudioStatus').finally(()=>{e.target.value=''})};
+  $('#settingsModal').classList.add('open');
+};
+
+
 
 function initDemoPath(){const loop=make('repeat');loop.count=4;loop.children=[make('move')];program=[make('input'),make('timer'),make('left'),loop,make('right'),make('move'),make('move'),make('move'),make('move'),make('move'),make('checkpoint')];renderProgram();renderCode()}
 function defaultMaze(){clearLockedCells();maze.cols=12;maze.rows=8;maze.walls=new Set(['3,2','3,3','3,4','4,4','5,4','6,4','7,4','8,4','8,3','8,2']);maze.start={x:0,y:7,dir:1};maze.goal={x:11,y:0};maze.body=[[0,0]];maze.bodyColor=COLORS.R1;maze.bodyName='1×1'}

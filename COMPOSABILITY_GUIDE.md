@@ -158,3 +158,39 @@ See `THINKINGRESULTS.md` for the export regression analysis and the deterministi
 ## v47 Pack Studio export UX
 
 Full game export belongs in Pack Studio, not as a duplicate global header action. Export UI must show status, fallback download link, and log in the same place.
+
+## v48 Story and discovery rule
+
+A shareable block is not complete until it tells creators why it exists.
+
+Every reusable piece should answer:
+
+```text
+What is the intention?
+Where is it already used?
+How can I reuse or extend it?
+What tags help me find it later?
+What child pieces or source does it depend on?
+```
+
+This story must travel with import/export:
+
+```text
+piece.yaml -> story block
+README.md -> human explanation
+Piece Store -> searchable summary
+Piece Settings -> editable Story / Intent / Reuse panel
+```
+
+Bundles follow the same rule. A game ZIP must include `bundle-story.md` so another creator can decide what to reuse before reading the code.
+
+
+## v49 Clean Front UX Rule
+
+No feature may add a wall of explanatory text to the first-use game screen. Use icon actions, concise labels, collapsed details, and double-click inspectors. Story metadata is required for reuse, but it must be discoverable on demand, not spammed at launch.
+
+
+## v55 learning
+Bundle Builder is the next platform step: export selected piece, piece + dependencies, or Program Stack template without adding front-screen text. Keep QA reports capped at two.
+
+- v58 learning: Test runs must be sandboxed; creator-authored grid/setup data must be restored after Test, even when runtime modules clear or collapse rows.

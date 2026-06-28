@@ -256,3 +256,26 @@ The product must show a visible fallback download link and a visible log line fo
 ## v47 export UX rule
 
 Do not add duplicate global export buttons. Full game export belongs in Pack Studio because that is where the persistent download link and export log live. A release check must confirm the header does not contain a redundant `exportBtn`.
+
+
+## v50 Tooling hierarchy update
+
+Use the least fragile tool that proves the exact behavior.
+
+Preferred ladder:
+
+1. ZIP/file integrity for artifact correctness.
+2. Static grep/Python assertions for presence/absence of UI/code paths.
+3. `node --check` for syntax.
+4. Deterministic JS harness for runtime logic and browser API branches.
+5. DOM stubs for button/status/log behavior.
+6. Screenshots for visual/tablet layout.
+7. Chromium/Playwright/CDP only after deterministic checks pass, and only for interaction bugs that need a browser.
+
+Do not use browser timeouts as a development strategy. If the bug is export, test export branches directly. If the bug is front-screen clutter, inspect and screenshot the first screen. If the bug is nested block composability, assert the data model and settings path directly.
+
+
+## v55 learning
+Bundle Builder is the next platform step: export selected piece, piece + dependencies, or Program Stack template without adding front-screen text. Keep QA reports capped at two.
+
+- v58 learning: Test runs must be sandboxed; creator-authored grid/setup data must be restored after Test, even when runtime modules clear or collapse rows.
