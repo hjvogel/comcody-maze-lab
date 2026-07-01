@@ -168,3 +168,8 @@ No feature may add a wall of explanatory text to the first-use game screen. Use 
 Bundle Builder is the next platform step: export selected piece, piece + dependencies, or Program Stack template without adding front-screen text. Keep QA reports capped at two.
 
 - v58 learning: Test runs must be sandboxed; creator-authored grid/setup data must be restored after Test, even when runtime modules clear or collapse rows.
+
+## v65 rule — save compositions before coding primitives
+If a user assembles working pieces in the Program Stack, ComCody must let that stack become a reusable block before any new primitive is added.
+
+- Tablet arcade UX gate: no panel may stretch into empty space when content is short; cap scroll at the inner list, not the whole page.

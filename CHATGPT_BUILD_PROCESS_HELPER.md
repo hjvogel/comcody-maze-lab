@@ -279,3 +279,10 @@ Do not use browser timeouts as a development strategy. If the bug is export, tes
 Bundle Builder is the next platform step: export selected piece, piece + dependencies, or Program Stack template without adding front-screen text. Keep QA reports capped at two.
 
 - v58 learning: Test runs must be sandboxed; creator-authored grid/setup data must be restored after Test, even when runtime modules clear or collapse rows.
+
+- Tablet UX checks: inspect CSS rows/heights first; avoid fractional side-rail rows for short content; prefer static CSS assertions when headless Chromium is unreliable.
+
+
+## v68 UI Tooling Rule
+
+Do not default to Chromium/headless/wkhtmltoimage for tablet screenshots in this environment. If the user supplies a screenshot, use it as the visual ground truth. Patch CSS/HTML, then run static checks for labels, scroll rules, and file integrity.

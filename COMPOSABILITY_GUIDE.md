@@ -194,3 +194,14 @@ No feature may add a wall of explanatory text to the first-use game screen. Use 
 Bundle Builder is the next platform step: export selected piece, piece + dependencies, or Program Stack template without adding front-screen text. Keep QA reports capped at two.
 
 - v58 learning: Test runs must be sandboxed; creator-authored grid/setup data must be restored after Test, even when runtime modules clear or collapse rows.
+
+## v65 — No-code piece creation
+A saved Program Stack becomes a normal piece:
+
+- behavior: `repeat`
+- count: `1`
+- children: visible existing pieces
+- story/tags/license: attached metadata
+- source: generated wrapper calling `ctx.runChildren(piece)`
+
+This keeps reuse honest: compose first, code only when needed.

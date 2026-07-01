@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>ComCody Lab v51</title>
+<title>ComCody Lab v68</title>
 <style>
 :root{
   --bg:#07111f;--panel:#101b2d;--panel2:#07101d;--ink:#f8fafc;--muted:#a9b9d6;--line:#2b4364;
@@ -118,6 +118,80 @@ h1{font-size:clamp(26px,3.2vw,42px)!important;letter-spacing:-.04em!important}.s
 .gamerStoryBox b{display:block;color:#fde68a;font-size:14px;margin-bottom:4px}.gamerStoryBox p{margin:0;color:#dbeafe;font-weight:850;line-height:1.35}.gamerStoryBox details{margin-top:8px}.gamerStoryBox summary{cursor:pointer;color:#9bdcff;font-weight:950}.gamerStoryBox textarea{width:100%;min-height:64px;border:1px solid #37567f;border-radius:12px;background:#050b14;color:#f8fafc;padding:9px;font-weight:750;resize:vertical}
 .inspectorExpertGate{margin-top:10px}.inspectorExpertGate>summary{background:#111827!important;color:#fcd34d!important}.inspectorExpertGrid{display:grid;gap:10px}
 
+
+.finderTools{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin-bottom:8px}
+.finderFilters{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 8px}.finderChip{padding:6px 8px;border-radius:999px;border:1px solid #315176;background:#07101d;color:#cfe1ff;font-weight:950;font-size:11px;cursor:pointer}.finderChip.active{background:#173f25;border-color:#38e078;color:#d1fae5}.storeInfoBtn{position:absolute;right:22px;top:50%;transform:translateY(-50%);width:24px;height:24px;min-width:24px;min-height:24px;padding:0;border-radius:10px;font-size:12px;z-index:4;background:#0b1728;box-shadow:inset 0 0 0 2px #ffffff33}.reuseMapHero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:center;padding:12px;border-radius:18px;border:1px solid #315176;background:linear-gradient(135deg,#07101d,#10243f);margin-bottom:10px}.reuseMapIcon{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;background:#16243a;font-size:30px;box-shadow:inset 0 0 0 2px #ffffff22}.reuseMapHero b{display:block;font-size:20px}.reuseMapHook{display:inline-flex;margin-top:5px;border:1px solid #38e07855;background:#092518;color:#bbf7d0;border-radius:999px;padding:5px 9px;font-weight:950;font-size:12px}.reuseMapGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reuseMapCard{border:1px solid #263b58;border-radius:16px;background:#050b14;padding:12px}.reuseMapCard h3{margin:0 0 8px;font-size:14px;color:#fde68a;text-transform:none!important;letter-spacing:0!important}.reuseList{display:flex;gap:7px;flex-wrap:wrap}.reusePill{border:1px solid #315176;background:#07101d;border-radius:999px;padding:6px 9px;color:#dbeafe;font-weight:900;font-size:12px}.reuseEmpty{color:#93a4c0;font-weight:850;font-size:13px}.recommendTile{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid #263b58;background:#07101d;border-radius:12px;padding:8px;margin:6px 0}.recommendTile b{font-size:13px}.recommendTile button{padding:6px 8px;border-radius:10px;font-size:12px}.store .piece{padding-right:54px!important}@media(max-width:760px){.reuseMapGrid{grid-template-columns:1fr}.finderTools{grid-template-columns:1fr}.storeInfoBtn{right:20px}}
+
+
+/* v64 Pack Test Runner */
+.packTestGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0}
+.packTestSummary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.packTestSummary .miniStat{min-height:60px}
+.packTestRows{display:grid;gap:7px;margin-top:10px;max-height:260px;overflow:auto}
+.packTestRow{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;border:1px solid #263b58;border-radius:14px;background:#07101d;padding:9px}
+.packTestRow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.packTestRow span{color:var(--muted);font-size:12px}
+.packTestBadge{font-weight:950;border-radius:999px;padding:5px 8px}.packTestBadge.ok{background:#0b3b20;color:#86efac}.packTestBadge.bad{background:#42121b;color:#fecdd3}.packTestBadge.warn{background:#452d08;color:#fde68a}
+@media(max-width:760px){.packTestGrid,.packTestSummary{grid-template-columns:1fr 1fr}.packTestRow{grid-template-columns:auto minmax(0,1fr)}}
+
+
+/* v66 Tablet fit-to-content UX: panels snap to useful content, not empty height. */
+:root{--rail-max:430px}
+.rightRail{grid-template-rows:auto auto!important;align-content:start!important;overflow:auto!important}
+.builderPanel{display:block!important;overflow:visible!important}
+.pieceLists{display:grid!important;grid-template-columns:1fr!important;grid-auto-rows:auto!important;gap:10px!important;overflow:visible!important}
+.pieceCol{overflow:visible!important;min-height:0!important}
+.pieceCol:first-child{max-height:min(36dvh,340px)!important;overflow:auto!important;overscroll-behavior:contain!important;scrollbar-gutter:stable!important}
+.pieceCol:last-child{max-height:none!important;overflow:visible!important}
+.actionStack{min-height:0!important;display:grid!important;grid-template-columns:1fr 1fr!important;gap:9px!important;align-content:start!important}
+.actionStack button{min-height:42px!important}
+.questsPanel{display:block!important;max-height:180px!important;min-height:0!important;overflow:hidden!important;align-self:start!important}
+.questsPanel .quests{max-height:112px!important;overflow:auto!important;line-height:1.42!important;margin:0!important;padding:0 6px 0 20px!important}
+.questsPanel .yamlBox{display:none!important}
+.makerLayout{grid-template-columns:minmax(0,1fr) minmax(286px,var(--rail-max))!important}
+@media (max-width:920px) and (orientation:portrait){
+  body{overflow:auto!important}
+  .app{height:auto!important;min-height:calc(100dvh - 70px)!important;overflow:visible!important}
+  .makerLayout,.pathLayout{grid-template-columns:1fr!important;overflow:visible!important;align-content:start!important}
+  .rightRail,.pathSide{grid-template-rows:auto auto!important;align-content:start!important;overflow:visible!important}
+  .builderPanel{max-height:none!important}
+  .pieceCol:first-child{max-height:min(32dvh,300px)!important}
+  .questsPanel{max-height:158px!important}
+  .questsPanel .quests{max-height:96px!important}
+}
+@media (max-width:620px){
+  .pieceCol:first-child{max-height:240px!important}
+  .actionStack{grid-template-columns:1fr!important}
+  .questsPanel{max-height:132px!important}
+  .questsPanel .quests{max-height:76px!important}
+}
+
+
+/* v67 Tablet fit controls: Builder content uses actual useful rows, not fixed empty height. */
+.panelTitleRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}.panelTitleRow h2{margin:0!important}.builderSizeControls{display:flex;gap:6px;align-items:center}.tinyBtn{min-height:28px!important;min-width:0!important;padding:5px 9px!important;border-radius:10px!important;font-size:12px!important;line-height:1!important}.tinyBtn.active{background:#1f3f23!important;border-color:#86efac!important;color:#dcffe5!important}.builderPanel{--paintRows:5;--paintRowHeight:52px}.builderPanel .pieceLists{align-items:start!important}.builderPanel .paintCol{overflow:hidden!important;max-height:none!important}.builderPanel #makerPieces{max-height:calc(var(--paintRows)*var(--paintRowHeight));overflow:auto!important;overscroll-behavior:contain!important;scrollbar-gutter:stable!important;padding-right:4px}.builderPanel .actionsCol{overflow:visible!important}.builderPanel .actionStack{min-height:0!important}.builderPanel[data-size="more"]{--paintRows:9}.builderPanel[data-size="fit"]{--paintRows:5}@media(max-width:780px){.builderPanel{--paintRows:4;--paintRowHeight:50px}.builderPanel[data-size="more"]{--paintRows:7}.panelTitleRow{margin-bottom:8px}.tinyBtn{padding:5px 8px!important}.builderPanel .pieceLists{gap:8px!important}.builderPanel .piece{min-height:38px!important;margin:5px 0!important}.builderPanel #makerPieces{max-height:calc(var(--paintRows)*var(--paintRowHeight))!important}.questsPanel{display:block!important;max-height:150px!important}.questsPanel .quests{max-height:92px!important}.questsPanel .yamlBox{display:none!important}}
+
+
+/* v68 Tablet builder fit: no visible tile-paint wording, no useless inner scrollbars in Fit mode.
+   Fit shows only the core maze tiles and lets the panel size to its content.
+   All reveals advanced maker/debug tiles and may scroll only if the user asks for All. */
+.builderPanel .paintCol h3::before{content:""}
+.builderPanel .paintCol{overflow:visible!important;max-height:none!important;}
+.builderPanel #makerPieces{max-height:none!important;overflow:visible!important;scrollbar-gutter:auto!important;padding-right:0!important;}
+.builderPanel:not([data-size="more"]) #makerPieces .piece[data-tool="testMaze"],
+.builderPanel:not([data-size="more"]) #makerPieces .piece[data-tool="timer"]{display:none!important;}
+.builderPanel[data-size="more"] #makerPieces{max-height:min(46dvh,420px)!important;overflow:auto!important;overscroll-behavior:contain!important;padding-right:4px!important;}
+.builderPanel[data-size="more"] .paintCol{overflow:hidden!important;}
+.builderPanel .pieceLists{grid-auto-rows:max-content!important;align-content:start!important;}
+.builderPanel .actionsCol{overflow:visible!important;}
+.builderPanel .actionStack{min-height:0!important;}
+.questsPanel{min-height:0!important;}
+.questsPanel .quests{max-height:none!important;overflow:visible!important;}
+@media(max-width:780px){
+  .builderPanel #makerPieces{max-height:none!important;overflow:visible!important;}
+  .builderPanel[data-size="more"] #makerPieces{max-height:min(42dvh,360px)!important;overflow:auto!important;}
+  .questsPanel{max-height:none!important;}
+  .questsPanel .quests{max-height:none!important;overflow:visible!important;}
+}
+
 </style>
 </head>
 <body>
@@ -130,10 +204,10 @@ h1{font-size:clamp(26px,3.2vw,42px)!important;letter-spacing:-.04em!important}.s
     <div class="panel mazePanel">
       <div class="mazeTop"><h2>Maze</h2><div><button id="mazeSettings" class="gold small">⚙ Maze Settings</button><button id="startSettingsTop" class="gold small">🧍 Start Shape</button></div></div>
       <div class="mazeShell"><div id="makerGrid" class="mazeGrid"></div></div>
-      <div><div id="makerStatus" class="status">Paint the maze.</div><div class="kernelStrip"><div class="kernelChip">Mode <b id="kernelPresetA">maze</b></div><div class="kernelChip">▦ <b id="kernelGridA">—</b></div><div class="kernelChip">◆ <b id="kernelPieceA">—</b></div><div class="kernelChip">★ <b id="kernelScoreA">0</b></div></div><div class="scoreBox" id="makerScore">Quests: —</div></div>
+      <div><div id="makerStatus" class="status">Build the maze.</div><div class="kernelStrip"><div class="kernelChip">Mode <b id="kernelPresetA">maze</b></div><div class="kernelChip">▦ <b id="kernelGridA">—</b></div><div class="kernelChip">◆ <b id="kernelPieceA">—</b></div><div class="kernelChip">★ <b id="kernelScoreA">0</b></div></div><div class="scoreBox" id="makerScore">Quests: —</div></div>
     </div>
     <div class="rightRail">
-      <div class="panel builderPanel"><h2>Builder</h2><div class="pieceLists"><div class="pieceCol"><h3>Paint</h3><div id="makerPieces"></div></div><div class="pieceCol"><h3>Actions</h3><div class="actionStack"><button id="clearWalls" class="danger">Clear Walls</button><button id="demoMaze" class="gold">Load Demo Maze</button><button id="testMazeMaker" class="primary">Test Maze</button><button id="publishPlay" class="primary">Publish & Play</button></div></div></div></div>
+      <div class="panel builderPanel"><div class="panelTitleRow"><h2>Builder</h2><div class="builderSizeControls" aria-label="Builder size"><button id="builderFitBtn" type="button" class="tinyBtn active">Fit</button><button id="builderMoreBtn" type="button" class="tinyBtn">All</button></div></div><div class="pieceLists"><div class="pieceCol paintCol"><h3>Maze Tiles</h3><div id="makerPieces"></div></div><div class="pieceCol actionsCol"><h3>Actions</h3><div class="actionStack"><button id="clearWalls" class="danger">Clear Walls</button><button id="demoMaze" class="gold">Load Demo Maze</button><button id="testMazeMaker" class="primary">Test Maze</button><button id="publishPlay" class="primary">Publish & Play</button></div></div></div></div>
       <div class="panel questsPanel"><h2>Quests</h2><ol id="makerQuests" class="quests"></ol><div class="yamlBox"><h2>Maze YAML</h2><pre id="mazeYaml"></pre></div></div>
     </div>
   </section>
@@ -302,7 +376,7 @@ blocks:
 };
 function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}
 
-const PACK_VERSION='1.4';
+const PACK_VERSION='1.6';
 function slugify(s){return String(s||'piece').toLowerCase().replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,'').slice(0,48)||'piece'}
 function yamlScalar(v){if(v===undefined||v===null)return '';return String(v).replace(/\n/g,'\\n').replace(/:/g,'-')}
 function normalizeTypeRef(ref){
@@ -1777,10 +1851,318 @@ openPackStudio=function(){
 
 
 
+
+// v61 Piece Finder / Reuse Map: compact discovery before creating new blocks.
+let storeFilterV61='all';
+function storeEntryV61(type,labelRaw='',cls=''){
+  const raw=labelRaw||'';
+  const icon=raw.trim().split(/\s+/)[0]||'◆';
+  const label=raw.replace(icon,'').trim()||type;
+  const def=CUSTOM_BLOCKS.get(type);
+  const proto=def?{...def,type:def.type||type,behavior:def.behavior||type,label:def.label||label,icon:def.icon||icon}:make(type);
+  proto.label=proto.label||label; proto.icon=proto.icon||icon;
+  return {type,label,icon,cls,def,proto,story:pieceStory(proto)};
+}
+function storeKindV61(entry){
+  const b=entry.proto.behavior||entry.proto.type;
+  if(entry.def)return 'imported';
+  if(['repeat','input'].includes(b)||(entry.proto.children||[]).length)return 'template';
+  if(['spawn_piece','rotate_shape','lock_piece','clear_rows','score','face_dir','move','timer','random_wall'].includes(b))return 'core';
+  return 'core';
+}
+function entrySearchTextV61(entry){
+  const deps=pieceDeps(entry.proto).join(' ');
+  return [entry.type,entry.label,entry.story.intent,entry.story.used,entry.story.how,entry.story.tags,deps,storeKindV61(entry)].join(' ').toLowerCase();
+}
+function storeEntriesV61(){return STORE.map(s=>storeEntryV61(s[0],s[1]||'',s[2]||''));}
+function entryMatchesFilterV61(entry){
+  const kind=storeKindV61(entry), b=entry.proto.behavior||entry.proto.type, tags=String(entry.story.tags||'').toLowerCase();
+  if(storeFilterV61==='all')return true;
+  if(storeFilterV61==='core')return kind==='core';
+  if(storeFilterV61==='imported')return kind==='imported';
+  if(storeFilterV61==='templates')return kind==='template'||b==='repeat'||b==='input'||(entry.proto.children||[]).length>0;
+  if(storeFilterV61==='grid')return /grid|row|wall|line|cell|tetris|wood/.test(tags+' '+b+' '+entry.label.toLowerCase());
+  return true;
+}
+function ensureStoreFinderUIV61(){
+  const drawer=$('#pieceDrawer .panel'); if(!drawer)return;
+  let wrap=$('#storeSearchWrap');
+  if(!wrap){
+    wrap=document.createElement('div');
+    wrap.id='storeSearchWrap';
+    wrap.className='storeSearchWrap';
+    const store=$('#pathStore');
+    drawer.insertBefore(wrap,store);
+  }
+  // v62: build the finder controls once. Replacing the input on every keystroke
+  // steals focus on tablet browsers and closes the soft keyboard.
+  if(!$('#storeSearch')){
+    wrap.innerHTML=`<div class="finderTools"><input id="storeSearch" class="storeSearch" placeholder="Find: move, score, tetris, line, input…" autocomplete="off" inputmode="search"><button id="openReuseMapBtn" class="small gold" type="button">🔎 Map</button></div><div class="finderFilters"><span class="finderChip" data-filter="all">All</span><span class="finderChip" data-filter="core">Core</span><span class="finderChip" data-filter="templates">Templates</span><span class="finderChip" data-filter="grid">Grid</span><span class="finderChip" data-filter="imported">Imported</span></div>`;
+    const search=$('#storeSearch');
+    search.value=window.__storeSearchV61||'';
+    search.oninput=()=>{
+      window.__storeSearchV61=search.value;
+      renderStore({preserveFinder:true});
+      search.focus({preventScroll:true});
+    };
+    search.onclick=e=>e.stopPropagation();
+    search.onpointerdown=e=>e.stopPropagation();
+    search.ontouchstart=e=>e.stopPropagation();
+    $('#openReuseMapBtn').onclick=()=>openReuseMapV61(null);
+  }
+  all('.finderChip').forEach(ch=>{
+    ch.classList.toggle('active',ch.dataset.filter===storeFilterV61);
+    ch.onclick=()=>{storeFilterV61=ch.dataset.filter;renderStore({preserveFinder:true});};
+  });
+}
+function dependsOnLabelsV61(entry){return pieceDeps(entry.proto).map(x=>String(x).replace(/^.*: /,''));}
+function usedByV61(type){
+  const label=(storeEntriesV61().find(e=>e.type===type)?.label||type).toLowerCase();
+  return storeEntriesV61().filter(e=>e.type!==type&&dependsOnLabelsV61(e).some(d=>String(d).toLowerCase()===label||String(d).toLowerCase()===type.toLowerCase())).slice(0,8);
+}
+function similarPiecesV61(entry){
+  const tags=new Set(String(entry.story.tags||'').toLowerCase().split(/[,\s]+/).filter(Boolean));
+  const b=entry.proto.behavior||entry.proto.type;
+  return storeEntriesV61().filter(e=>e.type!==entry.type).map(e=>{
+    const etags=String(e.story.tags||'').toLowerCase().split(/[,\s]+/).filter(Boolean);
+    let score=(e.proto.behavior===b?2:0)+etags.filter(t=>tags.has(t)).length;
+    return {e,score};
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.e);
+}
+function reusePillsV61(items){return items.length?`<div class="reuseList">${items.map(x=>`<span class="reusePill">${esc(x.icon||'◆')} ${esc(x.label||x.type||x)}</span>`).join('')}</div>`:'<div class="reuseEmpty">None yet. Good candidate to extend.</div>'}
+function openReuseMapV61(type){
+  const entries=storeEntriesV61();
+  const q=($('#storeSearch')?.value||'').toLowerCase().trim();
+  let entry=type?entries.find(e=>e.type===type):null;
+  if(!entry&&q)entry=entries.find(e=>entrySearchTextV61(e).includes(q));
+  entry=entry||entries[0]; if(!entry)return;
+  const deps=dependsOnLabelsV61(entry).map(x=>({label:x,icon:'↳'}));
+  const used=usedByV61(entry.type);
+  const sim=similarPiecesV61(entry);
+  $('#settingsTitle').textContent='🔎 Piece Finder';
+  $('#settingsBody').innerHTML=`<div class="reuseMapHero"><div class="reuseMapIcon">${esc(entry.icon)}</div><div><b>${esc(entry.label)}</b><span class="reuseMapHook">${esc(gamerHookV53(entry.proto))}</span></div></div><div class="gamerStoryBox"><b>Best for</b><p>${esc(gamerStoryTextV53(entry.proto))}</p><details><summary>Creator story</summary><p style="margin-top:8px">${esc(entry.story.used||'Use it in a visible Program Stack.')}</p><p style="margin-top:8px">${esc(entry.story.how||'Reuse as-is or extend by composing child pieces.')}</p></details></div><div class="reuseMapGrid"><div class="reuseMapCard"><h3>Depends on</h3>${reusePillsV61(deps)}</div><div class="reuseMapCard"><h3>Used by</h3>${reusePillsV61(used)}</div><div class="reuseMapCard"><h3>Similar pieces</h3>${sim.map(e=>`<div class="recommendTile"><b>${esc(e.icon)} ${esc(e.label)}</b><button type="button" data-add="${esc(e.type)}">Add</button></div>`).join('')||'<div class="reuseEmpty">No close match yet.</div>'}</div><div class="reuseMapCard"><h3>Extend next</h3><div class="reuseEmpty">Compose with Loop, Timer, Input, or Score before writing new code.</div></div></div><div class="settingsActions" style="margin-top:12px"><button id="reuseAddBtn" class="primary" type="button">Add to Stack</button><button id="reuseInspectBtn" class="gold" type="button">Inspect Copy</button></div><details class="inspectorDetails"><summary>Expert metadata</summary><div class="inspectorDetailsBody"><pre>${esc(pieceToYaml(entry.proto))}</pre></div></details>`;
+  $('#reuseAddBtn').onclick=()=>{program.push(make(entry.type));renderProgram();renderCode();closeSettings({commit:true});togglePieceDrawer(false)};
+  $('#reuseInspectBtn').onclick=()=>{program.push(make(entry.type));renderProgram();renderCode();closeSettings({commit:true});setTimeout(()=>openChildSettings(program.length-1),0)};
+  all('[data-add]').forEach(btn=>btn.onclick=()=>{program.push(make(btn.dataset.add));renderProgram();renderCode();closeSettings({commit:true});togglePieceDrawer(false)});
+  $('#settingsModal').classList.add('open');
+}
+renderStore=function(opts={}){
+  ensureStoreFinderUIV61();
+  const q=($('#storeSearch')?.value||'').toLowerCase().trim();
+  const store=$('#pathStore');
+  const rows=storeEntriesV61().filter(e=>(!q||entrySearchTextV61(e).includes(q))&&entryMatchesFilterV61(e));
+  store.innerHTML=rows.map(e=>`<div class="piece ${e.cls||clsFor(e.proto)}" draggable="true" data-store="${esc(e.type)}" title="${esc(entrySearchTextV61(e).slice(0,120))}"><span>${esc(e.icon)}</span><span class="storeText"><b>${esc(e.label)}</b></span><button class="storeInfoBtn" type="button" title="Reuse map" data-info="${esc(e.type)}">i</button></div>`).join('')||'<div class="hint">No pieces match.</div>';
+  store.querySelectorAll('[data-store]').forEach(el=>{
+    el.ondragstart=e=>{e.dataTransfer.setData('text/plain','store:'+el.dataset.store)};
+    el.onclick=e=>{if(e.target.closest('.storeInfoBtn'))return;program.push(make(el.dataset.store));renderProgram();renderCode();togglePieceDrawer(false)};
+  });
+  store.querySelectorAll('[data-info]').forEach(btn=>{btn.onclick=e=>{e.stopPropagation();openReuseMapV61(btn.dataset.info)}});
+}
+const oldOpenPackStudioV61=openPackStudio;
+openPackStudio=function(){
+  oldOpenPackStudioV61();
+  const status=$('#packStudioStatus');
+  if(status&&!$('#packFinderBtn')){
+    const bar=document.createElement('div');bar.className='packActionGrid';bar.style.marginTop='10px';bar.innerHTML='<button id="packFinderBtn" type="button" class="gold">🔎 Piece Finder</button><button id="packOpenStoreBtn" type="button">🧩 Store</button><button id="packCheckMapBtn" type="button">✓ Reuse Check</button>';
+    status.insertAdjacentElement('afterend',bar);
+    $('#packFinderBtn').onclick=()=>openReuseMapV61(null);
+    $('#packOpenStoreBtn').onclick=()=>{closeSettings({commit:true});togglePieceDrawer(true)};
+    $('#packCheckMapBtn').onclick=()=>{runBundleAuditV56();packLog('info','Reuse check: inspect dependencies with Piece Finder.');};
+  }
+};
+
+
+
+// v64 Pack Test Runner: non-destructive validation for pieces, packs, and templates.
+function flattenPiecesV63(list=program, out=[], prefix='program'){
+  (list||[]).forEach((p,i)=>{
+    if(!p)return;
+    const path=prefix+'.'+i;
+    out.push({piece:p,path,source:'program'});
+    if(Array.isArray(p.children))flattenPiecesV63(p.children,out,path+'.children');
+    if(p.bindings)Object.entries(p.bindings).forEach(([name,arr])=>flattenPiecesV63(arr,out,path+'.binding:'+name));
+  });
+  return out;
+}
+function storeEntriesSafeV63(){
+  try{return typeof storeEntriesV61==='function'?storeEntriesV61():STORE.map(s=>storeEntryV61(s[0],s[1]||'',s[2]||''));}
+  catch(e){return STORE.map(s=>({type:s[0],label:String(s[1]||s[0]).replace(/^\S+\s*/,''),proto:make(s[0]),def:CUSTOM_BLOCKS.get(s[0])}))}
+}
+function allCatalogPiecesV63(scope='all'){
+  const list=[];
+  if(scope==='program'||scope==='all')flattenPiecesV63(program).forEach(x=>list.push(x));
+  if(scope==='store'||scope==='imported'||scope==='all'){
+    storeEntriesSafeV63().forEach(e=>{
+      const isImported=!!e.def;
+      if(scope==='imported'&&!isImported)return;
+      list.push({piece:e.proto||make(e.type),path:'store:'+e.type,source:isImported?'imported':'store'});
+    });
+  }
+  const seen=new Set();
+  return list.filter(x=>{const key=x.path+'|'+(x.piece?.type||x.piece?.label); if(seen.has(key))return false; seen.add(key); return true;});
+}
+function knownPieceNamesV63(){
+  const names=new Set();
+  storeEntriesSafeV63().forEach(e=>{names.add(String(e.type||'').toLowerCase());names.add(String(e.label||'').toLowerCase());names.add(String(e.proto?.label||'').toLowerCase());});
+  flattenPiecesV63(program).forEach(x=>{names.add(String(x.piece.type||'').toLowerCase());names.add(String(x.piece.label||'').toLowerCase());});
+  return names;
+}
+function depKnownV63(dep,names){
+  const d=String(dep||'').split(':').pop().trim().toLowerCase();
+  if(!d)return true;
+  if(names.has(d))return true;
+  return [...names].some(n=>n&&n.includes(d));
+}
+function testOnePieceV63(item,names=knownPieceNamesV63()){
+  const p=item.piece||{};
+  const b=p.behavior||p.type;
+  const deps=pieceDeps(p);
+  const src=packSourceForPiece(p);
+  const yamlText=pieceToYaml(p);
+  const testsText=pieceTestsYaml(p);
+  const checks=[
+    {name:'name',ok:!!p.label},
+    {name:'behavior',ok:!!b},
+    {name:'manifest',ok:/kind:\s*piece/.test(yamlText)&&/source:/.test(yamlText)},
+    {name:'tests',ok:/tests:/.test(testsText)&&/import registers/.test(testsText)},
+    {name:'source',ok:!!src&&/export\s+async\s+function\s+run|function\s+run|ctx\./.test(src)},
+    {name:'deps',ok:deps.every(d=>depKnownV63(d,names)),warn:deps.length>0&&!deps.every(d=>depKnownV63(d,names))}
+  ];
+  const bad=checks.filter(c=>!c.ok&&!c.warn);
+  const warn=checks.filter(c=>!c.ok&&c.warn);
+  return {item,p,b,deps,checks,ok:bad.length===0&&warn.length===0,warn:warn.length>0,bad,warn};
+}
+function packTestRowHtmlV64(r){
+  const p=r.p;
+  const cls=r.ok?'ok':(r.warn?'warn':'bad');
+  const badge=r.ok?'OK':(r.warn?'WARN':'FIX');
+  const names=r.checks.map(c=>((c.ok?'✓ ':c.warn?'⚠ ':'✕ ')+c.name)).join(' · ');
+  return `<div class="packTestRow"><div class="packTestBadge ${cls}">${badge}</div><div><b>${esc(p.icon||'◆')} ${esc(p.label||p.type||'Piece')}</b><span>${esc(r.item.path)} · ${esc(names)}</span></div><button type="button" class="small" data-map-v63="${esc(p.type||'')}" data-label-v63="${esc(p.label||'')}">i</button></div>`;
+}
+function runPackTestsV63(scope='program'){
+  const items=allCatalogPiecesV63(scope);
+  const names=knownPieceNamesV63();
+  const rows=items.map(item=>testOnePieceV63(item,names));
+  const passed=rows.filter(r=>r.ok).length;
+  const warned=rows.filter(r=>r.warn).length;
+  const failed=rows.filter(r=>!r.ok&&!r.warn).length;
+  const box=$('#packTestResult');
+  if(!box)return rows;
+  const needsAttention=rows.filter(r=>r.warn||(!r.ok&&!r.warn));
+  const passRows=rows.filter(r=>r.ok);
+  const attentionHtml=needsAttention.length
+    ? needsAttention.map(packTestRowHtmlV64).join('')
+    : `<div class="reuseEmpty success">✅ All ${passed} checked pieces passed. No warnings.</div>`;
+  const passDetails=passRows.length
+    ? `<details class="arcadeDetails"><summary>Passed pieces (${passRows.length})</summary><div class="packTestRows">${passRows.slice(0,80).map(packTestRowHtmlV64).join('')}</div></details>`
+    : '';
+  box.innerHTML=`<div class="packTestSummary"><div class="miniStat"><small>Passed</small><b>${passed}</b></div><div class="miniStat"><small>Warnings</small><b>${warned}</b></div><div class="miniStat"><small>Failed</small><b>${failed}</b></div></div><div class="packTestRows">${attentionHtml}</div>${passDetails}`;
+  box.querySelectorAll('[data-map-v63]').forEach(btn=>btn.onclick=()=>{const t=btn.dataset.mapV63;if(t&&typeof openReuseMapV61==='function')openReuseMapV61(t)});
+  packLog(warned||failed?'warn':'info',`Pack tests ${scope}: ${passed} passed, ${warned} warnings, ${failed} failed`);
+  return rows;
+}
+function packTestRunnerHtmlV63(){
+  return `<details class="arcadeDetails"><summary>Pack Test Runner</summary><div class="arcadeDetailsBody"><div class="gamerStoryBox"><b>Trust before share</b><p>Checks pieces without changing the Builder or Play boards.</p></div><div class="packTestGrid"><button id="packTestProgramBtn" type="button" class="primary">▶ Program</button><button id="packTestStoreBtn" type="button">▶ Store</button><button id="packTestImportedBtn" type="button">▶ Imported</button><button id="packTestAllBtn" type="button" class="gold">▶ All</button></div><div id="packTestResult" class="testResult">Ready. Pick a safe test scope.</div></div></details>`;
+}
+function bindPackTestRunnerV63(){
+  const bind=(id,scope)=>{const el=$('#'+id); if(el)el.onclick=()=>runPackTestsV63(scope);};
+  bind('packTestProgramBtn','program');bind('packTestStoreBtn','store');bind('packTestImportedBtn','imported');bind('packTestAllBtn','all');
+}
+const openPackStudioBeforeV63=openPackStudio;
+openPackStudio=function(){
+  openPackStudioBeforeV63();
+  const body=$('#settingsBody');
+  if(body&&!$('#packTestResult')){
+    const anchor=$('#bundleAuditResult')?.closest('details')||$('#packStudioStatus');
+    if(anchor)anchor.insertAdjacentHTML('afterend',packTestRunnerHtmlV63());
+    bindPackTestRunnerV63();
+  }
+};
+
+
+// v65 No-Code Piece Creator: play + create funnel.
+// A gamer can turn a working Program Stack into a reusable block without code.
+function cleanTemplatePieceV65(p){
+  const c=JSON.parse(JSON.stringify(p||{}));
+  c.id='tpl_'+Math.random().toString(36).slice(2,8);
+  if(Array.isArray(c.children))c.children=c.children.map(cleanTemplatePieceV65);
+  if(c.bindings)Object.keys(c.bindings).forEach(k=>{c.bindings[k]=(c.bindings[k]||[]).map(cleanTemplatePieceV65)});
+  return c;
+}
+function creatorPieceTypeV65(name){return 'user_'+slugify(name||'combo')+'_'+Date.now().toString(36).slice(-5)}
+let lastCreatedPieceTypeV65='';
+function noCodeCreatorHtmlV65(){
+  return `<details class="arcadeDetails"><summary>No-code Piece Creator</summary><div class="arcadeDetailsBody"><div class="gamerStoryBox"><b>Build a combo</b><p>Save the current Program Stack as one reusable block. No JavaScript needed.</p></div><div class="formGrid"><label>3-word hook<input id="creatorPieceHook" maxlength="28" value="My combo move" autocomplete="off"></label><label>Piece name<input id="creatorPieceName" value="My Combo" autocomplete="off"></label><label style="grid-column:1/-1">Game story<textarea id="creatorPieceStory">Use this combo in a level, puzzle, or challenge where the same move pattern should be reused.</textarea></label><label>Tags<input id="creatorPieceTags" value="remix, combo, reusable" autocomplete="off"></label><label>License<select id="creatorPieceLicense"><option>CC-BY-4.0</option><option>MIT</option><option>CC0-1.0</option><option>Private draft</option></select></label></div><div class="packActionGrid" style="margin-top:10px"><button id="createStackPieceBtn" type="button" class="primary">✨ Save Stack as Piece</button><button id="addCreatedPieceBtn" type="button" disabled>Add Created Piece</button><button id="exportCreatedPieceBtn" type="button" disabled>⬇ Export Created Piece</button></div><div id="creatorPieceResult" class="testResult">Ready. Build in Program Stack, then save it as a block.</div></div></details>`;
+}
+function createStackPieceV65(){
+  const result=$('#creatorPieceResult');
+  if(!program.length){if(result)result.innerHTML='⚠ Program Stack is empty.';return null;}
+  const name=($('#creatorPieceName')?.value||'My Combo').trim()||'My Combo';
+  const hook=($('#creatorPieceHook')?.value||name).trim().split(/\s+/).slice(0,3).join(' ');
+  const story=($('#creatorPieceStory')?.value||'Reusable player-made combo.').trim();
+  const tags=($('#creatorPieceTags')?.value||'remix, combo, reusable').trim();
+  const license=($('#creatorPieceLicense')?.value||'CC-BY-4.0').trim();
+  const type=creatorPieceTypeV65(name);
+  const children=program.map(cleanTemplatePieceV65);
+  const def={
+    type,label:name,icon:'✨',role:'flow',behavior:'repeat',class:'repeatPiece',
+    defaults:{count:1},children,
+    story:{intent:hook,used:story,how:'Reuse from the Piece Store, remix its child pieces, or export it with dependencies.',tags},
+    license,
+    source:`export async function run(ctx, piece) {\n  // User-made no-code combo: run visible child pieces.\n  await ctx.runChildren(piece)\n}\n`
+  };
+  registerBlockDefs([def]);
+  lastCreatedPieceTypeV65=type;
+  const add=$('#addCreatedPieceBtn'), exp=$('#exportCreatedPieceBtn');
+  if(add)add.disabled=false;if(exp)exp.disabled=false;
+  if(result){
+    result.className='testResult ok';
+    result.innerHTML=`✅ Created reusable block: <b>${esc(name)}</b><br>Story: ${esc(hook)}<br>Children: ${children.length}<br>License: ${esc(license)}`;
+  }
+  packLog('info','No-code piece created',name+' / '+type);
+  return type;
+}
+function bindNoCodeCreatorV65(){
+  const create=$('#createStackPieceBtn'); if(create)create.onclick=createStackPieceV65;
+  const add=$('#addCreatedPieceBtn'); if(add)add.onclick=()=>{if(!lastCreatedPieceTypeV65)return;program.push(make(lastCreatedPieceTypeV65));renderProgram();renderCode();$('#creatorPieceResult').innerHTML+=' <br>Added to Program Stack.'};
+  const exp=$('#exportCreatedPieceBtn'); if(exp)exp.onclick=()=>{if(!lastCreatedPieceTypeV65)return;exportPiecePack(make(lastCreatedPieceTypeV65))};
+}
+const openPackStudioBeforeV65=openPackStudio;
+openPackStudio=function(){
+  openPackStudioBeforeV65();
+  const body=$('#settingsBody');
+  if(body&&!$('#createStackPieceBtn')){
+    const anchor=$('#bundleAuditResult')?.closest('details')||$('#packStudioStatus');
+    if(anchor)anchor.insertAdjacentHTML('afterend',noCodeCreatorHtmlV65());
+    bindNoCodeCreatorV65();
+  }
+};
+
 function initDemoPath(){const loop=make('repeat');loop.count=4;loop.children=[make('move')];program=[make('input'),make('timer'),make('left'),loop,make('right'),make('move'),make('move'),make('move'),make('move'),make('move'),make('checkpoint')];renderProgram();renderCode()}
 function defaultMaze(){clearLockedCells();maze.cols=12;maze.rows=8;maze.walls=new Set(['3,2','3,3','3,4','4,4','5,4','6,4','7,4','8,4','8,3','8,2']);maze.start={x:0,y:7,dir:1};maze.goal={x:11,y:0};maze.body=[[0,0]];maze.bodyColor=COLORS.R1;maze.bodyName='1×1'}
 defaultMaze();initDemoPath();applyGridTheme();resetState();renderAll();renderKernelStrip();bindTabletInput();setTimeout(()=>{fitMaze();renderAll();renderKernelStrip()},60);
 })();
+
+// v68 Builder size control: Fit shows core Maze Tiles; All reveals advanced tiles.
+function initBuilderSizeControls(){
+  const panel=document.querySelector('.builderPanel');
+  const fit=document.getElementById('builderFitBtn');
+  const more=document.getElementById('builderMoreBtn');
+  if(!panel||!fit||!more)return;
+  const apply=(mode)=>{
+    panel.dataset.size=mode;
+    fit.classList.toggle('active',mode==='fit');
+    more.classList.toggle('active',mode==='more');
+    try{localStorage.setItem('comcody.builder.size',mode)}catch(e){}
+  };
+  fit.onclick=()=>apply('fit');
+  more.onclick=()=>apply('more');
+  let saved='fit';
+  try{saved=localStorage.getItem('comcody.builder.size')||'fit'}catch(e){}
+  apply(saved==='more'?'more':'fit');
+}
+
+try{initBuilderSizeControls()}catch(e){console.warn("builder size init failed",e)}
 </script>
 </body>
 </html>

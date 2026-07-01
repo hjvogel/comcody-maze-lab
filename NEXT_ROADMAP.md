@@ -1,132 +1,35 @@
-# ComCody Next Roadmap — Creator Platform Path
+# ComCody Roadmap — Play + Create Funnel
 
-The next work should move ComCody from “playable prototype” to “creator platform” while keeping the arcade/no-code surface clean.
+## Product direction
+An addicted player can become a creator, then a teacher. The default funnel is:
 
-## Product promise
+1. Play a tiny game.
+2. Remix it by moving pieces.
+3. Save a working stack as a new block.
+4. Share the block or full game.
+5. Others import, test, fix, and extend it.
 
-```text
-Build -> Play -> Inspect -> Test -> Bundle -> Share -> Reuse
-```
+## Next milestones
 
-A gamer should be able to build and share without reading technical text. A coder should be able to open the same block and find real YAML, JavaScript, tests, and dependency metadata.
+### v65 — No-code Piece Creator
+Save the current Program Stack as one reusable block with story, tags, license, source, tests, and dependencies.
 
-## v51 — Piece Inspector MVP ✅ shipped
+### v66 — Pack preview + trust before import
+Before import, show: title, author/license, story, pieces, dependencies, tests, and warnings.
 
-Purpose: every block can tell its story when opened, not on the front screen.
+### v67 — Shared development track
+Support fork/fix metadata: original piece ID, author, version, changelog, fix notes, and compatibility.
 
-Deliver:
+### v68 — Template Gallery
+Starter games: Maze, Tetris, Wood Block Puzzle, Puzzle Grid, and remote-competition sketch.
 
-- double-click any piece opens the inspector/settings panel,
-- compact health badge on top,
-- collapsed sections:
-  - Story,
-  - Children / Composition,
-  - Source,
-  - Tests,
-  - Export,
-- Run Piece Test button,
-- Export Piece ZIP button,
-- missing dependency warnings.
+### v69 — Remote competition scaffold
+Two players run comparable puzzle/Tetris/code-creation challenges with shareable result bundles.
 
-Quality gate:
-
-- no front-screen text wall,
-- all details collapsed by default,
-- simple Loop, Tetris Tick Loop, Gravity loop, imported pieces all use the same inspector path.
-
-## v52 — Bundle Builder
-
-Purpose: creators choose exactly what they share.
-
-Deliver export modes:
-
-- selected piece,
-- selected piece + dependencies,
-- current Program Stack as template,
-- full game,
-- full game + custom/imported pieces.
-
-Quality gate:
-
-- preview ZIP contents before export,
-- visible fallback link remains,
-- export logs collapsed but available,
-- imports validate dependencies before registration.
-
-## v53 — Piece Finder / Reuse Map
-
-Purpose: help creators find the best existing block before making a new one.
-
-Deliver:
-
-- search by intent/story/tag,
-- filters for core/imported/template/game-ready,
-- “used by” and “depends on” view,
-- similar/recommended pieces,
-- extension suggestions.
-
-Quality gate:
-
-- search results are compact visual tiles,
-- no paragraph spam,
-- one tap opens inspector.
-
-## v54 — Pack Test Runner
-
-Purpose: imported packs should be trusted before use.
-
-Deliver:
-
-- parse `tests.yaml`,
-- run piece tests against the shared kernel,
-- compact pass/fail view,
-- block or warn on broken packs,
-- export QA report with bundles.
-
-Quality gate:
-
-- tests can run without external services,
-- imported broken pack produces clear visible warning,
-- no silent registration of invalid behavior.
-
-## v56 — Template Gallery
-
-Purpose: fast starts for gamers and builders.
-
-Deliver:
-
-- Blank Game,
-- Maze,
-- Tetris Lite,
-- imported templates,
-- compact cards with one-line intent,
-- apply template without losing ability to inspect/edit nested pieces.
-
-Quality gate:
-
-- no separate games/pages,
-- templates are pack-defined and inspectable,
-- applying a template preserves pack/source/story/test metadata.
-
-## Never break these rules
-
-- No hidden reusable behavior.
-- No duplicated primitive if composition can express it.
-- No long documentation wall on first screen.
-- No export without visible fallback link and log.
-- No imported piece on a separate path from native pieces.
+## Rule
+More games are useful only when they create reusable pieces that plug into other games.
 
 
-## v51 shipped
+## UX gate before roadmap features
 
-Piece Inspector MVP is now available behind double-click. Next step is v52 Bundle Builder for selected piece + dependencies and current Program Stack templates.
-
-
-## v56 learning
-Bundle Builder is the next platform step: export selected piece, piece + dependencies, or Program Stack template without adding front-screen text. Keep QA reports capped at two.
-
-- v58 learning: Test runs must be sandboxed; creator-authored grid/setup data must be restored after Test, even when runtime modules clear or collapse rows.
-
-
-## v59 note
-Builder grid is source-of-truth. Play grid is a disposable runtime sandbox. Reset copies Builder → Play.
+Before adding another creator/platform feature, each build must pass a tablet arcade-layout gate: no large empty panels, no front-screen text spam, and controls visible without hunting.
